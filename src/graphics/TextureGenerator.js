@@ -116,6 +116,46 @@ export const SKINS_DATA = {
     sneakerBody: '#ffffff',
     sneakerStripe: '#e879f9',
     sneakerSole: '#1e1b4b'
+  },
+  coordinator: {
+    id: 'coordinator',
+    namePt: 'Developer Coordenador',
+    nameEn: 'Lead Coordinator Developer',
+    descPt: 'Homem branco, camisa azul escura, calças de ganga, óculos e cabelo branco em crista',
+    descEn: 'Fair skin, dark navy shirt, denim jeans, glasses and white crest hair',
+    isCoordinator: true,
+    hasGlasses: true,
+    hasMohawk: true,
+    hasShirt: true,
+    hair: '#f1f5f9',
+    hairHighlight: '#ffffff',
+    hairShadow: '#cbd5e1',
+    skin: '#ffd9be',
+    skinShade: '#e2ab90',
+    eyeColor: '#1e293b',
+    glassesFrame: '#0f172a',
+    glassesLens: '#e0f2fe',
+    shirtBody: '#172554',
+    shirtCollar: '#1e3a8a',
+    shirtHighlight: '#2563eb',
+    shirtButtons: '#e2e8f0',
+    pants: '#1d4ed8',
+    pantsHighlight: '#3b82f6',
+    pantsShadow: '#1e3a8a',
+    sneakerBody: '#334155',
+    sneakerStripe: '#94a3b8',
+    sneakerSole: '#0f172a',
+    headband: 'transparent',
+    headbandAccent: 'transparent',
+    hpOuter: 'transparent',
+    hpLed: 'transparent',
+    hpCushion: 'transparent',
+    hoodieBody: '#172554',
+    hoodieCollar: '#1e3a8a',
+    hoodieHighlight: '#2563eb',
+    hoodiePocket: '#172554',
+    drawstring: 'transparent',
+    drawstringTip: 'transparent'
   }
 };
 
@@ -310,78 +350,143 @@ export class TextureGenerator {
     // Subtle breathing bob in idle
     const bob = frameType === 'idle' ? (tick % 2 === 0 ? 0 : 1) : 0;
 
-    // 1. OVER-EAR HEADPHONES (Top Headband Arch)
-    ctx.fillStyle = p.headband;
-    ctx.fillRect(ox + 11, oy + 3 + bob, 10, 2);
-    ctx.fillStyle = p.headbandAccent;
-    ctx.fillRect(ox + 13, oy + 2 + bob, 6, 2);
+    if (p.isCoordinator) {
+      // --- DEVELOPER COORDENADOR ---
+      // 1. CABELO BRANCO EM CRISTA (White Crest / Mohawk)
+      ctx.fillStyle = p.hair;
+      ctx.fillRect(ox + 14, oy + 1 + bob, 4, 7);
+      ctx.fillRect(ox + 15, oy + 0 + bob, 2, 2); // Top peak
+      ctx.fillStyle = p.hairHighlight;
+      ctx.fillRect(ox + 15, oy + 1 + bob, 2, 6); // Bright white center
+      ctx.fillStyle = p.hairShadow || '#cbd5e1';
+      ctx.fillRect(ox + 13, oy + 4 + bob, 1, 4);
+      ctx.fillRect(ox + 18, oy + 4 + bob, 1, 4);
 
-    // 2. HAIR
-    ctx.fillStyle = p.hair;
-    ctx.fillRect(ox + 11, oy + 5 + bob, 10, 4);
-    ctx.fillRect(ox + 12, oy + 4 + bob, 8, 2);
-    ctx.fillRect(ox + 12, oy + 8 + bob, 8, 2);
-    ctx.fillRect(ox + 12, oy + 10 + bob, 2, 1);
-    ctx.fillRect(ox + 16, oy + 10 + bob, 3, 1);
-    // Highlights
-    ctx.fillStyle = p.hairHighlight;
-    ctx.fillRect(ox + 14, oy + 5 + bob, 4, 2);
+      // 2. FACE & SKIN (Homem Branco)
+      ctx.fillStyle = p.skin;
+      ctx.fillRect(ox + 12, oy + 7 + bob, 8, 7);
+      ctx.fillRect(ox + 13, oy + 14 + bob, 6, 2); // Chin
+      // Face shading
+      ctx.fillStyle = p.skinShade;
+      ctx.fillRect(ox + 12, oy + 13 + bob, 8, 1);
+      // Ears
+      ctx.fillStyle = p.skin;
+      ctx.fillRect(ox + 10, oy + 9 + bob, 2, 3);
+      ctx.fillRect(ox + 20, oy + 9 + bob, 2, 3);
 
-    // 3. FACE & SKIN
-    ctx.fillStyle = p.skin;
-    ctx.fillRect(ox + 12, oy + 9 + bob, 8, 5);
-    ctx.fillRect(ox + 13, oy + 14 + bob, 6, 2); // chin
-    // Face shading
-    ctx.fillStyle = p.skinShade;
-    ctx.fillRect(ox + 12, oy + 13 + bob, 8, 1);
-    // Eyes with specular glint
-    ctx.fillStyle = p.eyeColor;
-    ctx.fillRect(ox + 14, oy + 11 + bob, 2, 2);
-    ctx.fillRect(ox + 18, oy + 11 + bob, 2, 2);
-    ctx.fillStyle = '#ffffff'; // sparkle
-    ctx.fillRect(ox + 15, oy + 11 + bob, 1, 1);
-    ctx.fillRect(ox + 19, oy + 11 + bob, 1, 1);
+      // 3. ÓCULOS (Glasses with frames, bridge, glint)
+      ctx.fillStyle = p.glassesFrame || '#0f172a';
+      ctx.fillRect(ox + 13, oy + 9 + bob, 3, 3); // Left frame
+      ctx.fillRect(ox + 17, oy + 9 + bob, 3, 3); // Right frame
+      ctx.fillRect(ox + 16, oy + 10 + bob, 1, 1); // Bridge
+      ctx.fillRect(ox + 11, oy + 10 + bob, 2, 1); // Left temple
+      ctx.fillRect(ox + 20, oy + 10 + bob, 1, 1); // Right temple
+      // Eyes behind glasses
+      ctx.fillStyle = p.eyeColor || '#1e293b';
+      ctx.fillRect(ox + 14, oy + 10 + bob, 1, 1);
+      ctx.fillRect(ox + 18, oy + 10 + bob, 1, 1);
+      // Glass specular glint
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(ox + 13, oy + 9 + bob, 1, 1);
+      ctx.fillRect(ox + 17, oy + 9 + bob, 1, 1);
 
-    // 4. OVER-EAR HEADPHONES (Earcups on sides of head)
-    // Left earcup
-    ctx.fillStyle = p.hpOuter;
-    ctx.fillRect(ox + 8, oy + 7 + bob, 3, 7);
-    ctx.fillStyle = p.hpLed;
-    ctx.fillRect(ox + 8, oy + 9 + bob, 2, 3);
-    ctx.fillStyle = p.hpCushion;
-    ctx.fillRect(ox + 10, oy + 8 + bob, 2, 5);
+      // 4. CAMISA AZUL ESCURA (Dark Navy Blue Shirt)
+      ctx.fillStyle = p.shirtBody || '#172554';
+      ctx.fillRect(ox + 10, oy + 16 + bob, 12, 8);
+      // Shirt collar
+      ctx.fillStyle = p.shirtCollar || '#1e3a8a';
+      ctx.fillRect(ox + 12, oy + 15 + bob, 3, 2);
+      ctx.fillRect(ox + 17, oy + 15 + bob, 3, 2);
+      ctx.fillStyle = p.skin;
+      ctx.fillRect(ox + 15, oy + 15 + bob, 2, 2); // Open neck
+      // Shoulder fold
+      ctx.fillStyle = p.shirtHighlight || '#2563eb';
+      ctx.fillRect(ox + 10, oy + 16 + bob, 12, 1);
+      // Button placket
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(ox + 15, oy + 17 + bob, 2, 7);
+      ctx.fillStyle = p.shirtButtons || '#e2e8f0';
+      ctx.fillRect(ox + 15, oy + 18 + bob, 1, 1);
+      ctx.fillRect(ox + 15, oy + 21 + bob, 1, 1);
+      // Belt
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fillRect(ox + 10, oy + 23 + bob, 12, 1);
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(ox + 15, oy + 23 + bob, 2, 1);
+    } else {
+      // 1. OVER-EAR HEADPHONES (Top Headband Arch)
+      ctx.fillStyle = p.headband;
+      ctx.fillRect(ox + 11, oy + 3 + bob, 10, 2);
+      ctx.fillStyle = p.headbandAccent;
+      ctx.fillRect(ox + 13, oy + 2 + bob, 6, 2);
 
-    // Right earcup
-    ctx.fillStyle = p.hpOuter;
-    ctx.fillRect(ox + 21, oy + 7 + bob, 3, 7);
-    ctx.fillStyle = p.hpLed;
-    ctx.fillRect(ox + 22, oy + 9 + bob, 2, 3);
-    ctx.fillStyle = p.hpCushion;
-    ctx.fillRect(ox + 20, oy + 8 + bob, 2, 5);
+      // 2. HAIR
+      ctx.fillStyle = p.hair;
+      ctx.fillRect(ox + 11, oy + 5 + bob, 10, 4);
+      ctx.fillRect(ox + 12, oy + 4 + bob, 8, 2);
+      ctx.fillRect(ox + 12, oy + 8 + bob, 8, 2);
+      ctx.fillRect(ox + 12, oy + 10 + bob, 2, 1);
+      ctx.fillRect(ox + 16, oy + 10 + bob, 3, 1);
+      // Highlights
+      ctx.fillStyle = p.hairHighlight;
+      ctx.fillRect(ox + 14, oy + 5 + bob, 4, 2);
 
-    // 5. HOODIE (Torso & Collar)
-    ctx.fillStyle = p.hoodieCollar;
-    ctx.fillRect(ox + 11, oy + 15 + bob, 10, 2);
-    ctx.fillStyle = p.hoodieBody;
-    ctx.fillRect(ox + 10, oy + 16 + bob, 12, 8);
-    // Shoulder highlight
-    ctx.fillStyle = p.hoodieHighlight;
-    ctx.fillRect(ox + 10, oy + 16 + bob, 12, 1);
-    // Kangaroo pocket
-    ctx.fillStyle = p.hoodiePocket;
-    ctx.fillRect(ox + 12, oy + 20 + bob, 8, 4);
-    ctx.fillStyle = p.hoodieHighlight;
-    ctx.fillRect(ox + 12, oy + 20 + bob, 8, 1);
-    // Drawstrings with aglets
-    ctx.fillStyle = p.drawstring;
-    ctx.fillRect(ox + 13, oy + 17 + bob, 1, 4);
-    ctx.fillRect(ox + 18, oy + 17 + bob, 1, 4);
-    ctx.fillStyle = p.drawstringTip;
-    ctx.fillRect(ox + 13, oy + 20 + bob, 1, 1);
-    ctx.fillRect(ox + 18, oy + 20 + bob, 1, 1);
+      // 3. FACE & SKIN
+      ctx.fillStyle = p.skin;
+      ctx.fillRect(ox + 12, oy + 9 + bob, 8, 5);
+      ctx.fillRect(ox + 13, oy + 14 + bob, 6, 2); // chin
+      // Face shading
+      ctx.fillStyle = p.skinShade;
+      ctx.fillRect(ox + 12, oy + 13 + bob, 8, 1);
+      // Eyes with specular glint
+      ctx.fillStyle = p.eyeColor;
+      ctx.fillRect(ox + 14, oy + 11 + bob, 2, 2);
+      ctx.fillRect(ox + 18, oy + 11 + bob, 2, 2);
+      ctx.fillStyle = '#ffffff'; // sparkle
+      ctx.fillRect(ox + 15, oy + 11 + bob, 1, 1);
+      ctx.fillRect(ox + 19, oy + 11 + bob, 1, 1);
+
+      // 4. OVER-EAR HEADPHONES (Earcups on sides of head)
+      // Left earcup
+      ctx.fillStyle = p.hpOuter;
+      ctx.fillRect(ox + 8, oy + 7 + bob, 3, 7);
+      ctx.fillStyle = p.hpLed;
+      ctx.fillRect(ox + 8, oy + 9 + bob, 2, 3);
+      ctx.fillStyle = p.hpCushion;
+      ctx.fillRect(ox + 10, oy + 8 + bob, 2, 5);
+
+      // Right earcup
+      ctx.fillStyle = p.hpOuter;
+      ctx.fillRect(ox + 21, oy + 7 + bob, 3, 7);
+      ctx.fillStyle = p.hpLed;
+      ctx.fillRect(ox + 22, oy + 9 + bob, 2, 3);
+      ctx.fillStyle = p.hpCushion;
+      ctx.fillRect(ox + 20, oy + 8 + bob, 2, 5);
+
+      // 5. HOODIE (Torso & Collar)
+      ctx.fillStyle = p.hoodieCollar;
+      ctx.fillRect(ox + 11, oy + 15 + bob, 10, 2);
+      ctx.fillStyle = p.hoodieBody;
+      ctx.fillRect(ox + 10, oy + 16 + bob, 12, 8);
+      // Shoulder highlight
+      ctx.fillStyle = p.hoodieHighlight;
+      ctx.fillRect(ox + 10, oy + 16 + bob, 12, 1);
+      // Kangaroo pocket
+      ctx.fillStyle = p.hoodiePocket;
+      ctx.fillRect(ox + 12, oy + 20 + bob, 8, 4);
+      ctx.fillStyle = p.hoodieHighlight;
+      ctx.fillRect(ox + 12, oy + 20 + bob, 8, 1);
+      // Drawstrings with aglets
+      ctx.fillStyle = p.drawstring;
+      ctx.fillRect(ox + 13, oy + 17 + bob, 1, 4);
+      ctx.fillRect(ox + 18, oy + 17 + bob, 1, 4);
+      ctx.fillStyle = p.drawstringTip;
+      ctx.fillRect(ox + 13, oy + 20 + bob, 1, 1);
+      ctx.fillRect(ox + 18, oy + 20 + bob, 1, 1);
+    }
 
     // 6. ARMS & HANDS
-    ctx.fillStyle = p.hoodieBody;
+    ctx.fillStyle = p.isCoordinator ? (p.shirtBody || '#172554') : p.hoodieBody;
     if (frameType === 'run') {
       const step = tick % 4;
       if (step === 0) {

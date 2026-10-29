@@ -116,6 +116,13 @@ export const TRANSLATIONS = {
     welcomeTdwSubtitle: 'PARABÉNS, PROGRAMADOR! CONQUISTASTE A WEB STACK COMPLETA!',
     welcomeTdwLore: 'Completaste todos os desafios do Kernel: HTML (Estrutura), CSS (Estilo), JavaScript (Execução), Testes & QA (Resiliência) e Inteligência Artificial (Inovação). O sistema web está totalmente funcional e livre de bugs!',
     btnWelcomeCredits: 'VER CRÉDITOS FINAIS ►',
+    skinUnlockedTitle: '★ NOVA SKIN DESBLOQUEADA! ★',
+    skinUnlockedSubtitle: 'Desparasitaste o Kernel e desbloqueaste o Developer Coordenador!',
+    skinCoordinatorName: 'Developer Coordenador',
+    skinCoordinatorDesc: 'Homem branco, camisa azul escura, calças de ganga, óculos e cabelo branco em crista.',
+    btnEquipNow: 'EQUIPAR AGORA',
+    btnEquipped: '✓ EQUIPADA!',
+    skinLockedDesc: '🔒 Bloqueado: Vence o jogo (Nível 16) para desbloquear!',
 
     // In-Game Toasts
     fragCollected: 'Fragmento HTML recolhido!',
@@ -271,11 +278,17 @@ export const TRANSLATIONS = {
     victoryAuthors: 'Francisco Mesquita & Gonçalo Abreu',
     btnPlayAgain: 'PLAY AGAIN ↺',
 
-    // Modals - Welcome to TDW
     welcomeTdwTitle: 'Welcome to TDW',
     welcomeTdwSubtitle: 'CONGRATULATIONS, DEVELOPER! YOU CONQUERED THE FULL WEB STACK!',
     welcomeTdwLore: 'You mastered every tier of the Kernel: HTML (Structure), CSS (Style), JavaScript (Execution), Testing & QA (Resilience), and Artificial Intelligence (Innovation). The web system is fully online and bug-free!',
     btnWelcomeCredits: 'VIEW FINAL CREDITS ►',
+    skinUnlockedTitle: '★ NEW SKIN UNLOCKED! ★',
+    skinUnlockedSubtitle: 'You purified the Kernel and unlocked the Coordinator Developer!',
+    skinCoordinatorName: 'Lead Coordinator Developer',
+    skinCoordinatorDesc: 'Fair skin, dark navy shirt, denim jeans, glasses and white crest hair.',
+    btnEquipNow: 'EQUIP NOW',
+    btnEquipped: '✓ EQUIPPED!',
+    skinLockedDesc: '🔒 Locked: Beat the game (Level 16) to unlock!',
 
     // In-Game Toasts
     fragCollected: 'HTML fragment collected!',

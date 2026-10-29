@@ -72,6 +72,14 @@ export class UIManager {
     this.welcomeTdwLore = document.getElementById('welcome-tdw-lore-text');
     this.lblBtnWelcomeCredits = document.getElementById('lbl-btn-welcome-credits');
 
+    // Unlocked Coordinator Skin Reward Elements
+    this.btnEquipWelcome = document.getElementById('btn-equip-coordinator-welcome');
+    this.btnEquipVictory = document.getElementById('btn-equip-coordinator-victory');
+    this.canvasRewardWelcome = document.getElementById('canvas-skin-reward-welcome');
+    this.canvasRewardVictory = document.getElementById('canvas-skin-reward-victory');
+    this.lblEquipWelcome = document.getElementById('lbl-equip-welcome');
+    this.lblEquipVictory = document.getElementById('lbl-equip-victory');
+
     // Press Start trigger
     this.pressStartTrigger = document.getElementById('press-start-trigger');
 
@@ -471,6 +479,25 @@ export class UIManager {
       this.showTitleScreen();
     });
 
+    // Equip Developer Coordenador Skin Buttons (from Welcome to TDW & Victory Screens)
+    const handleEquipCoordinator = () => {
+      Storage.unlockSkin('coordinator');
+      Storage.setSkin('coordinator');
+      sounds.playCollect();
+      sounds.playVictory();
+      if (this.callbacks && this.callbacks.onChangeSkin) {
+        this.callbacks.onChangeSkin('coordinator');
+      }
+      this.updateCoordinatorEquipButtons();
+      this.renderSkinsGrid();
+      this.updateTelemetry();
+      const isEn = i18n.getLang() === 'en';
+      this.showToast(isEn ? 'SKIN EQUIPPED: COORDINATOR DEVELOPER!' : 'SKIN EQUIPADA: DEVELOPER COORDENADOR!', 3200);
+    };
+
+    if (this.btnEquipWelcome) this.btnEquipWelcome.addEventListener('click', handleEquipCoordinator);
+    if (this.btnEquipVictory) this.btnEquipVictory.addEventListener('click', handleEquipCoordinator);
+
     // Virtual On-Screen Controls (Mouse & Touch)
     const bindVBtn = (id, key) => {
       const el = document.getElementById(id);
@@ -649,6 +676,23 @@ export class UIManager {
     if (this.welcomeTdwLore) this.welcomeTdwLore.textContent = i18n.t('welcomeTdwLore');
     if (this.lblBtnWelcomeCredits) this.lblBtnWelcomeCredits.textContent = i18n.t('btnWelcomeCredits');
 
+    // Unlocked Developer Coordenador Reward text
+    const welcomeSkinTitle = document.getElementById('welcome-skin-unlocked-title');
+    if (welcomeSkinTitle) welcomeSkinTitle.textContent = i18n.t('skinUnlockedTitle');
+    const welcomeSkinName = document.getElementById('welcome-skin-name');
+    if (welcomeSkinName) welcomeSkinName.textContent = i18n.t('skinCoordinatorName');
+    const welcomeSkinDesc = document.getElementById('welcome-skin-desc');
+    if (welcomeSkinDesc) welcomeSkinDesc.textContent = i18n.t('skinCoordinatorDesc');
+
+    const victorySkinTitle = document.getElementById('victory-skin-unlocked-title');
+    if (victorySkinTitle) victorySkinTitle.textContent = i18n.t('skinUnlockedTitle');
+    const victorySkinName = document.getElementById('victory-skin-name');
+    if (victorySkinName) victorySkinName.textContent = i18n.t('skinCoordinatorName');
+    const victorySkinDesc = document.getElementById('victory-skin-desc');
+    if (victorySkinDesc) victorySkinDesc.textContent = i18n.t('skinCoordinatorDesc');
+
+    this.updateCoordinatorEquipButtons();
+
     // Sound button text
     this.updateSoundButtons(Storage.isMuted());
     this.updateAudioButtons();
@@ -736,9 +780,10 @@ export class UIManager {
     Object.keys(SKINS_DATA).forEach(skinKey => {
       const skin = SKINS_DATA[skinKey];
       const isCurrent = (skinKey === activeSkin);
+      const isUnlocked = Storage.isSkinUnlocked(skinKey);
 
       const card = document.createElement('div');
-      card.className = `skin-card ${isCurrent ? 'active' : ''}`;
+      card.className = `skin-card ${isCurrent ? 'active' : ''} ${isUnlocked ? '' : 'locked'}`;
       card.setAttribute('data-skin', skinKey);
 
       const canvas = document.createElement('canvas');
@@ -748,10 +793,12 @@ export class UIManager {
       TextureGenerator.drawSkinPreview(canvas, skinKey);
 
       const nameText = isEn ? skin.nameEn : skin.namePt;
-      const descText = isEn ? skin.descEn : skin.descPt;
+      const descText = isUnlocked
+        ? (isEn ? skin.descEn : skin.descPt)
+        : (isEn ? '🔒 Locked: Beat Level 16 (Game Boss) to unlock!' : '🔒 Bloqueado: Vence o Nível 16 (Boss Final) para desbloquear!');
 
       card.innerHTML = `
-        ${isCurrent ? `<span class="skin-badge-active">${i18n.t('skinActive')}</span>` : ''}
+        ${isCurrent ? `<span class="skin-badge-active">${i18n.t('skinActive')}</span>` : (!isUnlocked ? `<span class="skin-badge-locked">🔒 ${isEn ? 'LOCKED' : 'BLOQUEADO'}</span>` : '')}
         <div class="skin-info">
           <span class="skin-name">${nameText}</span>
           <span class="skin-tag">${descText}</span>
@@ -760,6 +807,11 @@ export class UIManager {
       card.insertBefore(canvas, card.firstChild);
 
       card.addEventListener('click', () => {
+        if (!isUnlocked) {
+          sounds.playJsFail();
+          this.showToast(i18n.t('skinLockedDesc'), 2500);
+          return;
+        }
         sounds.playCollect();
         Storage.setSkin(skinKey);
         if (this.callbacks && this.callbacks.onChangeSkin) {
@@ -1000,10 +1052,37 @@ export class UIManager {
     this.screenLevelComplete.classList.remove('hidden');
   }
 
+  updateCoordinatorEquipButtons() {
+    const isCurrent = (Storage.getSkin() === 'coordinator');
+    const text = isCurrent ? i18n.t('btnEquipped') : i18n.t('btnEquipNow');
+    const cls = `cyber-btn ${isCurrent ? 'btn-equipped' : 'btn-primary btn-equip-reward'}`;
+
+    if (this.btnEquipWelcome) {
+      this.btnEquipWelcome.className = cls;
+      if (this.lblEquipWelcome) this.lblEquipWelcome.textContent = text;
+    }
+    if (this.btnEquipVictory) {
+      this.btnEquipVictory.className = cls;
+      if (this.lblEquipVictory) this.lblEquipVictory.textContent = text;
+    }
+  }
+
+  renderSkinRewardPreviews() {
+    if (this.canvasRewardWelcome) {
+      TextureGenerator.drawSkinPreview(this.canvasRewardWelcome, 'coordinator');
+    }
+    if (this.canvasRewardVictory) {
+      TextureGenerator.drawSkinPreview(this.canvasRewardVictory, 'coordinator');
+    }
+  }
+
   showWelcomeTdwScreen() {
     this.hideAllModals();
     sounds.playVictory();
+    Storage.unlockSkin('coordinator');
     this.applyTranslations();
+    this.renderSkinRewardPreviews();
+    this.updateCoordinatorEquipButtons();
     if (this.screenWelcomeTdw) {
       this.screenWelcomeTdw.classList.remove('hidden');
     } else {
@@ -1014,6 +1093,10 @@ export class UIManager {
   showVictoryScreen() {
     this.hideAllModals();
     sounds.playVictory();
+    Storage.unlockSkin('coordinator');
+    this.applyTranslations();
+    this.renderSkinRewardPreviews();
+    this.updateCoordinatorEquipButtons();
 
     const save = Storage.load();
     const isEn = i18n.getLang() === 'en';
@@ -1028,11 +1111,13 @@ export class UIManager {
     });
 
     const summaryBox = document.getElementById('victory-stats-summary');
-    summaryBox.innerHTML = `
-      <div><span class="highlight-cyan">${isEn ? 'TOTAL STARS:' : 'ESTRELAS:'}</span> ${totalStars} / ${LEVELS.length * 3} ★</div>
-      <div><span class="highlight-cyan">${isEn ? 'TOTAL DEATHS:' : 'MORTES TOTAIS:'}</span> ${totalDeaths} 💀</div>
-      <div><span class="highlight-cyan">${isEn ? 'TOTAL TIME:' : 'TEMPO TOTAL:'}</span> ${totalBestTime.toFixed(1)}s ⏱</div>
-    `;
+    if (summaryBox) {
+      summaryBox.innerHTML = `
+        <div><span class="highlight-cyan">${isEn ? 'TOTAL STARS:' : 'ESTRELAS:'}</span> ${totalStars} / ${LEVELS.length * 3} ★</div>
+        <div><span class="highlight-cyan">${isEn ? 'TOTAL DEATHS:' : 'MORTES TOTAIS:'}</span> ${totalDeaths} 💀</div>
+        <div><span class="highlight-cyan">${isEn ? 'TOTAL TIME:' : 'TEMPO TOTAL:'}</span> ${totalBestTime.toFixed(1)}s ⏱</div>
+      `;
+    }
 
     this.screenVictory.classList.remove('hidden');
   }

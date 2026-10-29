@@ -16,6 +16,7 @@ export class Storage {
       musicMuted: false,
       sfxMuted: false,
       skin: 'default',
+      unlockedSkins: ['default', 'cyber', 'stealth', 'synth'],
       lang: 'pt',
       levels
     };
@@ -34,6 +35,7 @@ export class Storage {
         musicMuted: !!parsed.musicMuted,
         sfxMuted: !!parsed.sfxMuted,
         skin: parsed.skin || 'default',
+        unlockedSkins: parsed.unlockedSkins || ['default', 'cyber', 'stealth', 'synth'],
         lang: parsed.lang || 'pt',
         levels: { ...def.levels, ...(parsed.levels || {}) }
       };
@@ -77,8 +79,42 @@ export class Storage {
       data.unlockedLevel = levelId + 1;
     }
 
+    // Completing level 16 (final boss) unlocks the Developer Coordenador skin
+    if (levelId === 16) {
+      data.unlockedSkins = data.unlockedSkins || ['default', 'cyber', 'stealth', 'synth'];
+      if (!data.unlockedSkins.includes('coordinator')) {
+        data.unlockedSkins.push('coordinator');
+      }
+    }
+
     Storage.save(data);
     return data.levels[levelId];
+  }
+
+  static isSkinUnlocked(skinId) {
+    if (skinId === 'default' || skinId === 'cyber' || skinId === 'stealth' || skinId === 'synth') {
+      return true;
+    }
+    const data = Storage.load();
+    if (skinId === 'coordinator') {
+      return (data.unlockedSkins && data.unlockedSkins.includes('coordinator')) ||
+             !!(data.levels && data.levels[16] && data.levels[16].completed);
+    }
+    return false;
+  }
+
+  static unlockSkin(skinId) {
+    const data = Storage.load();
+    data.unlockedSkins = data.unlockedSkins || ['default', 'cyber', 'stealth', 'synth'];
+    if (!data.unlockedSkins.includes(skinId)) {
+      data.unlockedSkins.push(skinId);
+      Storage.save(data);
+    }
+  }
+
+  static isGameCompleted() {
+    const data = Storage.load();
+    return !!(data.levels && data.levels[16] && data.levels[16].completed);
   }
 
   static isMuted() {
