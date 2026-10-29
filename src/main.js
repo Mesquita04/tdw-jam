@@ -39,6 +39,7 @@ let gameSceneInstance = null;
 const uiManager = new UIManager({
   onStartLevel: (levelId) => {
     sounds.ensureContext();
+    sounds.restartBgm();
     const gameScene = game.scene.getScene('GameScene');
     if (!gameScene || !gameScene.scene.isActive()) {
       game.scene.start('GameScene', { levelId: levelId, uiManager: uiManager });
@@ -70,6 +71,7 @@ const uiManager = new UIManager({
     }
   },
   onReturnToTitle: () => {
+    sounds.restartBgm();
     const scene = game.scene.getScene('GameScene');
     if (scene && scene.scene.isActive()) {
       scene.scene.stop();

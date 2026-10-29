@@ -11,8 +11,20 @@ export class SoundManager {
     this.masterGain = null;
     this.initialized = false;
     this.bgmPlaying = false;
-    this.bgmInterval = null;
-    this.bgmStep = 0;
+    this.bgmAudio = null;
+    this.initAudioElement();
+  }
+
+  initAudioElement() {
+    if (this.bgmAudio) return;
+    try {
+      this.bgmAudio = new Audio('/AIHB-8BIT.mp3');
+      this.bgmAudio.loop = true;
+      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : 0.35;
+      this.bgmAudio.preload = 'auto';
+    } catch (e) {
+      console.warn('Could not initialize BGM audio element:', e);
+    }
   }
 
   init() {
@@ -29,6 +41,7 @@ export class SoundManager {
     } catch (e) {
       console.warn('Web Audio API not supported or blocked:', e);
     }
+    this.initAudioElement();
   }
 
   ensureContext() {
@@ -45,6 +58,9 @@ export class SoundManager {
     if (this.masterGain && this.ctx) {
       this.masterGain.gain.setValueAtTime(this.muted ? 0 : 0.25, this.ctx.currentTime);
     }
+    if (this.bgmAudio) {
+      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : 0.35;
+    }
     if (this.muted) {
       this.stopBgm();
     } else if (!this.musicMuted) {
@@ -55,6 +71,9 @@ export class SoundManager {
 
   setMusicMuted(muted) {
     this.musicMuted = !!muted;
+    if (this.bgmAudio) {
+      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : 0.35;
+    }
     if (this.musicMuted) {
       this.stopBgm();
     } else if (!this.muted) {
@@ -68,87 +87,44 @@ export class SoundManager {
     return this.sfxMuted;
   }
 
-  // --- Real-time Web Audio Background Music (BGM Synthesizer) ---
+  // --- Background Music (AIHB-8BIT.mp3) ---
   startBgm() {
-    if (this.bgmPlaying || this.musicMuted || this.muted) return;
+    if (this.musicMuted || this.muted) return;
     this.ensureContext();
-    if (!this.ctx || !this.masterGain) return;
-
-    this.bgmPlaying = true;
-    this.bgmStep = 0;
-
-    // Cyberpunk synthwave progression: Am -> F -> C -> G
-    const bassNotes = [
-      110.00, 110.00, 110.00, 110.00, // A2
-      87.31,  87.31,  87.31,  87.31,  // F2
-      130.81, 130.81, 130.81, 130.81, // C3
-      98.00,  98.00,  98.00,  98.00   // G2
-    ];
-
-    const leadNotes = [
-      220.00, 261.63, 329.63, 440.00, // A3, C4, E4, A4
-      174.61, 220.00, 261.63, 349.23, // F3, A3, C4, F4
-      261.63, 329.63, 392.00, 523.25, // C4, E4, G4, C5
-      196.00, 246.94, 293.66, 392.00  // G3, B3, D4, G4
-    ];
-
-    const stepIntervalMs = 180; // ~166 BPM 16th note cyber clock
-
-    this.bgmInterval = setInterval(() => {
-      if (!this.bgmPlaying || this.musicMuted || this.muted || !this.ctx || this.ctx.state === 'suspended') return;
-
-      const idx = this.bgmStep % 16;
-      this.bgmStep++;
-
-      const now = this.ctx.currentTime;
-      const bFreq = bassNotes[idx];
-      const lFreq = leadNotes[idx];
-
-      try {
-        // 1. Warm Triangle Bass
-        const bassOsc = this.ctx.createOscillator();
-        const bassGain = this.ctx.createGain();
-        bassOsc.type = 'triangle';
-        bassOsc.frequency.setValueAtTime(bFreq, now);
-
-        bassGain.gain.setValueAtTime(0.08, now);
-        bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
-
-        bassOsc.connect(bassGain);
-        bassGain.connect(this.masterGain);
-        bassOsc.start(now);
-        bassOsc.stop(now + 0.16);
-
-        // 2. Filtered Analog Arpeggio Lead
-        const leadOsc = this.ctx.createOscillator();
-        const leadGain = this.ctx.createGain();
-        leadOsc.type = 'sawtooth';
-        leadOsc.frequency.setValueAtTime(lFreq, now);
-
-        const filter = this.ctx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(850, now);
-        filter.frequency.exponentialRampToValueAtTime(320, now + 0.14);
-
-        leadGain.gain.setValueAtTime(0.04, now);
-        leadGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
-
-        leadOsc.connect(filter);
-        filter.connect(leadGain);
-        leadGain.connect(this.masterGain);
-        leadOsc.start(now);
-        leadOsc.stop(now + 0.14);
-      } catch (e) {
-        // Safe catch for tab suspend
+    if (!this.bgmAudio) {
+      this.initAudioElement();
+    }
+    if (this.bgmAudio) {
+      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : 0.35;
+      const playPromise = this.bgmAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          this.bgmPlaying = true;
+        }).catch(() => {
+          // Autoplay policy: will start upon first user interaction
+        });
       }
-    }, stepIntervalMs);
+    }
   }
 
   stopBgm() {
     this.bgmPlaying = false;
-    if (this.bgmInterval) {
-      clearInterval(this.bgmInterval);
-      this.bgmInterval = null;
+    if (this.bgmAudio) {
+      this.bgmAudio.pause();
+    }
+  }
+
+  restartBgm() {
+    if (!this.bgmAudio) {
+      this.initAudioElement();
+    }
+    if (this.bgmAudio) {
+      try {
+        this.bgmAudio.currentTime = 0;
+      } catch (e) {}
+    }
+    if (!this.musicMuted && !this.muted) {
+      this.startBgm();
     }
   }
 

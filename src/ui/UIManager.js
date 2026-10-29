@@ -948,6 +948,7 @@ export class UIManager {
     this.screenTitle.classList.remove('hidden');
     this.updateTelemetry();
     this.updateTitleCreditsButton();
+    sounds.restartBgm();
     if (this.callbacks && this.callbacks.onReturnToTitle) {
       this.callbacks.onReturnToTitle();
     }
