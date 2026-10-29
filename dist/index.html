@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>CTRL + ALT + ESCAPE — O sistema conta contigo</title>
+  <title>TDW: ALT-F4 — uma experiência TDW</title>
   <meta name="description" content="Um jogo retro 2D de plataformas e puzzles focado em desenvolvimento web (HTML, CSS, JS). Desparasita o sistema e restaura o Kernel!" />
   <!-- Google Fonts: JetBrains Mono / Fira Code + Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-Cqnh4uxg.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CNyxp_An.css">
+  <script type="module" crossorigin src="./assets/index-nDTSyDIx.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DBo3afBC.css">
 </head>
 <body>
   <div id="game-app">
@@ -130,9 +130,9 @@
         <div class="bootloader-body">
           <div class="boot-brand">
             <span class="boot-prompt-tag">$</span>
-            <h1 class="game-title">CTRL + ALT + ESCAPE</h1>
+            <h1 class="game-title">TDW: ALT-F4</h1>
           </div>
-          <p class="tagline" id="splash-tagline">"The system counts on you."</p>
+          <p class="tagline" id="splash-tagline">"uma experiência TDW"</p>
 
           <div class="boot-log-box">
             <div class="boot-log-line"><span class="log-ok">[ OK ]</span> Mounted /dev/vda1 on /kernel (ext4)</div>
@@ -199,7 +199,7 @@
             <span class="win-dot dot-close"></span>
             <span class="win-dot dot-min"></span>
             <span class="win-dot dot-max" id="btn-win-fullscreen" title="Ecrã Inteiro"></span>
-            <span class="header-system-title">CTRL_ALT_ESCAPE // v1.2.0-LTS</span>
+            <span class="header-system-title">TDW_ALT_F4 // v1.2.0-LTS</span>
             <span class="sys-status-tag"><span class="pulse-indicator"></span> V8_ACTIVE</span>
           </div>
           <div class="header-right">
@@ -228,8 +228,8 @@
               <span class="hero-chip">SKIN: <strong id="lbl-telem-skin">DEV CLÁSSICO</strong></span>
             </div>
 
-            <h1 class="centered-game-logo">CTRL + ALT + ESCAPE</h1>
-            <p class="tagline centered-tagline" id="title-tagline">&gt; "O sistema conta contigo." <span class="term-cursor">█</span></p>
+            <h1 class="centered-game-logo">TDW: ALT-F4</h1>
+            <p class="tagline centered-tagline" id="title-tagline">&gt; "uma experiência TDW" <span class="term-cursor">█</span></p>
 
             <!-- Tech Pillars -->
             <div class="tech-spec-bar centered-tech-spec">
@@ -500,7 +500,7 @@
             <p class="highlight-cyan team-title" id="credits-team-heading"><strong>EQUIPA: NET YAHOO</strong></p>
             <p class="team-members"><strong>• Francisco Mesquita</strong></p>
             <p class="team-members"><strong>• Gonçalo Abreu</strong></p>
-            <p class="team-statement" id="credits-team-statement">"Foi tudo feito pelos Net Yahoo, a equipa do Francisco Mesquita e Gonçalo Abreu."</p>
+            <p class="team-statement" id="credits-team-statement">"Desenvolvido pela equipa Net Yahoo, constituída pelo Francisco Mesquita e Gonçalo Abreu."</p>
           </div>
           <p id="credits-jam-text">Desenvolvido por Net Yahoo para a TDW 24-Hour Game Jam.</p>
           <hr class="cyber-divider" />
@@ -536,6 +536,38 @@
           </button>
           <button id="btn-menu-pause" class="cyber-btn">
             <span class="btn-bracket">[</span> <span id="lbl-btn-menu-pause">MENU PRINCIPAL</span> <span class="btn-bracket">]</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Over / Player Death Modal -->
+    <div id="screen-game-over" class="ui-modal-overlay hidden">
+      <div class="cyber-panel game-over-panel">
+        <div class="death-glitch-badge">
+          <span class="death-icon">☠</span>
+          <span class="death-code">KERNEL_PANIC // 0xDEADBEEF</span>
+        </div>
+        <h2 class="panel-heading text-rose" id="game-over-title">KERNEL PANIC!</h2>
+        <p class="game-over-sub" id="game-over-sub">O processo do programador sofreu uma falha fatal.</p>
+
+        <div class="game-over-stats-box">
+          <div class="stat-line">
+            <span id="lbl-game-over-level">Nível Atual:</span>
+            <span id="game-over-level-val" class="stat-val highlight-cyan">Nível 1</span>
+          </div>
+          <div class="stat-line">
+            <span id="lbl-game-over-deaths">Falhas / Mortes Acumuladas:</span>
+            <span id="game-over-deaths-val" class="stat-val highlight-magenta">1</span>
+          </div>
+        </div>
+
+        <div class="menu-button-group horizontal">
+          <button id="btn-game-over-retry" class="cyber-btn btn-primary btn-game-over-cta">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-game-over-retry">JOGAR NOVAMENTE (R / ENTER)</span> <span class="btn-bracket">]</span>
+          </button>
+          <button id="btn-game-over-menu" class="cyber-btn">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-game-over-menu">MENU PRINCIPAL</span> <span class="btn-bracket">]</span>
           </button>
         </div>
       </div>
@@ -641,7 +673,6 @@
             <canvas id="canvas-skin-reward-welcome" class="reward-skin-canvas" width="48" height="48"></canvas>
             <div class="reward-skin-info">
               <span class="reward-skin-name" id="welcome-skin-name">Developer Coordenador</span>
-              <span class="reward-skin-desc" id="welcome-skin-desc">Homem branco, camisa azul escura, calças de ganga, óculos e cabelo branco em crista</span>
             </div>
             <button id="btn-equip-coordinator-welcome" class="cyber-btn btn-primary btn-equip-reward">
               <span id="lbl-equip-welcome">EQUIPAR AGORA</span>
@@ -668,7 +699,7 @@
         <div class="final-credits-banner" id="victory-final-credits-banner">
           <div class="final-credits-header" id="victory-final-credits-header">★ CRÉDITOS FINAIS ★</div>
           <p class="final-credits-statement" id="victory-statement">
-            "Foi tudo feito pelos Net Yahoo, a equipa do Francisco Mesquita e Gonçalo Abreu."
+            "Desenvolvido pela equipa Net Yahoo, constituída pelo Francisco Mesquita e Gonçalo Abreu."
           </p>
           <div class="final-credits-details">
             <span class="author-tag">Francisco Mesquita</span>
@@ -693,7 +724,6 @@
             <canvas id="canvas-skin-reward-victory" class="reward-skin-canvas" width="48" height="48"></canvas>
             <div class="reward-skin-info">
               <span class="reward-skin-name" id="victory-skin-name">Developer Coordenador</span>
-              <span class="reward-skin-desc" id="victory-skin-desc">Homem branco, camisa azul escura, calças de ganga, óculos e cabelo branco em crista</span>
             </div>
             <button id="btn-equip-coordinator-victory" class="cyber-btn btn-primary btn-equip-reward">
               <span id="lbl-equip-victory">EQUIPAR AGORA</span>

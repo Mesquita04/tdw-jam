@@ -1705,8 +1705,7 @@ html, body {
 }
 
 .skin-tag {
-  font-size: 10px;
-  color: var(--text-muted);
+  display: none !important;
 }
 
 .skin-card.locked {
@@ -2257,9 +2256,7 @@ html, body {
 }
 
 .reward-skin-desc {
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--text-secondary);
+  display: none !important;
 }
 
 .btn-equip-reward {
@@ -2276,6 +2273,71 @@ html, body {
   font-weight: 800 !important;
   cursor: default !important;
   box-shadow: 0 0 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* --- Game Over (Death) Screen --- */
+.game-over-panel {
+  text-align: center;
+  max-width: 520px;
+  background: radial-gradient(ellipse at center, rgba(30, 10, 18, 0.98), rgba(7, 9, 15, 0.98));
+  border: 1px solid rgba(244, 63, 94, 0.45);
+  box-shadow: 0 0 35px rgba(244, 63, 94, 0.25), inset 0 0 20px rgba(244, 63, 94, 0.08);
+  padding: 26px 30px;
+}
+
+.death-glitch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #f43f5e;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.death-icon {
+  font-size: 14px;
+}
+
+.death-code {
+  color: #fca5a5;
+}
+
+.game-over-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.game-over-stats-box {
+  background: #090c13;
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  border-radius: 6px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.btn-game-over-cta {
+  background: rgba(244, 63, 94, 0.2) !important;
+  border-color: #f43f5e !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.35) !important;
+}
+
+.btn-game-over-cta:hover {
+  background: #f43f5e !important;
+  color: #ffffff !important;
 }
 
 .hidden {

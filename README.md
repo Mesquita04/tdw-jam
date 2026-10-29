@@ -1,6 +1,6 @@
-# CTRL + ALT + ESCAPE
+# TDW: ALT-F4
 
-> **"O sistema conta contigo."**
+> **"uma experiência TDW"**
 
 Um jogo retro 2D de plataformas e puzzles ambientado dentro de um sistema operativo corrompido, desenvolvido para a **24-Hour Game Jam** com foco no tema de **Desenvolvimento Web (HTML, CSS e JavaScript)**.
 
@@ -108,7 +108,7 @@ Cada nível atribui até 3 estrelas:
 
 ## 👥 Créditos do Projeto (Net Yahoo)
 
-**Foi tudo feito pelos Net Yahoo, a equipa do Francisco Mesquita e Gonçalo Abreu.**
+**Desenvolvido pela equipa Net Yahoo, constituída pelo Francisco Mesquita e Gonçalo Abreu.**
 
 - **Equipa:** Net Yahoo
 - **Autores:** 

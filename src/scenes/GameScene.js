@@ -43,6 +43,7 @@ export class GameScene extends Phaser.Scene {
     this.collectedFragments = 0;
     this.isPaused = false;
     this.levelCompleted = false;
+    this.isDead = false;
     this.activeInteractable = null;
     this.jsSequenceEntered = [];
 
@@ -650,7 +651,8 @@ export class GameScene extends Phaser.Scene {
 
   dispatchAiCopilot(pointer = null) {
     if (!this.aiCopilot || !this.levelConfig?.hasAiCopilot) return;
-    if (this.isPaused || this.levelCompleted) return;
+    if (this.isPaused || this.levelCompleted || this.isDead) return;
+    if (this.aiCopilotState !== 'IDLE') return;
 
     // Check for remaining active tokens in the level
     const activeTokens = this.aiTokensGroup ? this.aiTokensGroup.getChildren().filter(t => t.active) : [];
@@ -883,7 +885,7 @@ export class GameScene extends Phaser.Scene {
 
   // --- Game Loop (Update) ---
   update(time, delta) {
-    if (this.isPaused || this.levelCompleted) return;
+    if (this.isPaused || this.levelCompleted || this.isDead) return;
 
     const deltaSec = delta / 1000;
     this.levelTime += deltaSec;
@@ -1432,21 +1434,28 @@ export class GameScene extends Phaser.Scene {
 
   // --- Hazard Touch / Death ---
   handleHazardTouch(player, hazard) {
-    if (this.levelCompleted) return;
+    if (this.levelCompleted || this.isDead) return;
 
+    this.isDead = true;
     sounds.playHurt();
-    this.cameras.main.shake(200, 0.012);
-    this.createParticleBurst(player.x, player.y, 'particle_magenta', 24);
+    this.cameras.main.shake(300, 0.02);
+    this.createParticleBurst(player.x, player.y, 'particle_magenta', 30);
+    this.createParticleBurst(player.x, player.y, 'particle_yellow', 15);
 
     this.deaths++;
 
-    // Respawn player at level start
-    const start = this.levelConfig.playerStart;
-    player.setPosition(start.x, start.y);
+    // Halt and hide player
     player.setVelocity(0, 0);
+    player.body.enable = false;
+    player.setAlpha(0);
+
+    // Clear active error projectiles
+    if (this.errorProjectilesGroup) {
+      this.errorProjectilesGroup.clear(true, true);
+    }
 
     if (this.uiManager) {
-      this.uiManager.showToast(i18n.t('kernelPanic'), 2000);
+      this.uiManager.showGameOver(this.levelConfig, this.deaths);
     }
   }
 

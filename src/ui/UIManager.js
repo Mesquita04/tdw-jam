@@ -65,6 +65,19 @@ export class UIManager {
     this.screenWelcomeTdw = document.getElementById('screen-welcome-tdw');
     this.screenVictory = document.getElementById('screen-victory');
 
+    // Game Over (Player Death) modal elements
+    this.screenGameOver = document.getElementById('screen-game-over');
+    this.btnGameOverRetry = document.getElementById('btn-game-over-retry');
+    this.btnGameOverMenu = document.getElementById('btn-game-over-menu');
+    this.lblGameOverLevelVal = document.getElementById('game-over-level-val');
+    this.lblGameOverDeathsVal = document.getElementById('game-over-deaths-val');
+    this.lblGameOverTitle = document.getElementById('game-over-title');
+    this.lblGameOverSub = document.getElementById('game-over-sub');
+    this.lblGameOverLevel = document.getElementById('lbl-game-over-level');
+    this.lblGameOverDeaths = document.getElementById('lbl-game-over-deaths');
+    this.lblBtnGameOverRetry = document.getElementById('lbl-btn-game-over-retry');
+    this.lblBtnGameOverMenu = document.getElementById('lbl-btn-game-over-menu');
+
     // Welcome to TDW elements
     this.btnWelcomeTdwContinue = document.getElementById('btn-welcome-tdw-continue');
     this.welcomeTdwTitle = document.getElementById('welcome-tdw-title-text');
@@ -334,8 +347,39 @@ export class UIManager {
     if (this.btnToggleSfx) this.btnToggleSfx.addEventListener('click', handleToggleSfx);
     if (this.btnToggleSfxTitle) this.btnToggleSfxTitle.addEventListener('click', handleToggleSfx);
 
-    // Keyboard Shortcuts for Developer Workstation Menu
+    // Keyboard Shortcuts for Developer Workstation Menu and Modals
     window.addEventListener('keydown', (e) => {
+      // Level complete: press ENTER to advance to next level or final victory
+      if (this.screenLevelComplete && !this.screenLevelComplete.classList.contains('hidden')) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.btnNextLevel.click();
+          return;
+        }
+      }
+
+      // Game over: press ENTER or R to play again, ESC to return to main menu
+      if (this.screenGameOver && !this.screenGameOver.classList.contains('hidden')) {
+        if (e.key === 'Enter' || e.key.toLowerCase() === 'r') {
+          e.preventDefault();
+          if (this.btnGameOverRetry) this.btnGameOverRetry.click();
+          return;
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          if (this.btnGameOverMenu) this.btnGameOverMenu.click();
+          return;
+        }
+      }
+
+      // Welcome to TDW: press ENTER to view final credits
+      if (this.screenWelcomeTdw && !this.screenWelcomeTdw.classList.contains('hidden')) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (this.btnWelcomeTdwContinue) this.btnWelcomeTdwContinue.click();
+          return;
+        }
+      }
+
       if (this.screenTitle && !this.screenTitle.classList.contains('hidden')) {
         // Ignore if a sub-modal is open on top
         if (!this.screenControls.classList.contains('hidden') ||
@@ -478,6 +522,27 @@ export class UIManager {
       this.screenVictory.classList.add('hidden');
       this.showTitleScreen();
     });
+
+    // Game Over buttons
+    if (this.btnGameOverRetry) {
+      this.btnGameOverRetry.addEventListener('click', () => {
+        sounds.playJsSwitch(2);
+        if (this.screenGameOver) this.screenGameOver.classList.add('hidden');
+        if (this.currentLevel) {
+          this.callbacks.onStartLevel(this.currentLevel.id);
+        } else {
+          this.callbacks.onRestartLevel();
+        }
+      });
+    }
+
+    if (this.btnGameOverMenu) {
+      this.btnGameOverMenu.addEventListener('click', () => {
+        sounds.playJsSwitch(1);
+        if (this.screenGameOver) this.screenGameOver.classList.add('hidden');
+        this.showTitleScreen();
+      });
+    }
 
     // Equip Developer Coordenador Skin Buttons (from Welcome to TDW & Victory Screens)
     const handleEquipCoordinator = () => {
@@ -681,15 +746,19 @@ export class UIManager {
     if (welcomeSkinTitle) welcomeSkinTitle.textContent = i18n.t('skinUnlockedTitle');
     const welcomeSkinName = document.getElementById('welcome-skin-name');
     if (welcomeSkinName) welcomeSkinName.textContent = i18n.t('skinCoordinatorName');
-    const welcomeSkinDesc = document.getElementById('welcome-skin-desc');
-    if (welcomeSkinDesc) welcomeSkinDesc.textContent = i18n.t('skinCoordinatorDesc');
 
     const victorySkinTitle = document.getElementById('victory-skin-unlocked-title');
     if (victorySkinTitle) victorySkinTitle.textContent = i18n.t('skinUnlockedTitle');
     const victorySkinName = document.getElementById('victory-skin-name');
     if (victorySkinName) victorySkinName.textContent = i18n.t('skinCoordinatorName');
-    const victorySkinDesc = document.getElementById('victory-skin-desc');
-    if (victorySkinDesc) victorySkinDesc.textContent = i18n.t('skinCoordinatorDesc');
+
+    // Game Over Modal
+    if (this.lblGameOverTitle) this.lblGameOverTitle.textContent = i18n.t('gameOverTitle');
+    if (this.lblGameOverSub) this.lblGameOverSub.textContent = i18n.t('gameOverSub');
+    if (this.lblGameOverLevel) this.lblGameOverLevel.textContent = i18n.t('deathLevel');
+    if (this.lblGameOverDeaths) this.lblGameOverDeaths.textContent = i18n.t('deathCount');
+    if (this.lblBtnGameOverRetry) this.lblBtnGameOverRetry.textContent = i18n.t('btnGameOverRetry');
+    if (this.lblBtnGameOverMenu) this.lblBtnGameOverMenu.textContent = i18n.t('btnGameOverMenu');
 
     this.updateCoordinatorEquipButtons();
 
@@ -801,7 +870,6 @@ export class UIManager {
         ${isCurrent ? `<span class="skin-badge-active">${i18n.t('skinActive')}</span>` : (!isUnlocked ? `<span class="skin-badge-locked">🔒 ${isEn ? 'LOCKED' : 'BLOQUEADO'}</span>` : '')}
         <div class="skin-info">
           <span class="skin-name">${nameText}</span>
-          <span class="skin-tag">${descText}</span>
         </div>
       `;
       card.insertBefore(canvas, card.firstChild);
@@ -846,6 +914,7 @@ export class UIManager {
     if (this.screenPause) this.screenPause.classList.add('hidden');
     if (this.screenTerminal) this.screenTerminal.classList.add('hidden');
     if (this.screenLevelComplete) this.screenLevelComplete.classList.add('hidden');
+    if (this.screenGameOver) this.screenGameOver.classList.add('hidden');
     if (this.screenWelcomeTdw) this.screenWelcomeTdw.classList.add('hidden');
     if (this.screenVictory) this.screenVictory.classList.add('hidden');
     if (this.hudHintCard) this.hudHintCard.classList.add('hidden');
@@ -1050,6 +1119,27 @@ export class UIManager {
     }
 
     this.screenLevelComplete.classList.remove('hidden');
+  }
+
+  showGameOver(levelConfig, deaths) {
+    this.hidePrompt();
+    if (this.hudHintCard) this.hudHintCard.classList.add('hidden');
+    if (this.btnHintPill) this.btnHintPill.classList.add('hidden');
+
+    const isEn = i18n.getLang() === 'en';
+    const lvlName = isEn ? (levelConfig.nameEn || levelConfig.name) : levelConfig.name;
+    const lvlSub = isEn ? (levelConfig.subEn || levelConfig.subtitle) : levelConfig.subtitle;
+
+    if (this.lblGameOverLevelVal) {
+      this.lblGameOverLevelVal.textContent = `${lvlName} — ${lvlSub}`;
+    }
+    if (this.lblGameOverDeathsVal) {
+      this.lblGameOverDeathsVal.textContent = String(deaths);
+    }
+    this.applyTranslations();
+    if (this.screenGameOver) {
+      this.screenGameOver.classList.remove('hidden');
+    }
   }
 
   updateCoordinatorEquipButtons() {

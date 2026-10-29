@@ -15,7 +15,8 @@ export const TRANSLATIONS = {
     langEn: 'ENGLISH (EN)',
 
     // Title Screen
-    tagline: '"O sistema conta contigo."',
+    gameTitle: 'TDW: ALT-F4',
+    tagline: 'uma experiência TDW',
     btnPlay: 'JOGAR',
     btnContinue: 'CONTINUAR',
     btnLevelSelect: 'ESCOLHER NÍVEL',
@@ -27,7 +28,7 @@ export const TRANSLATIONS = {
     btnChooseLevelDesc: 'Explora os 16 setores desbloqueados na Local Storage',
     soundActive: 'SOM: ATIVO 🔊',
     soundMuted: 'SOM: DESATIVADO 🔇',
-    versionTag: 'v1.1.0 • TDW JAM • NET YAHOO',
+    versionTag: 'v1.2.0 • TDW: ALT-F4 • NET YAHOO',
 
     // Options Modal
     optionsTitle: 'CONFIGURAÇÃO DO SISTEMA (OPÇÕES)',
@@ -56,6 +57,14 @@ export const TRANSLATIONS = {
     btnRestart: 'REINICIAR NÍVEL (R)',
     btnMenu: 'MENU PRINCIPAL',
 
+    // Modals - Game Over (Player Death)
+    gameOverTitle: 'KERNEL PANIC!',
+    gameOverSub: 'O processo do programador sofreu uma falha fatal.',
+    btnGameOverRetry: 'JOGAR NOVAMENTE (R / ENTER)',
+    btnGameOverMenu: 'MENU PRINCIPAL',
+    deathLevel: 'Nível Atual:',
+    deathCount: 'Falhas / Mortes Acumuladas:',
+
     // Modals - Controls
     controlsTitle: 'MANUAL DO DESENVOLVEDOR (CONTROLOS)',
     cMove: 'Mover programador para a esquerda / direita',
@@ -76,7 +85,7 @@ export const TRANSLATIONS = {
     teamHeading: 'EQUIPA DE DESENVOLVIMENTO: NET YAHOO',
     author1: '• Francisco Mesquita',
     author2: '• Gonçalo Abreu',
-    teamStatement: 'Foi tudo feito pelos Net Yahoo, a equipa do Francisco Mesquita e Gonçalo Abreu.',
+    teamStatement: 'Desenvolvido pela equipa Net Yahoo, constituída pelo Francisco Mesquita e Gonçalo Abreu.',
     creditsSubtitle: 'Desenvolvido por Net Yahoo para a TDW 24-Hour Game Jam.',
     creditsLore: 'O jogador encarna um programador preso no próprio servidor web. O HTML constrói a estrutura, o CSS estiliza o espaço e o JavaScript executa a lógica de desinfeção.',
     techStack: 'Motor Phaser 3 • Áudio Web Audio API sintetizado • Pixel Art em Canvas Procedural',
@@ -97,9 +106,9 @@ export const TRANSLATIONS = {
     execTime: 'Tempo de Execução:',
     targetTime: 'Tempo Alvo (3ª Estrela):',
     deaths: 'Falhas / Mortes:',
-    btnNextLevel: 'PRÓXIMO NÍVEL ►',
-    btnFinalVictory: 'RESTAURAÇÃO FINAL ★',
-    btnRetry: 'REPETIR ↺',
+    btnNextLevel: 'PRÓXIMO NÍVEL (ENTER) ►',
+    btnFinalVictory: 'RESTAURAÇÃO FINAL (ENTER) ★',
+    btnRetry: 'REPETIR (R) ↺',
 
     // Modals - Victory (Créditos Finais)
     victoryTitle: 'SISTEMA RESTAURADO!',
@@ -107,7 +116,7 @@ export const TRANSLATIONS = {
     victoryLore: 'O Kernel do servidor compilou sem erros. O código está limpo e a aplicação web voltou a funcionar a 100%!',
     victoryCreditsTitle: '★ CRÉDITOS FINAIS ★',
     victoryCreditsTeam: 'JOGO CRIADO POR: NET YAHOO',
-    victoryStatement: 'Foi tudo feito pelos Net Yahoo, a equipa do Francisco Mesquita e Gonçalo Abreu.',
+    victoryStatement: 'Desenvolvido pela equipa Net Yahoo, constituída pelo Francisco Mesquita e Gonçalo Abreu.',
     victoryAuthors: 'Francisco Mesquita & Gonçalo Abreu',
     btnPlayAgain: 'JOGAR NOVAMENTE ↺',
 
@@ -115,11 +124,10 @@ export const TRANSLATIONS = {
     welcomeTdwTitle: 'Welcome to TDW',
     welcomeTdwSubtitle: 'PARABÉNS, PROGRAMADOR! CONQUISTASTE A WEB STACK COMPLETA!',
     welcomeTdwLore: 'Completaste todos os desafios do Kernel: HTML (Estrutura), CSS (Estilo), JavaScript (Execução), Testes & QA (Resiliência) e Inteligência Artificial (Inovação). O sistema web está totalmente funcional e livre de bugs!',
-    btnWelcomeCredits: 'VER CRÉDITOS FINAIS ►',
+    btnWelcomeCredits: 'VER CRÉDITOS FINAIS (ENTER) ►',
     skinUnlockedTitle: '★ NOVA SKIN DESBLOQUEADA! ★',
     skinUnlockedSubtitle: 'Desparasitaste o Kernel e desbloqueaste o Developer Coordenador!',
     skinCoordinatorName: 'Developer Coordenador',
-    skinCoordinatorDesc: 'Homem branco, camisa azul escura, calças de ganga, óculos e cabelo branco em crista.',
     btnEquipNow: 'EQUIPAR AGORA',
     btnEquipped: '✓ EQUIPADA!',
     skinLockedDesc: '🔒 Bloqueado: Vence o jogo (Nível 16) para desbloquear!',
@@ -182,7 +190,8 @@ export const TRANSLATIONS = {
     langEn: 'ENGLISH (EN)',
 
     // Title Screen
-    tagline: '"The system counts on you."',
+    gameTitle: 'TDW: ALT-F4',
+    tagline: 'uma experiência TDW',
     btnPlay: 'PLAY',
     btnContinue: 'CONTINUE',
     btnLevelSelect: 'CHOOSE LEVEL',
@@ -194,7 +203,7 @@ export const TRANSLATIONS = {
     btnChooseLevelDesc: 'Browse 16 sectors unlocked via Local Storage',
     soundActive: 'AUDIO: ON 🔊',
     soundMuted: 'AUDIO: MUTED 🔇',
-    versionTag: 'v1.1.0 • TDW JAM • NET YAHOO',
+    versionTag: 'v1.2.0 • TDW: ALT-F4 • NET YAHOO',
 
     // Options Modal
     optionsTitle: 'SYSTEM CONFIGURATION (OPTIONS)',
@@ -223,6 +232,14 @@ export const TRANSLATIONS = {
     btnRestart: 'RESTART LEVEL (R)',
     btnMenu: 'MAIN MENU',
 
+    // Modals - Game Over (Player Death)
+    gameOverTitle: 'KERNEL PANIC!',
+    gameOverSub: 'The developer process encountered a fatal crash.',
+    btnGameOverRetry: 'PLAY AGAIN (R / ENTER)',
+    btnGameOverMenu: 'MAIN MENU',
+    deathLevel: 'Current Level:',
+    deathCount: 'Total Failures / Deaths:',
+
     // Modals - Controls
     controlsTitle: 'DEVELOPER MANUAL (CONTROLS)',
     cMove: 'Move developer left / right',
@@ -243,7 +260,7 @@ export const TRANSLATIONS = {
     teamHeading: 'DEVELOPMENT TEAM: NET YAHOO',
     author1: '• Francisco Mesquita',
     author2: '• Gonçalo Abreu',
-    teamStatement: 'Everything was created by Net Yahoo, the team of Francisco Mesquita and Gonçalo Abreu.',
+    teamStatement: 'Desenvolvido pela equipa Net Yahoo, constituída pelo Francisco Mesquita e Gonçalo Abreu.',
     creditsSubtitle: 'Crafted with passion by Net Yahoo for the TDW 24-Hour Game Jam.',
     creditsLore: 'The player embodies a developer trapped inside their own web server. HTML builds structure, CSS shapes and styles space, and JavaScript executes the core purge logic.',
     techStack: 'Phaser 3 Engine • Real-time Synthesized Web Audio API • Procedural Canvas Pixel Art',
@@ -264,8 +281,8 @@ export const TRANSLATIONS = {
     execTime: 'Execution Time:',
     targetTime: 'Target Time (3rd Star):',
     deaths: 'Failures / Deaths:',
-    btnNextLevel: 'NEXT LEVEL ►',
-    btnFinalVictory: 'FINAL RESTORE ★',
+    btnNextLevel: 'NEXT LEVEL (ENTER) ►',
+    btnFinalVictory: 'FINAL RESTORE (ENTER) ★',
     btnRetry: 'RETRY ↺',
 
     // Modals - Victory (Final Credits)
@@ -274,18 +291,17 @@ export const TRANSLATIONS = {
     victoryLore: 'The server Kernel compiled with 0 errors. The codebase is clean and the web platform is running at 100% capacity!',
     victoryCreditsTitle: '★ FINAL CREDITS ★',
     victoryCreditsTeam: 'GAME CREATED BY: NET YAHOO',
-    victoryStatement: 'Everything was created by Net Yahoo, the team of Francisco Mesquita and Gonçalo Abreu.',
+    victoryStatement: 'Desenvolvido pela equipa Net Yahoo, constituída pelo Francisco Mesquita e Gonçalo Abreu.',
     victoryAuthors: 'Francisco Mesquita & Gonçalo Abreu',
     btnPlayAgain: 'PLAY AGAIN ↺',
 
     welcomeTdwTitle: 'Welcome to TDW',
     welcomeTdwSubtitle: 'CONGRATULATIONS, DEVELOPER! YOU CONQUERED THE FULL WEB STACK!',
     welcomeTdwLore: 'You mastered every tier of the Kernel: HTML (Structure), CSS (Style), JavaScript (Execution), Testing & QA (Resilience), and Artificial Intelligence (Innovation). The web system is fully online and bug-free!',
-    btnWelcomeCredits: 'VIEW FINAL CREDITS ►',
+    btnWelcomeCredits: 'VIEW FINAL CREDITS (ENTER) ►',
     skinUnlockedTitle: '★ NEW SKIN UNLOCKED! ★',
     skinUnlockedSubtitle: 'You purified the Kernel and unlocked the Coordinator Developer!',
     skinCoordinatorName: 'Lead Coordinator Developer',
-    skinCoordinatorDesc: 'Fair skin, dark navy shirt, denim jeans, glasses and white crest hair.',
     btnEquipNow: 'EQUIP NOW',
     btnEquipped: '✓ EQUIPPED!',
     skinLockedDesc: '🔒 Locked: Beat the game (Level 16) to unlock!',
