@@ -2,6 +2,8 @@
  * SoundManager - Pure Web Audio API Synthesizer
  * No external audio files needed! Generates authentic retro chiptune sound effects.
  */
+import { Storage } from '../systems/Storage.js';
+
 export class SoundManager {
   constructor() {
     this.ctx = null;
@@ -12,6 +14,7 @@ export class SoundManager {
     this.initialized = false;
     this.bgmPlaying = false;
     this.bgmAudio = null;
+    this.musicVolume = Storage.getMusicVolume();
     this.initAudioElement();
   }
 
@@ -20,7 +23,7 @@ export class SoundManager {
     try {
       this.bgmAudio = new Audio('/AIHB-8BIT.mp3');
       this.bgmAudio.loop = true;
-      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : 0.35;
+      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : this.musicVolume;
       this.bgmAudio.preload = 'auto';
     } catch (e) {
       console.warn('Could not initialize BGM audio element:', e);
@@ -59,7 +62,7 @@ export class SoundManager {
       this.masterGain.gain.setValueAtTime(this.muted ? 0 : 0.25, this.ctx.currentTime);
     }
     if (this.bgmAudio) {
-      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : 0.35;
+      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : this.musicVolume;
     }
     if (this.muted) {
       this.stopBgm();
@@ -72,7 +75,7 @@ export class SoundManager {
   setMusicMuted(muted) {
     this.musicMuted = !!muted;
     if (this.bgmAudio) {
-      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : 0.35;
+      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : this.musicVolume;
     }
     if (this.musicMuted) {
       this.stopBgm();
@@ -80,6 +83,18 @@ export class SoundManager {
       this.startBgm();
     }
     return this.musicMuted;
+  }
+
+  setMusicVolume(vol) {
+    this.musicVolume = Math.max(0, Math.min(1, Number(vol)));
+    Storage.setMusicVolume(this.musicVolume);
+    if (this.bgmAudio) {
+      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : this.musicVolume;
+    }
+  }
+
+  getMusicVolume() {
+    return this.musicVolume;
   }
 
   setSfxMuted(muted) {
@@ -95,7 +110,7 @@ export class SoundManager {
       this.initAudioElement();
     }
     if (this.bgmAudio) {
-      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : 0.35;
+      this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : this.musicVolume;
       const playPromise = this.bgmAudio.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {

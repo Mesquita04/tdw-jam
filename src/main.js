@@ -37,9 +37,13 @@ let gameSceneInstance = null;
 
 // Initialize UI Manager
 const uiManager = new UIManager({
-  onStartLevel: (levelId) => {
+  onStartLevel: (levelId, fromMainMenu = false) => {
     sounds.ensureContext();
-    sounds.restartBgm();
+    if (fromMainMenu) {
+      sounds.restartBgm();
+    } else {
+      sounds.startBgm();
+    }
     const gameScene = game.scene.getScene('GameScene');
     if (!gameScene || !gameScene.scene.isActive()) {
       game.scene.start('GameScene', { levelId: levelId, uiManager: uiManager });

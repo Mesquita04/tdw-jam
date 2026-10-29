@@ -15,6 +15,7 @@ export class Storage {
       muted: false,
       musicMuted: false,
       sfxMuted: false,
+      musicVolume: 0.2, // Starts lower by default
       skin: 'default',
       unlockedSkins: ['default', 'cyber', 'stealth', 'synth'],
       lang: 'pt',
@@ -34,6 +35,7 @@ export class Storage {
         muted: !!parsed.muted,
         musicMuted: !!parsed.musicMuted,
         sfxMuted: !!parsed.sfxMuted,
+        musicVolume: (parsed.musicVolume !== undefined && parsed.musicVolume !== null) ? Number(parsed.musicVolume) : 0.2,
         skin: parsed.skin || 'default',
         unlockedSkins: parsed.unlockedSkins || ['default', 'cyber', 'stealth', 'synth'],
         lang: parsed.lang || 'pt',
@@ -139,6 +141,17 @@ export class Storage {
   static setMusicMuted(val) {
     const data = Storage.load();
     data.musicMuted = !!val;
+    Storage.save(data);
+  }
+
+  static getMusicVolume() {
+    const data = Storage.load();
+    return (data.musicVolume !== undefined && data.musicVolume !== null) ? Number(data.musicVolume) : 0.2;
+  }
+
+  static setMusicVolume(val) {
+    const data = Storage.load();
+    data.musicVolume = Math.max(0, Math.min(1, Number(val)));
     Storage.save(data);
   }
 

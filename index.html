@@ -379,11 +379,27 @@
               <div class="audio-toggle-card">
                 <div class="audio-card-info">
                   <span class="audio-card-name" id="lbl-bgm-title">Música de Fundo (BGM)</span>
-                  <span class="audio-card-sub" id="lbl-bgm-sub">Sintetizador retro chiptune em tempo real</span>
+                  <span class="audio-card-sub" id="lbl-bgm-sub">AIHB-8BIT Retro Soundtrack</span>
                 </div>
                 <button id="btn-toggle-music" class="cyber-btn toggle-btn">
                   <span id="lbl-music-status">MÚSICA: ATIVA 🎵</span>
                 </button>
+              </div>
+
+              <!-- Volume Slider Control -->
+              <div class="audio-volume-card">
+                <div class="volume-header-row">
+                  <div class="audio-card-info">
+                    <span class="audio-card-name" id="lbl-volume-title">Volume da Música</span>
+                    <span class="audio-card-sub" id="lbl-volume-sub">Ajusta o nível sonoro da banda sonora</span>
+                  </div>
+                  <span id="lbl-music-volume-val" class="volume-percent-badge">20%</span>
+                </div>
+                <div class="volume-slider-wrapper">
+                  <span class="volume-icon-min">🔈</span>
+                  <input type="range" id="slider-music-volume" min="0" max="100" value="20" class="cyber-slider" aria-label="Volume da Música" />
+                  <span class="volume-icon-max">🔊</span>
+                </div>
               </div>
 
               <div class="audio-toggle-card">

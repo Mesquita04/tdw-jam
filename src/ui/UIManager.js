@@ -127,6 +127,8 @@ export class UIManager {
     this.btnToggleMusicTitle = document.getElementById('btn-toggle-music-title');
     this.lblMusicStatus = document.getElementById('lbl-music-status');
     this.lblQuickMusic = document.getElementById('lbl-quick-music');
+    this.sliderMusicVolume = document.getElementById('slider-music-volume');
+    this.lblMusicVolumeVal = document.getElementById('lbl-music-volume-val');
 
     this.btnToggleSfx = document.getElementById('btn-toggle-sfx');
     this.btnToggleSfxTitle = document.getElementById('btn-toggle-sfx-title');
@@ -235,7 +237,7 @@ export class UIManager {
       const save = Storage.load();
       const isGameFinished = save.levels && save.levels[16] && save.levels[16].completed;
       const targetLvl = isGameFinished ? 1 : (save.unlockedLevel || 1);
-      this.callbacks.onStartLevel(targetLvl);
+      this.callbacks.onStartLevel(targetLvl, true);
     });
 
     if (this.btnContinue) {
@@ -246,7 +248,7 @@ export class UIManager {
         const save = Storage.load();
         const isGameFinished = save.levels && save.levels[16] && save.levels[16].completed;
         const targetLvl = isGameFinished ? 1 : (save.unlockedLevel || 1);
-        this.callbacks.onStartLevel(targetLvl);
+        this.callbacks.onStartLevel(targetLvl, true);
       });
     }
 
@@ -344,6 +346,21 @@ export class UIManager {
     };
     if (this.btnToggleMusic) this.btnToggleMusic.addEventListener('click', handleToggleMusic);
     if (this.btnToggleMusicTitle) this.btnToggleMusicTitle.addEventListener('click', handleToggleMusic);
+
+    // Audio Slider: Music Volume
+    if (this.sliderMusicVolume) {
+      const handleVolumeChange = (e) => {
+        const val = parseInt(e.target.value, 10);
+        const norm = Math.max(0, Math.min(100, isNaN(val) ? 20 : val)) / 100;
+        Storage.setMusicVolume(norm);
+        sounds.setMusicVolume(norm);
+        if (this.lblMusicVolumeVal) {
+          this.lblMusicVolumeVal.textContent = `${Math.round(norm * 100)}%`;
+        }
+      };
+      this.sliderMusicVolume.addEventListener('input', handleVolumeChange);
+      this.sliderMusicVolume.addEventListener('change', handleVolumeChange);
+    }
 
     // Audio Toggles: SFX Sound Effects
     const handleToggleSfx = () => {
@@ -504,7 +521,7 @@ export class UIManager {
       sounds.playJsSwitch(2);
       this.screenLevelComplete.classList.add('hidden');
       if (this.currentLevel && this.currentLevel.id < LEVELS.length) {
-        this.callbacks.onStartLevel(this.currentLevel.id + 1);
+        this.callbacks.onStartLevel(this.currentLevel.id + 1, false);
       } else {
         this.showRollCredits();
       }
@@ -523,7 +540,7 @@ export class UIManager {
       sounds.playJsSwitch(1);
       this.screenLevelComplete.classList.add('hidden');
       if (this.currentLevel) {
-        this.callbacks.onStartLevel(this.currentLevel.id);
+        this.callbacks.onStartLevel(this.currentLevel.id, false);
       }
     });
 
@@ -537,7 +554,7 @@ export class UIManager {
     this.btnVictoryReplay.addEventListener('click', () => {
       sounds.playJsSwitch(2);
       this.screenVictory.classList.add('hidden');
-      this.callbacks.onStartLevel(1);
+      this.callbacks.onStartLevel(1, true);
     });
 
     this.btnVictoryMenu.addEventListener('click', () => {
@@ -552,7 +569,7 @@ export class UIManager {
         sounds.playJsSwitch(2);
         if (this.screenGameOver) this.screenGameOver.classList.add('hidden');
         if (this.currentLevel) {
-          this.callbacks.onStartLevel(this.currentLevel.id);
+          this.callbacks.onStartLevel(this.currentLevel.id, false);
         } else {
           this.callbacks.onRestartLevel();
         }
@@ -677,7 +694,7 @@ export class UIManager {
     if (lblStatus) lblStatus.textContent = isEn ? 'GLITCH DETECTED' : 'GLITCH DETETADO';
 
     // Options Modal Translations
-    const optHeading = document.getElementById('options-modal-heading');
+    const optHeading = document.getElementById('lbl-options-heading') || document.getElementById('options-modal-heading');
     if (optHeading) optHeading.textContent = i18n.t('optionsTitle');
     const lblOptSkins = document.getElementById('lbl-opt-skins');
     if (lblOptSkins) lblOptSkins.textContent = i18n.t('optionsSkins');
@@ -690,7 +707,11 @@ export class UIManager {
     const lblBgmTitle = document.getElementById('lbl-bgm-title');
     if (lblBgmTitle) lblBgmTitle.textContent = isEn ? 'Background Music (BGM)' : 'Música de Fundo (BGM)';
     const lblBgmSub = document.getElementById('lbl-bgm-sub');
-    if (lblBgmSub) lblBgmSub.textContent = isEn ? 'Real-time synthesized retro cyberpunk synthwave' : 'Sintetizador retro synthwave em tempo real';
+    if (lblBgmSub) lblBgmSub.textContent = isEn ? 'AIHB-8BIT Retro Soundtrack' : 'Banda sonora retro AIHB-8BIT';
+    const lblVolumeTitle = document.getElementById('lbl-volume-title');
+    if (lblVolumeTitle) lblVolumeTitle.textContent = i18n.t('volumeTitle');
+    const lblVolumeSub = document.getElementById('lbl-volume-sub');
+    if (lblVolumeSub) lblVolumeSub.textContent = i18n.t('volumeSub');
     const lblSfxTitle = document.getElementById('lbl-sfx-title');
     if (lblSfxTitle) lblSfxTitle.textContent = isEn ? 'Sound Effects (SFX)' : 'Efeitos Sonoros (SFX)';
     const lblSfxSub = document.getElementById('lbl-sfx-sub');
@@ -832,6 +853,14 @@ export class UIManager {
     }
     if (this.lblQuickMusic) {
       this.lblQuickMusic.textContent = musicMuted ? (isEn ? '[BGM: OFF]' : '[MÚSICA: OFF]') : (isEn ? '[BGM: ON]' : '[MÚSICA: ON]');
+    }
+
+    const vol = Math.round(Storage.getMusicVolume() * 100);
+    if (this.sliderMusicVolume) {
+      this.sliderMusicVolume.value = vol;
+    }
+    if (this.lblMusicVolumeVal) {
+      this.lblMusicVolumeVal.textContent = `${vol}%`;
     }
 
     if (this.btnToggleSfx && this.lblSfxStatus) {
@@ -1028,7 +1057,7 @@ export class UIManager {
         card.addEventListener('click', () => {
           sounds.playJsSwitch(2);
           this.hideAllModals();
-          this.callbacks.onStartLevel(lvl.id);
+          this.callbacks.onStartLevel(lvl.id, true);
         });
       }
 
