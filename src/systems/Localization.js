@@ -18,13 +18,31 @@ export const TRANSLATIONS = {
     tagline: '"O sistema conta contigo."',
     btnPlay: 'JOGAR',
     btnContinue: 'CONTINUAR',
-    btnLevelSelect: 'SELECIONAR NÍVEL',
+    btnLevelSelect: 'ESCOLHER NÍVEL',
+    btnOptions: 'OPÇÕES',
     btnControls: 'CONTROLOS',
     btnCredits: 'CRÉDITOS FINAIS',
     btnLang: 'IDIOMA: PT 🇵🇹',
+    btnOptionsDesc: 'Personalizar skins, música, efeitos sonoros e ecrã',
+    btnChooseLevelDesc: 'Explora os 16 setores desbloqueados na Local Storage',
     soundActive: 'SOM: ATIVO 🔊',
     soundMuted: 'SOM: DESATIVADO 🔇',
     versionTag: 'v1.1.0 • TDW JAM • NET YAHOO',
+
+    // Options Modal
+    optionsTitle: 'CONFIGURAÇÃO DO SISTEMA (OPÇÕES)',
+    optionsSkins: 'SKINS DO PROGRAMADOR',
+    optionsAudio: 'ÁUDIO & MÚSICA DE FUNDO',
+    optionsDisplay: 'ECRÃ & VISUALIZAÇÃO',
+    musicOn: 'MÚSICA DE FUNDO: ATIVA 🎵',
+    musicOff: 'MÚSICA DE FUNDO: DESATIVADA 🔇',
+    sfxOn: 'EFEITOS SONOROS (SFX): ATIVOS 🔊',
+    sfxOff: 'EFEITOS SONOROS (SFX): DESATIVADOS 🔇',
+    fullscreenBtn: 'ECRÃ INTEIRO (FULLSCREEN) ⛶',
+    fullscreenExit: 'SAIR DE ECRÃ INTEIRO ⛶',
+    skinActive: 'ATIVO',
+    skinSelect: 'EQUIPAR',
+    sectorsProgress: 'SETORES DESBLOQUEADOS: {0} / {1} • ESTRELAS: {2} / {3} ★',
 
     // HUD
     levelPrefix: 'NÍVEL',
@@ -44,6 +62,7 @@ export const TRANSLATIONS = {
     cJump: 'Saltar (altura dinâmica / dobro da potência)',
     cInteract: 'Interagir com Terminais, Consolas e Pontos de Construção',
     cSkills: 'Consultar Habilidades Desbloqueadas (HTML, CSS, JS)',
+    cAiDispatch: 'Atirar AI Copilot para buscar tokens elevados [F / Clique]',
     cRestart: 'Reiniciar rapidamente o nível atual',
     cPause: 'Pausar jogo / Abrir menu',
     conceptsTitle: 'CONCEITOS DE DEPURAÇÃO:',
@@ -92,6 +111,12 @@ export const TRANSLATIONS = {
     victoryAuthors: 'Francisco Mesquita & Gonçalo Abreu',
     btnPlayAgain: 'JOGAR NOVAMENTE ↺',
 
+    // Modals - Welcome to TDW
+    welcomeTdwTitle: 'Welcome to TDW',
+    welcomeTdwSubtitle: 'PARABÉNS, PROGRAMADOR! CONQUISTASTE A WEB STACK COMPLETA!',
+    welcomeTdwLore: 'Completaste todos os desafios do Kernel: HTML (Estrutura), CSS (Estilo), JavaScript (Execução), Testes & QA (Resiliência) e Inteligência Artificial (Inovação). O sistema web está totalmente funcional e livre de bugs!',
+    btnWelcomeCredits: 'VER CRÉDITOS FINAIS ►',
+
     // In-Game Toasts
     fragCollected: 'Fragmento HTML recolhido!',
     bridgeBuilt: 'Ponte de elementos <div/> construída!',
@@ -101,6 +126,18 @@ export const TRANSLATIONS = {
     jsSuccess: 'Script JS executado com sucesso! Portal desbloqueado.',
     kernelPanic: 'Kernel Panic! Posição restaurada.',
     bossDefeated: 'VÍRUS GLITCH ELIMINADO! O portal abriu-se no chão!',
+    bugPatched: 'npm test --fix: 100% PASS! Bug corrigido e portal desbloqueado.',
+    aiTokenCollected: 'Token de treino neural recolhido!',
+    aiInferred: 'Inferência concluída! O Copilot projetou a ponte neural!',
+    needAiTokens: 'Dados insuficientes! O modelo necessita de 3 tokens de treino.',
+    aiDispatchPrompt: '[F / CLIQUE] ATIRAR AI COPILOT',
+    aiDispatched: 'AI Copilot a voar para recolher [{0}]!',
+    aiAllGathered: 'Todos os tokens recolhidos! Ativa o Terminal IA [E].',
+    hammerBuilt: 'HTML: <div id="hammer"/> estruturado! Ativa o CSS no terminal do chão!',
+    hammerCssEnabled: 'CSS: display: block! Martelo energizado! Executa a animação JS!',
+    hammerJsSmash: 'JS: hammer.animate({ swing: true })! MARTELADA NO VÍRUS!',
+    needHammerBuild: 'Constrói primeiro o martelo com fragmentos HTML!',
+    needHammerCss: 'O martelo ainda está desativado! Ativa o CSS no chão primeiro!',
 
     // Terminal Dialogs
     termTitleInit: 'TERMINAL DE INICIALIZAÇÃO',
@@ -115,11 +152,17 @@ export const TRANSLATIONS = {
     termTitleJs: 'DEPURADOR DE JAVASCRIPT',
     termMsg4: 'A porta de saída no chão está trancada por um loop assíncrono!\nOrdem das Promises:\n1º [2] (init)\n2º [1] (fetchData)\n3º [3] (renderUI)\nPrime os botões pela ordem: 2 → 1 → 3 para destrancar a porta!',
 
+    termTitleTest: 'SUITE DE TESTES E PROFILER',
+    termMsg5: 'BUG CRÍTICO DETETADO!\nUm processo zumbi está a disparar UnhandledRuntimeError em loop contínuo.\nUsa o timing dos teus saltos para te esquivares dos projéteis de erro e chega ao terminal de testes para executar "npm test --fix" e pacificar o bug!',
+
+    termTitleAi: 'NÚCLEO NEURONAL & COPILOT',
+    termMsg6: 'TOKENS EM ALTITUDE ELEVADA!\nOs tokens [PROMPT], [WEIGHTS] e [ATTENTION] estão inacessíveis a saltar.\n1. Prime [F] ou CLICA no ecrã para atirar o teu AI Copilot a recolhê-los lá acima!\n2. Leva os 3 tokens à consola de inferência para projetar a ponte neural sólida!',
+
     termTitleMerge: 'CONFLITO DE CÓDIGO (GIT MERGE)',
-    termMsg5: 'O branch de produção está em conflito com o local!\n1. Salta pelos degraus para apanhar os fragmentos HTML.\n2. Constrói a ponte e usa o terminal CSS para desativar o laser.\n3. A porta de saída espera-te no chão!',
+    termMsg7: 'O branch de produção está em conflito com o local!\n1. Salta pelos degraus para apanhar os fragmentos HTML.\n2. Constrói a ponte e usa o terminal CSS para desativar o laser.\n3. A porta de saída espera-te no chão!',
 
     termTitleBoss: 'NÚCLEO DO VÍRUS CORROMPIDO',
-    termMsg6: 'O Kernel está sob ataque do GLITCH CORE!\nMissão de Restauração Total:\n1. Recolhe 3 fragmentos HTML para erguer a ponte central.\n2. Altera o CSS para solidificar os degraus.\n3. Aciona os botões [3 → 2 → 1] para desativar o vírus!\nA porta de saída abrir-se-á no chão!'
+    termMsg8: 'O Kernel está sob ataque do GLITCH CORE!\nMissão de Restauração Total:\n1. Recolhe 3 fragmentos HTML para erguer a ponte central.\n2. Altera o CSS para solidificar os degraus.\n3. Aciona os botões [3 → 2 → 1] para desativar o vírus!\nA porta de saída abrir-se-á no chão!'
   },
 
   en: {
@@ -135,13 +178,31 @@ export const TRANSLATIONS = {
     tagline: '"The system counts on you."',
     btnPlay: 'PLAY',
     btnContinue: 'CONTINUE',
-    btnLevelSelect: 'SELECT LEVEL',
+    btnLevelSelect: 'CHOOSE LEVEL',
+    btnOptions: 'OPTIONS',
     btnControls: 'CONTROLS',
     btnCredits: 'FINAL CREDITS',
     btnLang: 'LANGUAGE: EN 🇬🇧',
+    btnOptionsDesc: 'Customize skins, music, sound effects & screen',
+    btnChooseLevelDesc: 'Browse 16 sectors unlocked via Local Storage',
     soundActive: 'AUDIO: ON 🔊',
     soundMuted: 'AUDIO: MUTED 🔇',
     versionTag: 'v1.1.0 • TDW JAM • NET YAHOO',
+
+    // Options Modal
+    optionsTitle: 'SYSTEM CONFIGURATION (OPTIONS)',
+    optionsSkins: 'DEVELOPER SKINS',
+    optionsAudio: 'AUDIO & BACKGROUND MUSIC',
+    optionsDisplay: 'SCREEN & DISPLAY',
+    musicOn: 'BACKGROUND MUSIC: ON 🎵',
+    musicOff: 'BACKGROUND MUSIC: OFF 🔇',
+    sfxOn: 'SOUND EFFECTS (SFX): ON 🔊',
+    sfxOff: 'SOUND EFFECTS (SFX): OFF 🔇',
+    fullscreenBtn: 'FULLSCREEN ⛶',
+    fullscreenExit: 'EXIT FULLSCREEN ⛶',
+    skinActive: 'ACTIVE',
+    skinSelect: 'EQUIP',
+    sectorsProgress: 'UNLOCKED SECTORS: {0} / {1} • STARS: {2} / {3} ★',
 
     // HUD
     levelPrefix: 'LEVEL',
@@ -161,6 +222,7 @@ export const TRANSLATIONS = {
     cJump: 'Jump (variable height / doubled power)',
     cInteract: 'Interact with Terminals, Consoles & Build Points',
     cSkills: 'Inspect Unlocked Abilities (HTML, CSS, JS)',
+    cAiDispatch: 'Launch AI Copilot to fetch high tokens [F / Click]',
     cRestart: 'Quickly restart current room',
     cPause: 'Pause game / Open menu',
     conceptsTitle: 'DEBUGGING CONCEPTS:',
@@ -209,6 +271,12 @@ export const TRANSLATIONS = {
     victoryAuthors: 'Francisco Mesquita & Gonçalo Abreu',
     btnPlayAgain: 'PLAY AGAIN ↺',
 
+    // Modals - Welcome to TDW
+    welcomeTdwTitle: 'Welcome to TDW',
+    welcomeTdwSubtitle: 'CONGRATULATIONS, DEVELOPER! YOU CONQUERED THE FULL WEB STACK!',
+    welcomeTdwLore: 'You mastered every tier of the Kernel: HTML (Structure), CSS (Style), JavaScript (Execution), Testing & QA (Resilience), and Artificial Intelligence (Innovation). The web system is fully online and bug-free!',
+    btnWelcomeCredits: 'VIEW FINAL CREDITS ►',
+
     // In-Game Toasts
     fragCollected: 'HTML fragment collected!',
     bridgeBuilt: '<div/> structural bridge constructed!',
@@ -218,6 +286,18 @@ export const TRANSLATIONS = {
     jsSuccess: 'JS Script executed successfully! Exit unlocked.',
     kernelPanic: 'Kernel Panic! Restoring spawn point.',
     bossDefeated: 'GLITCH VIRUS DESTROYED! The ground portal opened!',
+    bugPatched: 'npm test --fix: 100% PASS! Bug patched and portal unlocked.',
+    aiTokenCollected: 'Neural training token collected!',
+    aiInferred: 'Inference complete! Copilot materialized the neural bridge!',
+    needAiTokens: 'Insufficient data! The model requires 3 training tokens.',
+    aiDispatchPrompt: '[F / CLICK] LAUNCH AI COPILOT',
+    aiDispatched: 'AI Copilot flying to fetch [{0}]!',
+    aiAllGathered: 'All tokens gathered! Activate AI Terminal [E].',
+    hammerBuilt: 'HTML: <div id="hammer"/> structured! Enable CSS at the ground terminal!',
+    hammerCssEnabled: 'CSS: display: block! Hammer energized! Trigger the JS animation!',
+    hammerJsSmash: 'JS: hammer.animate({ swing: true })! VIRUS SMASHED!',
+    needHammerBuild: 'Build the hammer with HTML fragments first!',
+    needHammerCss: 'Hammer is still disabled! Enable CSS on the ground first!',
 
     // Terminal Dialogs
     termTitleInit: 'BOOT TERMINAL',
@@ -232,11 +312,17 @@ export const TRANSLATIONS = {
     termTitleJs: 'JAVASCRIPT DEBUGGER',
     termMsg4: 'The ground exit portal is locked in an infinite async loop!\nPromise execution order:\n1st [2] (init)\n2nd [1] (fetchData)\n3rd [3] (renderUI)\nPress buttons in order: 2 → 1 → 3 to unlock the portal!',
 
+    termTitleTest: 'TEST RUNNER & PROFILER SUITE',
+    termMsg5: 'CRITICAL BUG DETECTED!\nA zombie process is firing UnhandledRuntimeError projectiles in a continuous loop.\nTime your jumps to dodge error orbs and reach the QA terminal to run "npm test --fix" to patch the bug!',
+
+    termTitleAi: 'NEURAL CORE & AI COPILOT',
+    termMsg6: 'TOKENS AT HIGH ALTITUDE!\nThe [PROMPT], [WEIGHTS], and [ATTENTION] tokens are placed too high to jump.\n1. Press [F] or CLICK the screen to launch your AI Copilot to fetch them from above!\n2. Bring all 3 tokens to the inference console to project the neural bridge!',
+
     termTitleMerge: 'CODE CONFLICT (GIT MERGE)',
-    termMsg5: 'Production branch conflicts with local changes!\n1. Jump across steps to collect HTML fragments.\n2. Build the bridge and use the CSS terminal to disable the laser.\n3. The exit door awaits on the ground!',
+    termMsg7: 'Production branch conflicts with local changes!\n1. Jump across steps to collect HTML fragments.\n2. Build the bridge and use the CSS terminal to disable the laser.\n3. The exit door awaits on the ground!',
 
     termTitleBoss: 'CORRUPTED VIRUS CORE',
-    termMsg6: 'The Kernel is under attack by the GLITCH CORE!\nTotal System Restoration Mission:\n1. Collect 3 HTML fragments to build the center bridge.\n2. Toggle CSS to solidify the switch access steps.\n3. Trigger button sequence [3 → 2 → 1] to terminate the virus!\nThe ground exit will open!'
+    termMsg8: 'The Kernel is under attack by the GLITCH CORE!\nTotal System Restoration Mission:\n1. Collect 3 HTML fragments to build the center bridge.\n2. Toggle CSS to solidify the switch access steps.\n3. Trigger button sequence [3 → 2 → 1] to terminate the virus!\nThe ground exit will open!'
   }
 };
 

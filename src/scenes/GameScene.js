@@ -27,6 +27,9 @@ export class GameScene extends Phaser.Scene {
     if (data && data.levelId) {
       this.currentLevelIndex = data.levelId;
     }
+    if (data && data.uiManager) {
+      this.uiManager = data.uiManager;
+    }
   }
 
   setUIManager(ui) {
@@ -62,11 +65,13 @@ export class GameScene extends Phaser.Scene {
     this.setupCssPlatforms();
     this.setupTerminals();
     this.setupJsSwitches();
+    this.setupShootingBugs();
     this.setupExitPortal();
     this.setupGlitchBoss();
 
     // Create Player
     this.createPlayer();
+    this.setupAiModule();
 
     // Physics Colliders
     this.physics.add.collider(this.player, this.platformsGroup);
@@ -75,10 +80,18 @@ export class GameScene extends Phaser.Scene {
 
     // Hazard Overlap
     this.physics.add.overlap(this.player, this.hazardGroup, this.handleHazardTouch, null, this);
+    if (this.errorProjectilesGroup) {
+      this.physics.add.overlap(this.player, this.errorProjectilesGroup, this.handleHazardTouch, null, this);
+    }
 
     // Fragment Overlap
     if (this.fragmentItems) {
       this.physics.add.overlap(this.player, this.fragmentItems, this.handleCollectFragment, null, this);
+    }
+
+    // AI Tokens Overlap
+    if (this.aiTokensGroup) {
+      this.physics.add.overlap(this.player, this.aiTokensGroup, this.handleCollectAiToken, null, this);
     }
 
     // Portal Overlap
@@ -235,7 +248,7 @@ export class GameScene extends Phaser.Scene {
     // Story/Info Terminal
     if (this.levelConfig.terminal) {
       const t = this.levelConfig.terminal;
-      const termSprite = this.add.image(t.x, t.y, `terminal_${t.type || 'info'}`);
+      const termSprite = this.add.image(t.x, t.y, `terminal_${t.type || 'info'}`).setOrigin(0.5, 1);
       this.interactiveTerminals.push({
         type: 'dialog',
         x: t.x,
@@ -249,7 +262,7 @@ export class GameScene extends Phaser.Scene {
     // CSS Terminals
     if (this.levelConfig.cssTerminals) {
       this.levelConfig.cssTerminals.forEach(ct => {
-        const spr = this.add.image(ct.x, ct.y, 'terminal_css');
+        const spr = this.add.image(ct.x, ct.y, 'terminal_css').setOrigin(0.5, 1);
         this.interactiveTerminals.push({
           type: 'css_toggle',
           x: ct.x,
@@ -264,7 +277,7 @@ export class GameScene extends Phaser.Scene {
     // JS Terminals
     if (this.levelConfig.jsTerminals) {
       this.levelConfig.jsTerminals.forEach(jt => {
-        const spr = this.add.image(jt.x, jt.y, 'terminal_js');
+        const spr = this.add.image(jt.x, jt.y, 'terminal_js').setOrigin(0.5, 1);
         this.interactiveTerminals.push({
           type: 'js_terminal',
           x: jt.x,
@@ -272,6 +285,35 @@ export class GameScene extends Phaser.Scene {
           sprite: spr,
           sequence: jt.sequence,
           clue: jt.clue
+        });
+      });
+    }
+
+    // Test Terminals (Level 5: QA / Performance)
+    if (this.levelConfig.testTerminals) {
+      this.levelConfig.testTerminals.forEach(tt => {
+        const spr = this.add.image(tt.x, tt.y, 'terminal_test').setOrigin(0.5, 1);
+        this.interactiveTerminals.push({
+          type: 'test_patch',
+          x: tt.x,
+          y: tt.y,
+          sprite: spr,
+          label: tt.label || 'npm test --fix'
+        });
+      });
+    }
+
+    // AI Inference Terminals (Level 6: Neural Network)
+    if (this.levelConfig.aiTerminals) {
+      this.levelConfig.aiTerminals.forEach(at => {
+        const spr = this.add.image(at.x, at.y, 'terminal_ai').setOrigin(0.5, 1);
+        this.interactiveTerminals.push({
+          type: 'ai_inference',
+          x: at.x,
+          y: at.y,
+          cost: at.cost || 3,
+          sprite: spr,
+          label: at.label || 'RUN INFERENCE'
         });
       });
     }
@@ -311,25 +353,135 @@ export class GameScene extends Phaser.Scene {
     this.createParticleBurst(this.portalSprite.x, this.portalSprite.y, 'particle_green', 25);
   }
 
-  // --- Glitch Boss (Level 6) ---
+  // --- Glitch Boss (Level 16: Giant Virus & The Web Hammer) ---
   setupGlitchBoss() {
     this.bossCore = null;
+    this.bossHammer = null;
+    this.bossHammerBuilt = false;
+    this.bossHammerCssEnabled = false;
+    this.bossNextShotTime = 1200;
     if (!this.levelConfig.glitchCore) return;
 
     const bc = this.levelConfig.glitchCore;
-    this.bossCore = this.add.image(bc.x, bc.y, 'glitch_core');
+    const bossTexture = this.levelConfig.id === 16 ? 'boss_giant_virus' : 'glitch_core';
+    this.bossCore = this.add.image(bc.x, bc.y, bossTexture);
+    this.bossCore.setDepth(6);
+    if (this.levelConfig.id === 16) {
+      this.bossCore.setDisplaySize(96, 96);
+    }
     this.bossAlive = true;
 
     // Floating pulsing tween
     this.tweens.add({
       targets: this.bossCore,
       y: bc.y - 12,
-      scaleX: 1.08,
-      scaleY: 1.08,
+      scaleX: 1.06,
+      scaleY: 1.06,
       duration: 1200,
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut'
+    });
+  }
+
+  fireBossVirusShot() {
+    if (!this.bossCore || !this.bossAlive || !this.errorProjectilesGroup || !this.player) return;
+
+    const startX = this.bossCore.x + Phaser.Math.Between(-20, 20);
+    const startY = this.bossCore.y + 32;
+
+    const proj = this.errorProjectilesGroup.create(startX, startY, 'hazard_error_orb');
+    proj.body.setAllowGravity(false);
+    proj.body.setCircle(7, 1, 1);
+
+    // Aim directly towards the player's current position
+    const targetX = this.player.x;
+    const targetY = this.player.y;
+    const angle = Phaser.Math.Angle.Between(startX, startY, targetX, targetY);
+    const speed = this.levelConfig.glitchCore?.speed || 210;
+
+    proj.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+    proj.startX = startX;
+    proj.startY = startY;
+    proj.maxRange = 850;
+
+    // Spin animation
+    this.tweens.add({
+      targets: proj,
+      angle: 360,
+      duration: 400,
+      repeat: -1
+    });
+
+    // Muzzle flash particle burst
+    this.createParticleBurst(startX, startY, 'particle_magenta', 8);
+    sounds.playBugShoot();
+  }
+
+  animateHammerSmash() {
+    if (!this.bossHammer || !this.bossCore || !this.bossAlive) return;
+
+    if (this.uiManager) {
+      this.uiManager.showToast(i18n.t('hammerJsSmash'), 4000);
+    }
+
+    // Phase 1: Windup hammer backwards
+    sounds.playHammerSmash();
+    this.tweens.add({
+      targets: this.bossHammer,
+      angle: -50,
+      y: this.bossHammer.y - 20,
+      duration: 400,
+      ease: 'Back.easeIn',
+      onComplete: () => {
+        // Phase 2: SMASH DOWN directly onto the Giant Virus!
+        this.tweens.add({
+          targets: this.bossHammer,
+          angle: 70,
+          x: this.bossCore.x - 15,
+          y: this.bossCore.y + 25,
+          duration: 180,
+          ease: 'Cubic.easeIn',
+          onComplete: () => {
+            // Impact!
+            sounds.playExplosion();
+            this.cameras.main.shake(700, 0.035);
+            this.cameras.main.flash(280, 255, 255, 255);
+
+            // Massive particle explosions
+            this.createParticleBurst(this.bossCore.x, this.bossCore.y, 'particle_yellow', 45);
+            this.createParticleBurst(this.bossCore.x, this.bossCore.y, 'particle_magenta', 40);
+            this.createParticleBurst(this.bossCore.x, this.bossCore.y, 'particle_cyan', 40);
+
+            // Clear all virus projectile hazards immediately
+            if (this.errorProjectilesGroup) {
+              this.errorProjectilesGroup.clear(true, true);
+            }
+
+            // Squash boss virus
+            this.tweens.add({
+              targets: this.bossCore,
+              scaleX: 1.8,
+              scaleY: 0.1,
+              y: this.bossCore.y + 35,
+              duration: 250,
+              ease: 'Quad.easeOut',
+              onComplete: () => {
+                this.defeatGlitchBoss();
+              }
+            });
+
+            // Hammer recoil bounce
+            this.tweens.add({
+              targets: this.bossHammer,
+              angle: 30,
+              y: this.bossHammer.y - 15,
+              duration: 350,
+              ease: 'Back.easeOut'
+            });
+          }
+        });
+      }
     });
   }
 
@@ -356,10 +508,298 @@ export class GameScene extends Phaser.Scene {
       onComplete: () => {
         this.unlockPortal();
         if (this.uiManager) {
-          this.uiManager.showToast(i18n.t('bossDefeated'), 4000);
+          this.uiManager.showToast(i18n.t('bossDefeated'), 4500);
         }
       }
     });
+  }
+
+  // --- Shooting Bugs (Level 5: QA / Testing & Performance) ---
+  setupShootingBugs() {
+    this.shootingBugsList = [];
+    this.errorProjectilesGroup = this.physics.add.group();
+    if (!this.levelConfig.shootingBugs) return;
+
+    this.levelConfig.shootingBugs.forEach(b => {
+      const bugSprite = this.add.sprite(b.x, b.y, 'hazard_bug');
+      bugSprite.setDepth(5);
+      if (b.dir > 0) bugSprite.setFlipX(true);
+
+      // Subtle breathing/bobbing animation
+      this.tweens.add({
+        targets: bugSprite,
+        y: b.y - 4,
+        duration: 800,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut'
+      });
+
+      this.shootingBugsList.push({
+        config: b,
+        sprite: bugSprite,
+        nextShotTime: 1200 + Math.random() * 600,
+        patched: false
+      });
+    });
+  }
+
+  updateShootingBugs(time, delta) {
+    if (!this.shootingBugsList || this.shootingBugsList.length === 0) return;
+
+    this.shootingBugsList.forEach(bug => {
+      if (bug.patched) return;
+
+      if (time >= bug.nextShotTime) {
+        bug.nextShotTime = time + (bug.config.fireRate || 1600);
+        this.fireBugError(bug);
+      }
+    });
+
+    // Clean up out of bounds projectiles
+    if (this.errorProjectilesGroup) {
+      this.errorProjectilesGroup.getChildren().forEach(proj => {
+        const startY = proj.startY !== undefined ? proj.startY : proj.y;
+        const dist = Phaser.Math.Distance.Between(proj.startX, startY, proj.x, proj.y);
+        if (proj.x < 10 || proj.x > 950 || proj.y < 10 || proj.y > 540 || dist > proj.maxRange) {
+          proj.destroy();
+        }
+      });
+    }
+  }
+
+  fireBugError(bug) {
+    if (bug.patched || !this.errorProjectilesGroup || !this.player) return;
+
+    const startX = bug.sprite.x + (this.player.x < bug.sprite.x ? -20 : 20);
+    const startY = bug.sprite.y + 4;
+
+    const proj = this.errorProjectilesGroup.create(startX, startY, 'hazard_error_orb');
+    proj.body.setAllowGravity(false);
+    proj.body.setCircle(7, 1, 1);
+
+    // Aim directly towards the player's current position (aligns with player on platforms/steps)
+    const targetX = this.player.x;
+    const targetY = this.player.y;
+    const angle = Phaser.Math.Angle.Between(startX, startY, targetX, targetY);
+    const speed = bug.config.speed || 210;
+
+    proj.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+    proj.startX = startX;
+    proj.startY = startY;
+    proj.maxRange = bug.config.range || 850;
+
+    // Flip bug sprite facing towards player
+    bug.sprite.setFlipX(targetX > bug.sprite.x);
+
+    // Spin animation
+    this.tweens.add({
+      targets: proj,
+      angle: 360,
+      duration: 450,
+      repeat: -1
+    });
+
+    // Muzzle flash particle burst
+    this.createParticleBurst(startX, startY, 'particle_magenta', 6);
+    sounds.playBugShoot();
+  }
+
+  // --- AI Module & Companion Copilot (Level 6: Neural Network) ---
+  setupAiModule() {
+    this.aiTokensGroup = this.physics.add.group();
+    this.aiTokensCollected = 0;
+    this.aiCopilot = null;
+    this.aiBridgesList = [];
+    this.aiCopilotState = 'IDLE'; // 'IDLE', 'FETCHING', 'RETURNING'
+    this.aiTargetToken = null;
+    this.retrievedToken = null;
+
+    // AI Copilot Drone
+    if (this.levelConfig.hasAiCopilot) {
+      const px = this.player ? this.player.x : (this.levelConfig.playerStart?.x || 80);
+      const py = this.player ? this.player.y : (this.levelConfig.playerStart?.y || 440);
+      this.aiCopilot = this.add.sprite(px - 26, py - 20, 'ai_copilot');
+      this.aiCopilot.setDepth(10);
+    }
+
+    // AI Data Tokens
+    if (this.levelConfig.aiTokens) {
+      this.levelConfig.aiTokens.forEach(tok => {
+        const spr = this.aiTokensGroup.create(tok.x, tok.y, 'item_ai_token');
+        spr.body.setAllowGravity(false);
+        spr.body.setImmovable(true);
+        spr.baseY = tok.y;
+        spr.tokenName = tok.name;
+      });
+    }
+
+    // AI Ghost Bridges
+    if (this.levelConfig.aiBridges) {
+      this.levelConfig.aiBridges.forEach(ab => {
+        const ghost = this.add.image(ab.x + ab.w / 2, ab.y + ab.h / 2, ab.ghostTexture || 'tile_ai_bridge_ghost');
+        ghost.setDisplaySize(ab.w, ab.h);
+        this.aiBridgesList.push({
+          config: ab,
+          ghostSprite: ghost,
+          solid: false
+        });
+      });
+    }
+  }
+
+  dispatchAiCopilot(pointer = null) {
+    if (!this.aiCopilot || !this.levelConfig?.hasAiCopilot) return;
+    if (this.isPaused || this.levelCompleted) return;
+
+    // Check for remaining active tokens in the level
+    const activeTokens = this.aiTokensGroup ? this.aiTokensGroup.getChildren().filter(t => t.active) : [];
+    if (activeTokens.length === 0) {
+      if (this.aiTokensCollected >= 3 && this.uiManager) {
+        this.uiManager.showToast(i18n.t('aiAllGathered'), 2200);
+      }
+      return;
+    }
+
+    let targetToken = null;
+
+    if (pointer) {
+      // Find token closest to click point if clicked nearby, or closest active token to pointer
+      let closestDist = Infinity;
+      activeTokens.forEach(tok => {
+        const d = Phaser.Math.Distance.Between(pointer.worldX, pointer.worldY, tok.x, tok.y);
+        if (d < closestDist) {
+          closestDist = d;
+          targetToken = tok;
+        }
+      });
+    }
+
+    if (!targetToken) {
+      // Target nearest active token to the player
+      activeTokens.sort((a, b) => {
+        const da = Phaser.Math.Distance.Between(this.player.x, this.player.y, a.x, a.y);
+        const db = Phaser.Math.Distance.Between(this.player.x, this.player.y, b.x, b.y);
+        return da - db;
+      });
+      targetToken = activeTokens[0];
+    }
+
+    if (targetToken) {
+      this.aiCopilotState = 'FETCHING';
+      this.aiTargetToken = targetToken;
+      sounds.playAiLaunch();
+      this.createParticleBurst(this.aiCopilot.x, this.aiCopilot.y, 'particle_magenta', 18);
+      if (this.uiManager) {
+        this.uiManager.showToast(i18n.t('aiDispatched', targetToken.tokenName || 'TOKEN'), 2000);
+      }
+    }
+  }
+
+  updateAiCopilot(time, delta) {
+    // Bobbing AI Tokens
+    if (this.aiTokensGroup) {
+      this.aiTokensGroup.getChildren().forEach(tok => {
+        tok.y = tok.baseY + Math.sin(time / 220) * 4;
+      });
+    }
+
+    if (!this.aiCopilot || !this.player) return;
+
+    const deltaSec = delta / 1000;
+
+    // State 1: IDLE (Hovering around player)
+    if (this.aiCopilotState === 'IDLE') {
+      const offsetX = this.player.flipX ? 28 : -28;
+      const targetX = this.player.x + offsetX;
+      const targetY = this.player.y - 24 + Math.sin(time / 260) * 5;
+
+      this.aiCopilot.x = Phaser.Math.Linear(this.aiCopilot.x, targetX, 0.08);
+      this.aiCopilot.y = Phaser.Math.Linear(this.aiCopilot.y, targetY, 0.08);
+      this.aiCopilot.setFlipX(this.player.flipX);
+    }
+    // State 2: FETCHING (Flying fast to collect unreachable high token)
+    else if (this.aiCopilotState === 'FETCHING') {
+      if (!this.aiTargetToken || !this.aiTargetToken.active) {
+        // Target token was destroyed or missing, return to player
+        this.aiCopilotState = 'RETURNING';
+        return;
+      }
+
+      const tx = this.aiTargetToken.x;
+      const ty = this.aiTargetToken.y;
+      const dist = Phaser.Math.Distance.Between(this.aiCopilot.x, this.aiCopilot.y, tx, ty);
+      const speed = 540; // High speed flight
+      const step = Math.min(dist, speed * deltaSec);
+
+      const angle = Phaser.Math.Angle.Between(this.aiCopilot.x, this.aiCopilot.y, tx, ty);
+      this.aiCopilot.x += Math.cos(angle) * step;
+      this.aiCopilot.y += Math.sin(angle) * step;
+      this.aiCopilot.setFlipX(tx < this.aiCopilot.x);
+
+      // Neon thruster trail particles
+      if (Math.random() < 0.45) {
+        this.createParticleBurst(this.aiCopilot.x, this.aiCopilot.y, 'particle_cyan', 2);
+      }
+
+      if (dist < 22) {
+        // Captured token!
+        this.createParticleBurst(tx, ty, 'particle_cyan', 22);
+        this.createParticleBurst(tx, ty, 'particle_magenta', 16);
+        sounds.playCollect();
+        this.retrievedToken = { tokenName: this.aiTargetToken.tokenName };
+        this.aiTargetToken.destroy();
+        this.aiTargetToken = null;
+        this.aiCopilotState = 'RETURNING';
+      }
+    }
+    // State 3: RETURNING (Returning high-speed with token to player)
+    else if (this.aiCopilotState === 'RETURNING') {
+      const targetX = this.player.x + (this.player.flipX ? 28 : -28);
+      const targetY = this.player.y - 24;
+      const dist = Phaser.Math.Distance.Between(this.aiCopilot.x, this.aiCopilot.y, targetX, targetY);
+      const speed = 500;
+      const step = Math.min(dist, speed * deltaSec);
+
+      const angle = Phaser.Math.Angle.Between(this.aiCopilot.x, this.aiCopilot.y, targetX, targetY);
+      this.aiCopilot.x += Math.cos(angle) * step;
+      this.aiCopilot.y += Math.sin(angle) * step;
+      this.aiCopilot.setFlipX(targetX < this.aiCopilot.x);
+
+      // Particle trail
+      if (Math.random() < 0.45) {
+        this.createParticleBurst(this.aiCopilot.x, this.aiCopilot.y, 'particle_magenta', 2);
+      }
+
+      if (dist < 28) {
+        // Returned token to player!
+        this.aiTokensCollected++;
+        sounds.playAiToken();
+        this.createParticleBurst(this.aiCopilot.x, this.aiCopilot.y, 'particle_magenta', 24);
+        this.createParticleBurst(this.aiCopilot.x, this.aiCopilot.y, 'particle_yellow', 16);
+
+        const total = (this.levelConfig.aiTokens || []).length;
+        if (this.uiManager) {
+          const tokName = this.retrievedToken?.tokenName || 'TOKEN';
+          this.uiManager.showToast(`${i18n.t('aiTokenCollected')} [${tokName}] (${this.aiTokensCollected}/${total})`, 2200);
+        }
+
+        this.retrievedToken = null;
+        this.aiCopilotState = 'IDLE';
+      }
+    }
+  }
+
+  handleCollectAiToken(player, token) {
+    token.destroy();
+    this.aiTokensCollected++;
+    sounds.playAiToken();
+    this.createParticleBurst(token.x, token.y, 'particle_cyan', 20);
+
+    const total = (this.levelConfig.aiTokens || []).length;
+    if (this.uiManager) {
+      this.uiManager.showToast(`${i18n.t('aiTokenCollected')} [${token.tokenName || 'TOKEN'}] (${this.aiTokensCollected}/${total})`, 2000);
+    }
   }
 
   // --- Player Setup ---
@@ -382,13 +822,15 @@ export class GameScene extends Phaser.Scene {
     this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
     this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     this.keyEsc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+    this.keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+    this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
     this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
     this.key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
     this.key3 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
     // Prevent default browser scrolling
     this.input.keyboard.on('keydown', (event) => {
-      const keysToBlock = ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE', 'KeyR'];
+      const keysToBlock = ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE', 'KeyR', 'KeyF', 'KeyQ'];
       if (keysToBlock.includes(event.code)) {
         event.preventDefault();
       }
@@ -407,6 +849,21 @@ export class GameScene extends Phaser.Scene {
     // Interaction [E]
     this.keyE.on('down', () => {
       this.handleInteractKey();
+    });
+
+    // Dispatch AI Copilot [F] or [Q]
+    this.keyF.on('down', () => {
+      this.dispatchAiCopilot(null);
+    });
+    this.keyQ.on('down', () => {
+      this.dispatchAiCopilot(null);
+    });
+
+    // Dispatch AI Copilot via canvas click/tap
+    this.input.on('pointerdown', (pointer) => {
+      if (this.levelConfig?.hasAiCopilot && !this.isPaused && !this.levelCompleted) {
+        this.dispatchAiCopilot(pointer);
+      }
     });
 
     // Ability lore info [1, 2, 3]
@@ -443,6 +900,20 @@ export class GameScene extends Phaser.Scene {
       });
     }
 
+    // Update shooting bugs and error projectiles (Level 10-12, 15)
+    this.updateShootingBugs(time, delta);
+
+    // Update Boss virus shooting (Level 16: Giant Virus)
+    if (this.bossCore && this.bossAlive && this.levelConfig.id === 16) {
+      if (time >= this.bossNextShotTime) {
+        this.bossNextShotTime = time + (this.levelConfig.glitchCore?.fireRate || 1800);
+        this.fireBossVirusShot();
+      }
+    }
+
+    // Update AI Copilot and AI tokens (Level 13-15)
+    this.updateAiCopilot(time, delta);
+
     // Player Movement
     this.handlePlayerMovement(deltaSec);
 
@@ -452,7 +923,12 @@ export class GameScene extends Phaser.Scene {
     // Update HUD
     if (this.uiManager) {
       const totalFrags = (this.levelConfig.htmlFragments || []).length;
-      this.uiManager.updateHUDStats(this.levelTime, this.deaths, this.collectedFragments, totalFrags);
+      const totalAiTok = (this.levelConfig.aiTokens || []).length;
+      if (totalAiTok > 0) {
+        this.uiManager.updateHUDStats(this.levelTime, this.deaths, this.aiTokensCollected, totalAiTok);
+      } else {
+        this.uiManager.updateHUDStats(this.levelTime, this.deaths, this.collectedFragments, totalFrags);
+      }
     }
   }
 
@@ -557,12 +1033,28 @@ export class GameScene extends Phaser.Scene {
 
     // 1. Check Terminal Dialogs & Consoles
     this.interactiveTerminals.forEach(t => {
-      const dist = Phaser.Math.Distance.Between(px, py, t.x, t.y);
+      // With origin (0.5, 1) at y: 480, terminal center is at t.y - 20
+      const dist = Phaser.Math.Distance.Between(px, py, t.x, t.y - 20);
       if (dist < closestDist) {
+        let promptText = isEn ? 'OPEN TERMINAL' : 'ABRIR TERMINAL';
+        if (t.type === 'css_toggle') {
+          if (this.levelConfig.id === 16 || t.targetGroup === 'boss_hammer_css') {
+            promptText = this.bossHammerCssEnabled
+              ? (isEn ? 'CSS: HAMMER [ENABLED]' : 'CSS: MARTELO [ATIVADO]')
+              : (isEn ? 'CSS: ENABLE <hammer/>' : 'CSS: ATIVAR <hammer/>');
+          } else {
+            promptText = isEn ? 'CSS: TOGGLE DISPLAY' : 'CSS: ALTERNAR DISPLAY';
+          }
+        } else if (t.type === 'test_patch') {
+          promptText = isEn ? 'TEST: RUN npm test --fix' : 'TESTES: EXECUTAR npm test --fix';
+        } else if (t.type === 'ai_inference') {
+          const req = t.cost || 3;
+          promptText = `${isEn ? 'AI: RUN INFERENCE' : 'IA: EXECUTAR INFERÊNCIA'} (${this.aiTokensCollected || 0}/${req})`;
+        }
         closest = {
           type: t.type,
           data: t,
-          prompt: t.type === 'css_toggle' ? (isEn ? 'CSS: TOGGLE DISPLAY' : 'CSS: ALTERNAR DISPLAY') : (isEn ? 'OPEN TERMINAL' : 'ABRIR TERMINAL')
+          prompt: promptText
         };
         closestDist = dist;
       }
@@ -577,10 +1069,11 @@ export class GameScene extends Phaser.Scene {
         const dist = Phaser.Math.Distance.Between(px, py, bx, by);
         if (dist < Math.max(closestDist, bp.config.w / 2 + 25)) {
           const cost = bp.config.cost;
+          const bpTag = bp.config.isHammer ? '<div id="hammer"/>' : '<div/>';
           closest = {
             type: 'build_point',
             data: bp,
-            prompt: `${isEn ? 'BUILD' : 'CONSTRUIR'} <div/> (${this.collectedFragments}/${cost})`
+            prompt: `${isEn ? 'BUILD' : 'CONSTRUIR'} ${bpTag} (${this.collectedFragments}/${cost})`
           };
           closestDist = dist;
         }
@@ -591,10 +1084,14 @@ export class GameScene extends Phaser.Scene {
     this.jsSwitchesList.forEach(sw => {
       const dist = Phaser.Math.Distance.Between(px, py, sw.x, sw.y);
       if (dist < closestDist) {
+        let promptText = `${isEn ? 'TRIGGER SWITCH' : 'ACIONAR BOTÃO'} [${sw.id}]`;
+        if (this.levelConfig.id === 16) {
+          promptText = isEn ? 'JS: hammer.animate() -> SMASH()!' : 'JS: hammer.animate() -> ESMAGAR()!';
+        }
         closest = {
           type: 'js_switch',
           data: sw,
-          prompt: `${isEn ? 'TRIGGER SWITCH' : 'ACIONAR BOTÃO'} [${sw.id}]`
+          prompt: promptText
         };
         closestDist = dist;
       }
@@ -617,6 +1114,8 @@ export class GameScene extends Phaser.Scene {
     if (this.uiManager) {
       if (closest) {
         this.uiManager.showPrompt(closest.prompt);
+      } else if (this.levelConfig?.hasAiCopilot && this.aiTokensGroup?.getChildren().some(t => t.active)) {
+        this.uiManager.showPrompt(i18n.t('aiDispatchPrompt'));
       } else {
         this.uiManager.hidePrompt();
       }
@@ -624,7 +1123,12 @@ export class GameScene extends Phaser.Scene {
   }
 
   handleInteractKey() {
-    if (!this.activeInteractable) return;
+    if (!this.activeInteractable) {
+      if (this.levelConfig?.hasAiCopilot && this.aiTokensGroup?.getChildren().some(t => t.active)) {
+        this.dispatchAiCopilot(null);
+      }
+      return;
+    }
 
     const it = this.activeInteractable;
 
@@ -643,8 +1147,10 @@ export class GameScene extends Phaser.Scene {
               2: 'termTitleHtml',
               3: 'termTitleCss',
               4: 'termTitleJs',
-              5: 'termTitleMerge',
-              6: 'termTitleBoss'
+              5: 'termTitleTest',
+              6: 'termTitleAi',
+              7: 'termTitleMerge',
+              8: 'termTitleBoss'
             };
             if (termTitleKeys[lid]) title = i18n.t(termTitleKeys[lid]);
             if (i18n.t(`termMsg${lid}`)) message = i18n.t(`termMsg${lid}`);
@@ -657,6 +1163,42 @@ export class GameScene extends Phaser.Scene {
 
     // 2. CSS Toggle Terminal
     if (it.type === 'css_toggle') {
+      // Special handling for Level 16: Enable Web Hammer CSS
+      if (this.levelConfig.id === 16 || it.data.targetGroup === 'boss_hammer_css') {
+        if (!this.bossHammerBuilt) {
+          sounds.playJsFail();
+          if (this.uiManager) {
+            this.uiManager.showToast(i18n.t('needHammerBuild'), 3200);
+          }
+          return;
+        }
+
+        this.bossHammerCssEnabled = true;
+        sounds.playToggle();
+        this.cameras.main.flash(180, 168, 85, 247);
+
+        if (this.bossHammer) {
+          this.bossHammer.setTexture('giant_hammer_on');
+          // Add energizing pulse animation
+          this.tweens.add({
+            targets: this.bossHammer,
+            scaleX: 1.08,
+            scaleY: 1.08,
+            duration: 400,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+          });
+          this.createParticleBurst(this.bossHammer.x, this.bossHammer.y - 30, 'particle_magenta', 35);
+          this.createParticleBurst(this.bossHammer.x, this.bossHammer.y - 30, 'particle_cyan', 25);
+        }
+
+        if (this.uiManager) {
+          this.uiManager.showToast(i18n.t('hammerCssEnabled'), 3500);
+        }
+        return;
+      }
+
       sounds.playToggle();
       this.cameras.main.flash(120, 168, 85, 247);
 
@@ -683,7 +1225,77 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
-    // 3. HTML Build Point
+    // 3. Test Patch Terminal (Level 5: QA / Performance)
+    if (it.type === 'test_patch') {
+      sounds.playTestPass();
+      this.cameras.main.flash(180, 16, 185, 129);
+
+      if (this.shootingBugsList) {
+        this.shootingBugsList.forEach(bug => {
+          bug.patched = true;
+          bug.sprite.setTexture('hazard_bug_patched');
+          this.createParticleBurst(bug.sprite.x, bug.sprite.y, 'particle_green', 24);
+        });
+      }
+
+      if (this.errorProjectilesGroup) {
+        this.errorProjectilesGroup.getChildren().forEach(p => {
+          this.createParticleBurst(p.x, p.y, 'particle_cyan', 10);
+        });
+        this.errorProjectilesGroup.clear(true, true);
+      }
+
+      this.unlockPortal();
+      if (this.uiManager) {
+        this.uiManager.showToast(i18n.t('bugPatched'), 3200);
+      }
+      return;
+    }
+
+    // 4. AI Inference Terminal (Level 6: Neural Network)
+    if (it.type === 'ai_inference') {
+      const required = it.data.cost || 3;
+      if ((this.aiTokensCollected || 0) < required) {
+        sounds.playJsFail();
+        if (this.uiManager) {
+          this.uiManager.showToast(i18n.t('needAiTokens'), 2500);
+        }
+      } else {
+        sounds.playAiInference();
+        this.cameras.main.flash(200, 139, 92, 246);
+
+        if (this.aiCopilot) {
+          this.createParticleBurst(this.aiCopilot.x, this.aiCopilot.y, 'particle_magenta', 24);
+        }
+
+        // Materialize AI Bridges
+        if (this.aiBridgesList) {
+          this.aiBridgesList.forEach(ab => {
+            if (!ab.solid) {
+              ab.solid = true;
+              if (ab.ghostSprite) ab.ghostSprite.destroy();
+              const cols = Math.max(1, Math.round(ab.config.w / 32));
+              const tex = ab.config.solidTexture || 'tile_ai_bridge_solid';
+              for (let c = 0; c < cols; c++) {
+                const bx = ab.config.x + c * 32 + 16;
+                const by = ab.config.y + 16;
+                const tile = this.builtPlatformsGroup.create(bx, by, tex);
+                tile.refreshBody();
+              }
+              this.createParticleBurst(ab.config.x + ab.config.w / 2, ab.config.y + 16, 'particle_magenta', 30);
+            }
+          });
+        }
+
+        this.unlockPortal();
+        if (this.uiManager) {
+          this.uiManager.showToast(i18n.t('aiInferred'), 3200);
+        }
+      }
+      return;
+    }
+
+    // 5. HTML Build Point
     if (it.type === 'build_point') {
       const bp = it.data;
       const cost = bp.config.cost;
@@ -692,6 +1304,26 @@ export class GameScene extends Phaser.Scene {
         this.collectedFragments -= cost;
         bp.built = true;
         bp.ghostSprite.destroy();
+
+        // Level 16: The Web Hammer build point
+        if (bp.config.isHammer) {
+          this.bossHammerBuilt = true;
+          this.bossHammer = this.add.sprite(
+            bp.config.x + bp.config.w / 2,
+            bp.config.y + bp.config.h * 0.85,
+            'giant_hammer_off'
+          );
+          this.bossHammer.setOrigin(0.5, 0.85);
+          this.bossHammer.setDisplaySize(96, 96);
+          this.bossHammer.setDepth(8);
+
+          sounds.playBuild();
+          this.createParticleBurst(bp.config.x + bp.config.w / 2, bp.config.y + bp.config.h / 2, 'particle_cyan', 35);
+          if (this.uiManager) {
+            this.uiManager.showToast(i18n.t('hammerBuilt'), 3500);
+          }
+          return;
+        }
 
         // Create solid bridge tiles
         const cols = Math.max(1, Math.round(bp.config.w / 32));
@@ -719,9 +1351,31 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
-    // 4. JS Sequence Switch
+    // 6. JS Sequence Switch
     if (it.type === 'js_switch') {
       const sw = it.data;
+
+      // Special handling for Level 16: The Web Hammer Boss Fight
+      if (this.levelConfig.id === 16) {
+        if (!this.bossHammerBuilt) {
+          sounds.playJsFail();
+          if (this.uiManager) this.uiManager.showToast(i18n.t('needHammerBuild'), 3200);
+          return;
+        }
+        if (!this.bossHammerCssEnabled) {
+          sounds.playJsFail();
+          if (this.uiManager) this.uiManager.showToast(i18n.t('needHammerCss'), 3200);
+          return;
+        }
+
+        // Both HTML and CSS complete! Trigger JS Hammer Smash!
+        sounds.playJsSwitch(sw.id);
+        sw.sprite.setTexture(`switch_${sw.id}_on`);
+        this.createParticleBurst(sw.x, sw.y, 'particle_yellow', 15);
+        this.animateHammerSmash();
+        return;
+      }
+
       sounds.playJsSwitch(sw.id);
       sw.sprite.setTexture(`switch_${sw.id}_on`);
       this.createParticleBurst(sw.x, sw.y, 'particle_yellow', 10);
@@ -749,7 +1403,7 @@ export class GameScene extends Phaser.Scene {
         // Sequence fully solved!
         sounds.playJsSuccess();
 
-        if (this.levelConfig.id === 6) {
+        if (this.levelConfig.id === 16 || this.bossCore) {
           // Boss level -> defeats glitch virus!
           this.defeatGlitchBoss();
         } else {

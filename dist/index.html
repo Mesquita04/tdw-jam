@@ -5,57 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>CTRL + ALT + ESCAPE — O sistema conta contigo</title>
   <meta name="description" content="Um jogo retro 2D de plataformas e puzzles focado em desenvolvimento web (HTML, CSS, JS). Desparasita o sistema e restaura o Kernel!" />
-  <!-- Google Fonts: Retro Pixel & Cyberpunk Monospace -->
+  <!-- Google Fonts: JetBrains Mono / Fira Code + Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-CPXnX2pl.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-DrTgbzJ5.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <script type="module" crossorigin src="./assets/index-BM7hSIxM.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-JJKGxm9k.css">
 </head>
 <body>
   <div id="game-app">
-    <!-- Retro Screen Scanline Effect -->
+    <!-- Subtle Retro Screen Scanline Effect -->
     <div class="scanlines" aria-hidden="true"></div>
 
     <!-- Phaser Canvas Container -->
     <div id="phaser-container"></div>
 
-    <!-- HUD Overlay -->
+    <!-- HUD Overlay (Developer Tooling & Diagnostics) -->
     <div id="hud-overlay" class="ui-layer hidden">
       <div class="hud-top">
+        <!-- Left: IDE Breadcrumb & Sector File -->
         <div class="hud-left">
-          <div class="hud-badge level-badge" id="hud-level-name">NÍVEL 1: LOCALHOST</div>
+          <div class="dev-breadcrumb-pill">
+            <span class="breadcrumb-icon">📁</span>
+            <span class="breadcrumb-root">src/levels/</span>
+            <span class="breadcrumb-file" id="hud-level-name">01_localhost.html</span>
+          </div>
           <div class="hud-sub" id="hud-level-sub">Ambiente de Testes</div>
         </div>
 
+        <!-- Center: Telemetry Benchmarker -->
         <div class="hud-center">
-          <div class="hud-stat timer-box">
-            <span class="hud-icon">⏱</span>
-            <span id="hud-timer">00:00.0</span>
+          <div class="telemetry-pill timer-box">
+            <span class="pill-label">EXEC</span>
+            <span id="hud-timer" class="pill-value">00:00.0</span>
           </div>
-          <div class="hud-stat fragments-box" id="hud-fragments-box">
-            <span class="hud-icon">&lt;&gt;</span>
-            <span id="hud-fragments">0 / 0</span>
+          <div class="telemetry-pill fragments-box" id="hud-fragments-box">
+            <span class="pill-label">&lt;/&gt; FRAGS</span>
+            <span id="hud-fragments" class="pill-value">0 / 0</span>
           </div>
-          <div class="hud-stat deaths-box">
-            <span class="hud-icon">💀</span>
-            <span id="hud-deaths">0</span>
+          <div class="telemetry-pill deaths-box">
+            <span class="pill-label">PANIC</span>
+            <span id="hud-deaths" class="pill-value">0</span>
           </div>
         </div>
 
+        <!-- Right: Active Ability Badge & Controls -->
         <div class="hud-right">
-          <div class="hud-badge ability-badge" id="hud-ability">HABILIDADE: NENHUMA</div>
-          <button id="btn-sound-hud" class="btn-icon" title="Ativar/Desativar Som" aria-label="Som">🔊</button>
-          <button id="btn-pause-hud" class="btn-icon" title="Pausa [ESC]" aria-label="Pausa">⏸</button>
+          <div class="dev-ability-pill" id="hud-ability">
+            <span class="ability-dot"></span>
+            <span class="ability-text">HABILIDADE: NENHUMA</span>
+          </div>
+          <button id="btn-sound-hud" class="dev-icon-btn" title="Ativar/Desativar Som" aria-label="Som">🔊</button>
+          <button id="btn-pause-hud" class="dev-icon-btn" title="Pausa [ESC]" aria-label="Pausa">⏸</button>
         </div>
       </div>
 
-      <!-- Top-Right Level Hint Notification Card -->
+      <!-- Top-Right Level Hint Card (VS Code Problems / Linter Diagnostic Style) -->
       <div id="hud-hint-card" class="hint-notification-card">
         <div class="hint-card-header">
           <div class="hint-card-title-group">
-            <span class="hint-card-icon">💡</span>
-            <span id="hint-card-title" class="hint-card-title">DICA DO SISTEMA</span>
+            <span class="linter-indicator"></span>
+            <span id="hint-card-title" class="hint-card-title">DIAGNÓSTICO DO SISTEMA</span>
           </div>
           <button id="btn-toggle-hint" class="hint-card-btn" title="Minimizar Dica">−</button>
         </div>
@@ -68,17 +78,30 @@
         </div>
       </div>
 
-      <!-- Minimized Hint Pill (appears when hint is minimized) -->
-      <button id="btn-hint-pill" class="hint-minimized-pill hidden" title="Ver Dica">
+      <!-- Minimized Hint Pill -->
+      <button id="btn-hint-pill" class="hint-minimized-pill hidden" title="Ver Diagnóstico">
         <span class="hint-pill-icon">💡</span> <span id="hint-pill-text">DICA</span>
       </button>
+
+      <!-- Bottom Dock: Sleek Keyboard Shortcuts Reference -->
+      <div class="hud-bottom-dock">
+        <div class="dock-key-hint"><kbd>A</kbd><kbd>D</kbd> <span>MOVER</span></div>
+        <span class="dock-sep">•</span>
+        <div class="dock-key-hint"><kbd>W</kbd><kbd>ESPAÇO</kbd> <span>SALTAR</span></div>
+        <span class="dock-sep">•</span>
+        <div class="dock-key-hint"><kbd>E</kbd> <span>INTERAGIR</span></div>
+        <span class="dock-sep">•</span>
+        <div class="dock-key-hint"><kbd>R</kbd> <span>REINICIAR</span></div>
+        <span class="dock-sep">•</span>
+        <div class="dock-key-hint"><kbd>ESC</kbd> <span>PAUSA</span></div>
+      </div>
 
       <!-- In-Game Toast Notification Banner -->
       <div id="toast-banner" class="toast-banner hidden"></div>
 
       <!-- Quick Hint / Interaction Prompt on Screen -->
       <div id="interaction-prompt" class="interaction-prompt hidden">
-        <span class="key-badge">E</span> <span id="prompt-text">INTERAGIR</span>
+        <kbd class="key-badge">E</kbd> <span id="prompt-text">INTERAGIR</span>
       </div>
 
       <!-- Virtual On-Screen Controls for Accessibility & Mobile/Mouse -->
@@ -94,93 +117,323 @@
       </div>
     </div>
 
-    <!-- 1. Press Any Button To Start Screen (Splash Screen - In English) -->
-    <div id="screen-press-start" class="ui-modal-overlay">
-      <div class="press-start-box" id="press-start-trigger">
-        <div class="glitch-wrapper">
-          <h1 class="game-title" data-text="CTRL + ALT + ESCAPE">CTRL + ALT + ESCAPE</h1>
+    <!-- 1. Press Any Button To Start Screen (Developer Bootloader) -->
+    <!-- 1. Press Any Button To Start Screen (Hidden by default, available if needed) -->
+    <div id="screen-press-start" class="ui-modal-overlay hidden">
+      <div class="bootloader-frame" id="press-start-trigger">
+        <div class="bootloader-header">
+          <span class="term-dot dot-red"></span>
+          <span class="term-dot dot-yellow"></span>
+          <span class="term-dot dot-green"></span>
+          <span class="bootloader-title">bootloader.sys // v2.4.0-init</span>
         </div>
-        <p class="tagline" id="splash-tagline">"The system counts on you."</p>
+        <div class="bootloader-body">
+          <div class="boot-brand">
+            <span class="boot-prompt-tag">$</span>
+            <h1 class="game-title">CTRL + ALT + ESCAPE</h1>
+          </div>
+          <p class="tagline" id="splash-tagline">"The system counts on you."</p>
 
-        <div class="title-meta-box">
-          <span class="meta-tag neon-cyan">HTML: BUILD</span>
-          <span class="meta-tag neon-violet">CSS: STYLE</span>
-          <span class="meta-tag neon-yellow">JS: EXECUTE</span>
-        </div>
+          <div class="boot-log-box">
+            <div class="boot-log-line"><span class="log-ok">[ OK ]</span> Mounted /dev/vda1 on /kernel (ext4)</div>
+            <div class="boot-log-line"><span class="log-ok">[ OK ]</span> Initialized WebGL2 Canvas Renderer (Phaser 3)</div>
+            <div class="boot-log-line"><span class="log-ok">[ OK ]</span> Real-time Web Audio Synthesizer ready</div>
+            <div class="boot-log-line"><span class="log-warn">[WARN]</span> Corrupted byte streams detected across sectors</div>
+            <div class="boot-log-line"><span class="log-info">[INFO]</span> Developer workstation awaiting authorization...</div>
+          </div>
 
-        <div class="press-start-prompt">
-          <span id="txt-press-any-key">[ PRESS ANY BUTTON TO START ]</span>
-          <span class="press-start-sub" id="txt-press-any-sub">OR CLICK ANYWHERE</span>
-        </div>
+          <div class="press-start-prompt">
+            <span class="prompt-main" id="txt-press-any-key">[ PRESS ANY KEY TO INITIALIZE DEV SESSION ]</span>
+            <span class="press-start-sub" id="txt-press-any-sub">OR CLICK ANYWHERE TO CONTINUE</span>
+          </div>
 
-        <div class="team-badge-intro">
-          <span class="team-badge-title">NET YAHOO</span>
+          <div class="bootloader-footer">
+            <span class="team-credit-tag">NET YAHOO • FRANCISCO MESQUITA & GONÇALO ABREU</span>
+            <span class="jam-tag">TDW 24-HOUR GAME JAM</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 2. Language Selection Screen -->
+    <!-- 2. Language Selection Screen (Locale Configuration) -->
     <div id="screen-language-select" class="ui-modal-overlay hidden">
-      <div class="cyber-panel lang-panel">
-        <h2 class="panel-heading" id="lang-modal-heading">SELECT SYSTEM LANGUAGE</h2>
-        <p class="lang-modal-sub" id="lang-modal-sub">Choose your preferred language</p>
-        <div class="lang-buttons-group">
-          <button id="btn-lang-en" class="cyber-btn btn-primary lang-btn">
-            <span class="lang-flag">🇬🇧</span> ENGLISH (EN)
-          </button>
-          <button id="btn-lang-pt" class="cyber-btn btn-secondary lang-btn">
-            <span class="lang-flag">🇵🇹</span> PORTUGUÊS (PT)
-          </button>
+      <div class="dev-dialog-box lang-dialog">
+        <div class="dialog-header">
+          <div class="dialog-dots">
+            <span class="term-dot dot-red"></span>
+            <span class="term-dot dot-yellow"></span>
+            <span class="term-dot dot-green"></span>
+          </div>
+          <span class="dialog-title-text" id="lang-modal-heading">CONFIGURE SYSTEM LOCALE</span>
+        </div>
+        <div class="dialog-body">
+          <p class="lang-modal-sub" id="lang-modal-sub">Select language for the developer environment</p>
+          <div class="lang-cards-grid">
+            <button id="btn-lang-en" class="lang-card-btn">
+              <span class="lang-card-flag">🇬🇧</span>
+              <div class="lang-card-text">
+                <span class="lang-card-name">ENGLISH</span>
+                <span class="lang-card-code">en-US</span>
+              </div>
+              <kbd class="card-shortcut">1</kbd>
+            </button>
+            <button id="btn-lang-pt" class="lang-card-btn">
+              <span class="lang-card-flag">🇵🇹</span>
+              <div class="lang-card-text">
+                <span class="lang-card-name">PORTUGUÊS</span>
+                <span class="lang-card-code">pt-PT (Portugal)</span>
+              </div>
+              <kbd class="card-shortcut">2</kbd>
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 3. Title Screen Modal -->
-    <div id="screen-title" class="ui-modal-overlay hidden">
-      <div class="cyber-panel title-panel">
-        <div class="glitch-wrapper">
-          <h1 class="game-title" data-text="CTRL + ALT + ESCAPE">CTRL + ALT + ESCAPE</h1>
-        </div>
-        <p class="tagline" id="title-tagline">"O sistema conta contigo."</p>
+    <!-- 3. Title Screen Modal (CENTERED FULLSCREEN MAIN MENU WITH LARGE BUTTONS) -->
+    <div id="screen-title" class="ui-modal-overlay">
+      <div class="centered-menu-container">
+        <!-- Top Utility Bar (Quick Toggles, Fullscreen, Language, Audio) -->
+        <header class="centered-menu-header">
+          <div class="header-left">
+            <span class="win-dot dot-close"></span>
+            <span class="win-dot dot-min"></span>
+            <span class="win-dot dot-max" id="btn-win-fullscreen" title="Ecrã Inteiro"></span>
+            <span class="header-system-title">CTRL_ALT_ESCAPE // v1.2.0-LTS</span>
+            <span class="sys-status-tag"><span class="pulse-indicator"></span> V8_ACTIVE</span>
+          </div>
+          <div class="header-right">
+            <button id="btn-toggle-lang-title" class="menu-utility-btn" title="Alternar Idioma">
+              <span id="lbl-quick-lang">[LOCALE: PT]</span>
+            </button>
+            <button id="btn-toggle-music-title" class="menu-utility-btn" title="Alternar Música">
+              <span id="lbl-quick-music">[BGM: ON]</span>
+            </button>
+            <button id="btn-toggle-sfx-title" class="menu-utility-btn" title="Alternar Efeitos Sonoros">
+              <span id="lbl-quick-sfx">[SFX: ON]</span>
+            </button>
+            <button id="btn-fullscreen-header" class="menu-utility-btn fs-utility-btn" title="Alternar Ecrã Inteiro">
+              <span id="lbl-fs-header">[FULLSCREEN]</span>
+            </button>
+          </div>
+        </header>
 
-        <div class="title-meta-box">
-          <span class="meta-tag neon-cyan">HTML: BUILD</span>
-          <span class="meta-tag neon-violet">CSS: STYLE</span>
-          <span class="meta-tag neon-yellow">JS: EXECUTE</span>
+        <!-- Main Centered Content Area -->
+        <main class="centered-menu-main">
+          <!-- Game Logo & Branding -->
+          <div class="centered-hero-banner">
+            <div class="hero-chip-row">
+              <span class="hero-chip"><span class="term-sym">&gt;_</span> <span id="lbl-telem-title">TELEMETRIA:</span> <strong id="lbl-telem-status" class="telem-warning">GLITCH DETETADO</strong></span>
+              <span class="hero-chip highlight-chip">SETORES: <strong id="lbl-telem-unlocked">1 / 16</strong></span>
+              <span class="hero-chip">SKIN: <strong id="lbl-telem-skin">DEV CLÁSSICO</strong></span>
+            </div>
+
+            <h1 class="centered-game-logo">CTRL + ALT + ESCAPE</h1>
+            <p class="tagline centered-tagline" id="title-tagline">&gt; "O sistema conta contigo." <span class="term-cursor">█</span></p>
+
+            <!-- Tech Pillars -->
+            <div class="tech-spec-bar centered-tech-spec">
+              <span class="tech-pill html-pill">&lt;HTML: BUILD&gt;</span>
+              <span class="tech-pill css-pill">{CSS: STYLE}</span>
+              <span class="tech-pill js-pill">(JS: EXECUTE)</span>
+              <span class="tech-pill qa-pill">[QA: TEST]</span>
+              <span class="tech-pill ai-pill">/*AI: COPILOT*/</span>
+            </div>
+          </div>
+
+          <!-- Big Centered Menu Actions Stack -->
+          <div class="centered-actions-stack">
+            <!-- 01. JOGAR / PLAY -->
+            <button id="btn-play" class="big-menu-card card-primary">
+              <div class="card-left-content">
+                <span class="card-tag card-tag-play">&gt;&gt;</span>
+                <div class="card-text-group">
+                  <span class="card-title" id="lbl-btn-play">JOGAR</span>
+                  <span class="card-desc" id="lbl-btn-play-desc">Iniciar nova sessão de depuração do Kernel</span>
+                </div>
+              </div>
+              <div class="card-shortcut-tag">
+                <kbd>[ ENTER ]</kbd>
+              </div>
+            </button>
+
+            <!-- 02. ESCOLHER NÍVEL / CHOOSE LEVEL -->
+            <button id="btn-level-select" class="big-menu-card card-levels">
+              <div class="card-left-content">
+                <span class="card-tag card-tag-levels">&lt;02&gt;</span>
+                <div class="card-text-group">
+                  <span class="card-title" id="lbl-btn-levels">ESCOLHER NÍVEL</span>
+                  <span class="card-desc" id="lbl-btn-levels-desc">Explora os 16 setores desbloqueados na Local Storage</span>
+                </div>
+              </div>
+              <div class="card-shortcut-tag">
+                <kbd>[ L ]</kbd>
+              </div>
+            </button>
+
+            <!-- 03. OPÇÕES / OPTIONS (Skins, Música, Efeitos, Ecrã) -->
+            <button id="btn-options" class="big-menu-card card-options">
+              <div class="card-left-content">
+                <span class="card-tag card-tag-options">{03}</span>
+                <div class="card-text-group">
+                  <span class="card-title" id="lbl-btn-options">OPÇÕES</span>
+                  <span class="card-desc" id="lbl-btn-options-desc">Personalizar skins, música, efeitos sonoros e ecrã</span>
+                </div>
+              </div>
+              <div class="card-shortcut-tag">
+                <kbd>[ O ]</kbd>
+              </div>
+            </button>
+
+            <!-- 04. IDIOMA / LANGUAGE -->
+            <button id="btn-lang-menu" class="big-menu-card card-lang">
+              <div class="card-left-content">
+                <span class="card-tag card-tag-lang">[04]</span>
+                <div class="card-text-group">
+                  <span class="card-title" id="lbl-btn-lang-menu">IDIOMA (LANGUAGE)</span>
+                  <span class="card-desc" id="lbl-btn-lang-menu-desc">Alternar entre Português e English</span>
+                </div>
+              </div>
+              <div class="card-shortcut-tag">
+                <kbd>[ G ]</kbd>
+              </div>
+            </button>
+
+            <!-- 05. CONTROLOS / CONTROLS -->
+            <button id="btn-controls" class="big-menu-card card-controls">
+              <div class="card-left-content">
+                <span class="card-tag card-tag-controls">(05)</span>
+                <div class="card-text-group">
+                  <span class="card-title" id="lbl-btn-controls">CONTROLOS</span>
+                  <span class="card-desc" id="lbl-btn-controls-desc">Manual de comandos do programador e mecânicas</span>
+                </div>
+              </div>
+              <div class="card-shortcut-tag">
+                <kbd>[ M ]</kbd>
+              </div>
+            </button>
+
+            <!-- 06. CRÉDITOS FINAIS / CREDITS -->
+            <button id="btn-credits" class="big-menu-card card-credits">
+              <div class="card-left-content">
+                <span class="card-tag card-tag-credits">/*06*/</span>
+                <div class="card-text-group">
+                  <span class="card-title" id="lbl-btn-credits">CRÉDITOS FINAIS</span>
+                  <span class="card-desc" id="lbl-btn-credits-desc">Net Yahoo (Francisco Mesquita & Gonçalo Abreu)</span>
+                </div>
+              </div>
+              <div class="card-shortcut-tag">
+                <kbd>[ K ]</kbd>
+              </div>
+            </button>
+
+            <!-- Hidden continue button for keyboard shortcut support -->
+            <button id="btn-continue" class="hidden"></button>
+          </div>
+        </main>
+
+        <!-- Centered Sleek Footer -->
+        <footer class="centered-menu-footer">
+          <div class="footer-credit-line">
+            <span class="footer-highlight">&gt; TDW 24-HOUR GAME JAM</span>
+            <span class="footer-dot">//</span>
+            <span class="footer-authors">NET YAHOO: <strong>Francisco Mesquita</strong> &amp; <strong>Gonçalo Abreu</strong></span>
+            <span class="footer-dot">//</span>
+            <span class="footer-specs">PHASER 3 • WEB AUDIO API</span>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Options Modal (Trocar Skins, Música de Fundo, Sound Effects, Fullscreen) -->
+    <div id="screen-options" class="ui-modal-overlay hidden">
+      <div class="cyber-panel options-panel">
+        <div class="dialog-header">
+          <div class="dialog-dots">
+            <span class="term-dot dot-red"></span>
+            <span class="term-dot dot-yellow"></span>
+            <span class="term-dot dot-green"></span>
+          </div>
+          <span class="dialog-title-text" id="lbl-options-heading">CONFIGURAÇÃO DO SISTEMA (OPÇÕES)</span>
         </div>
 
-        <div class="menu-button-group">
-          <button id="btn-play" class="cyber-btn btn-primary">
-            <span class="btn-bracket">[</span> <span id="lbl-btn-play">JOGAR</span> <span class="btn-bracket">]</span>
-          </button>
-          <button id="btn-continue" class="cyber-btn btn-secondary">
-            <span class="btn-bracket">[</span> <span id="lbl-btn-continue">CONTINUAR</span> <span class="btn-bracket">]</span>
-          </button>
-          <button id="btn-level-select" class="cyber-btn">
-            <span class="btn-bracket">[</span> <span id="lbl-btn-levels">SELECIONAR NÍVEL</span> <span class="btn-bracket">]</span>
-          </button>
-          <button id="btn-controls" class="cyber-btn">
-            <span class="btn-bracket">[</span> <span id="lbl-btn-controls">CONTROLOS</span> <span class="btn-bracket">]</span>
-          </button>
-          <button id="btn-credits" class="cyber-btn">
-            <span class="btn-bracket">[</span> <span id="lbl-btn-credits">CRÉDITOS FINAIS</span> <span class="btn-bracket">]</span>
-          </button>
+        <div class="options-body">
+          <!-- Section 1: Skins Selector -->
+          <div class="options-section">
+            <div class="section-title-row">
+              <span class="section-icon">👕</span>
+              <h3 class="section-title" id="lbl-opt-skins">SKINS DO PROGRAMADOR</h3>
+            </div>
+            <div class="skins-grid" id="skins-grid-container">
+              <!-- Dynamically populated with preview canvases and equip buttons -->
+            </div>
+          </div>
+
+          <!-- Section 2: Audio & Music Settings -->
+          <div class="options-section">
+            <div class="section-title-row">
+              <span class="section-icon">🔊</span>
+              <h3 class="section-title" id="lbl-opt-audio">ÁUDIO & MÚSICA</h3>
+            </div>
+            <div class="audio-options-grid">
+              <div class="audio-toggle-card">
+                <div class="audio-card-info">
+                  <span class="audio-card-name" id="lbl-bgm-title">Música de Fundo (BGM)</span>
+                  <span class="audio-card-sub" id="lbl-bgm-sub">Sintetizador retro chiptune em tempo real</span>
+                </div>
+                <button id="btn-toggle-music" class="cyber-btn toggle-btn">
+                  <span id="lbl-music-status">MÚSICA: ATIVA 🎵</span>
+                </button>
+              </div>
+
+              <div class="audio-toggle-card">
+                <div class="audio-card-info">
+                  <span class="audio-card-name" id="lbl-sfx-title">Efeitos Sonoros (SFX)</span>
+                  <span class="audio-card-sub" id="lbl-sfx-sub">Saltos, recolha, impacto e terminais</span>
+                </div>
+                <button id="btn-toggle-sfx" class="cyber-btn toggle-btn">
+                  <span id="lbl-sfx-status">SFX: ATIVOS 🔊</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Screen & Display -->
+          <div class="options-section">
+            <div class="section-title-row">
+              <span class="section-icon">🖥️</span>
+              <h3 class="section-title" id="lbl-opt-display">ECRÃ & VISUALIZAÇÃO</h3>
+            </div>
+            <div class="display-options-row">
+              <button id="btn-toggle-fullscreen" class="cyber-btn btn-primary fs-cta-btn">
+                <span id="lbl-fullscreen-btn">ECRÃ INTEIRO (FULLSCREEN) ⛶</span>
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div class="title-footer">
-          <button id="btn-toggle-lang-title" class="text-link">IDIOMA: PT 🇵🇹</button>
-          <button id="btn-toggle-sound-title" class="text-link">SOM: ATIVO 🔊</button>
-          <span class="version-tag">NET YAHOO • TDW JAM</span>
+        <div class="modal-footer">
+          <button id="btn-close-options" class="cyber-btn btn-primary">VOLTAR AO MENU</button>
         </div>
       </div>
     </div>
 
-    <!-- Level Select Modal -->
+    <!-- Level Select Modal (com base na local storage) -->
     <div id="screen-level-select" class="ui-modal-overlay hidden">
       <div class="cyber-panel levels-panel">
-        <h2 class="panel-heading">SELECIONA O NÍVEL DO SISTEMA</h2>
+        <div class="dialog-header">
+          <div class="dialog-dots">
+            <span class="term-dot dot-red"></span>
+            <span class="term-dot dot-yellow"></span>
+            <span class="term-dot dot-green"></span>
+          </div>
+          <span class="dialog-title-text" id="level-select-header-title">SELECIONA O NÍVEL DO SISTEMA</span>
+        </div>
+        <div class="level-select-overview-bar" id="level-select-overview-bar">
+          SETORES DESBLOQUEADOS: 1 / 16 • ESTRELAS: 0 / 48 ★
+        </div>
         <div class="levels-grid" id="levels-grid-container">
-          <!-- Dynamically populated by UIManager -->
+          <!-- Dynamically populated by UIManager with category badges, stars, times, and locked states -->
         </div>
         <div class="modal-footer">
           <button id="btn-close-levels" class="cyber-btn">VOLTAR AO MENU</button>
@@ -210,6 +463,10 @@
             <span class="control-desc">Consultar Habilidades Desbloqueadas (HTML, CSS, JS)</span>
           </div>
           <div class="control-row">
+            <span class="control-keys">F / Clique</span>
+            <span class="control-desc">Atirar AI Copilot para buscar tokens elevados [F / Clique]</span>
+          </div>
+          <div class="control-row">
             <span class="control-keys">R</span>
             <span class="control-desc">Reiniciar rapidamente o nível atual</span>
           </div>
@@ -224,6 +481,8 @@
           <p><strong>HTML (Build):</strong> Apanha fragmentos &lt;&gt; para erguer pontes e plataformas &lt;div&gt;.</p>
           <p><strong>CSS (Style):</strong> Altera regras no terminal para transformar elementos entre sólido e fantasma.</p>
           <p><strong>JavaScript (Execute):</strong> Resolve sequências assíncronas de botões para abrir portais e desativar o vírus!</p>
+          <p><strong>Testes & QA:</strong> Esquiva-te de bugs a disparar erros de execução e corre npm test --fix no terminal!</p>
+          <p><strong>IA & Copilot:</strong> Recolhe tokens neurais para o teu drone AI Copilot projetar pontes de inferência!</p>
         </div>
 
         <div class="modal-footer">
@@ -340,6 +599,45 @@
       </div>
     </div>
 
+    <!-- Welcome to TDW Celebration Screen (Before Final Credits) -->
+    <div id="screen-welcome-tdw" class="ui-modal-overlay hidden">
+      <div class="cyber-panel welcome-tdw-panel">
+        <div class="welcome-tdw-badge-row">
+          <span class="welcome-pillar-pill html-glow">&lt;HTML5&gt;</span>
+          <span class="welcome-pillar-pill css-glow">{CSS3}</span>
+          <span class="welcome-pillar-pill js-glow">(JS/ES6)</span>
+          <span class="welcome-pillar-pill qa-glow">[QA/TEST]</span>
+          <span class="welcome-pillar-pill ai-glow">[AI/COPILOT]</span>
+        </div>
+
+        <div class="welcome-title-container">
+          <div class="welcome-celebration-stars">✦ ✦ ✦</div>
+          <h1 class="welcome-tdw-title" id="welcome-tdw-title-text">Welcome to TDW</h1>
+          <div class="welcome-celebration-stars">✦ ✦ ✦</div>
+        </div>
+
+        <p class="welcome-tdw-subtitle" id="welcome-tdw-subtitle-text">
+          PARABÉNS, PROGRAMADOR! CONQUISTASTE A WEB STACK COMPLETA!
+        </p>
+
+        <div class="welcome-tdw-card">
+          <p id="welcome-tdw-lore-text">
+            Completaste todos os desafios do Kernel: HTML (Estrutura), CSS (Estilo), JavaScript (Execução), Testes & QA (Resiliência) e Inteligência Artificial (Inovação). O sistema web está totalmente funcional e livre de bugs!
+          </p>
+          <div class="welcome-signature">
+            <span class="sig-team">NET YAHOO</span>
+            <span class="sig-sub">Francisco Mesquita &amp; Gonçalo Abreu • TDW 24H Game Jam</span>
+          </div>
+        </div>
+
+        <div class="menu-button-group">
+          <button id="btn-welcome-tdw-continue" class="cyber-btn btn-primary btn-welcome-cta">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-welcome-credits">VER CRÉDITOS FINAIS ►</span> <span class="btn-bracket">]</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Victory Screen (Game Complete) -->
     <div id="screen-victory" class="ui-modal-overlay hidden">
       <div class="cyber-panel victory-panel">
@@ -377,5 +675,22 @@
     </div>
   </div>
 
+  <script>
+    // Detect if game was opened directly via file:// protocol
+    if (window.location.protocol === 'file:') {
+      window.addEventListener('DOMContentLoaded', function() {
+        var banner = document.createElement('div');
+        banner.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.96);color:#00e5ff;font-family:monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999;padding:24px;text-align:center;box-sizing:border-box;';
+        banner.innerHTML = '<div style="max-width:640px;background:#0d111a;border:2px solid #f43f5e;border-radius:8px;padding:32px;box-shadow:0 0 30px rgba(244,63,94,0.3);">' +
+          '<h2 style="color:#f43f5e;margin-top:0;font-size:22px;letter-spacing:1px;">⚠️ PROTOCOLO DE FICHEIRO DETETADO (file://)</h2>' +
+          '<p style="color:#cbd5e1;font-size:15px;line-height:1.6;margin:16px 0;">O jogo utiliza módulos modernos JavaScript (ES Modules). Os navegadores bloqueiam módulos quando abertos por duplo clique direto em ficheiros locais por restrições de segurança (CORS).</p>' +
+          '<p style="color:#10b981;font-size:16px;font-weight:bold;margin:20px 0;">O servidor de desenvolvimento já está ativo em segundo plano!</p>' +
+          '<a href="http://localhost:3000/" style="display:inline-block;background:#00e5ff;color:#000000;font-weight:bold;font-size:16px;padding:14px 28px;border-radius:6px;text-decoration:none;margin-top:10px;box-shadow:0 0 15px rgba(0,229,255,0.4);">► CLICA AQUI PARA ABRIR EM HTTP://LOCALHOST:3000/</a>' +
+          '<p style="color:#64748b;font-size:12px;margin-top:20px;">Em alternativa, digita <code>http://localhost:3000/</code> na barra de endereços do teu navegador.</p>' +
+          '</div>';
+        document.body.appendChild(banner);
+      });
+    }
+  </script>
 </body>
 </html>

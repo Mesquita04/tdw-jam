@@ -4,6 +4,7 @@ import { GameScene } from './scenes/GameScene.js';
 import { UIManager } from './ui/UIManager.js';
 import { sounds } from './audio/SoundManager.js';
 import { Storage } from './systems/Storage.js';
+import { TextureGenerator } from './graphics/TextureGenerator.js';
 
 // Phaser Game Configuration
 const config = {
@@ -38,15 +39,17 @@ let gameSceneInstance = null;
 const uiManager = new UIManager({
   onStartLevel: (levelId) => {
     sounds.ensureContext();
-    const scene = game.scene.getScene('GameScene');
-    if (scene) {
-      gameSceneInstance = scene;
-      scene.setUIManager(uiManager);
-      scene.scene.restart({ levelId: levelId });
-      if (scene.physics && scene.physics.world && scene.physics.world.isPaused) {
-        scene.physics.resume();
+    const gameScene = game.scene.getScene('GameScene');
+    if (!gameScene || !gameScene.scene.isActive()) {
+      game.scene.start('GameScene', { levelId: levelId, uiManager: uiManager });
+    } else {
+      gameScene.setUIManager(uiManager);
+      gameScene.scene.restart({ levelId: levelId, uiManager: uiManager });
+      if (gameScene.physics && gameScene.physics.world && gameScene.physics.world.isPaused) {
+        gameScene.physics.resume();
       }
     }
+    gameSceneInstance = game.scene.getScene('GameScene');
   },
   onRestartLevel: () => {
     const scene = game.scene.getScene('GameScene');
@@ -62,14 +65,33 @@ const uiManager = new UIManager({
   },
   onPause: () => {
     const scene = game.scene.getScene('GameScene');
-    if (scene) {
+    if (scene && scene.scene.isActive()) {
       scene.togglePause();
+    }
+  },
+  onReturnToTitle: () => {
+    const scene = game.scene.getScene('GameScene');
+    if (scene && scene.scene.isActive()) {
+      scene.scene.stop();
+      gameSceneInstance = null;
     }
   },
   onVirtualInput: (key, isDown) => {
     const scene = game.scene.getScene('GameScene');
     if (scene && scene.setVirtualInput) {
       scene.setVirtualInput(key, isDown);
+    }
+  },
+  onChangeSkin: (skinKey) => {
+    const bootScene = game.scene.getScene('BootScene');
+    const gameScene = game.scene.getScene('GameScene');
+    const targetScene = (gameScene && gameScene.scene.isActive()) ? gameScene : bootScene;
+    if (targetScene) {
+      TextureGenerator.applySkinToActiveTextures(targetScene, skinKey);
+      if (gameScene && gameScene.player && gameScene.player.active) {
+        gameScene.player.setTexture('player_idle');
+        gameScene.player.anims.play('idle', true);
+      }
     }
   }
 });
@@ -98,4 +120,5 @@ window.addEventListener('blur', () => {
 });
 
 // Pre-initialize SoundManager state from storage
-sounds.setMuted(Storage.isMuted());
+sounds.setMusicMuted(Storage.isMusicMuted());
+sounds.setSfxMuted(Storage.isSfxMuted());

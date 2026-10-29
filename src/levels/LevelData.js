@@ -1,124 +1,69 @@
 /**
- * LevelData.js - Handcrafted definitions for all 6 levels.
- * Grid size: 960 x 540 pixels (30 x 17 tiles of 32x32).
- * Ground floor is at y: 480.
- * All exit portals are positioned on the floor at y: 452 (bottom touches y: 480).
- * Platform steps never exceed 65-75px, making every jump reachable!
+ * LevelData.js - Handcrafted definitions for the full 16-level campaign.
+ * Structured progressively by category:
+ * - HTML I, II, III (Levels 1-3): Pure HTML Document structure, White Canvas & black <div> blocks.
+ * - CSS I, II, III (Levels 4-6): Stylesheet, Display rules & Box Model, incorporating HTML challenges.
+ * - JS I, II, III (Levels 7-9): Callbacks, Promises & Event Loop, incorporating HTML + CSS.
+ * - QA I, II, III (Levels 10-12): Test Runner, Regression & Performance with shooting Error Bugs, incorporating HTML + CSS.
+ * - AI I, II, III (Levels 13-15): Neural Networks, AI Copilot Dispatch for sky tokens & Inference bridges, incorporating HTML + CSS + QA.
+ * - Final Boss (Level 16): Kernel Panic Boss Battle integrating all mechanics, triggering "Welcome to TDW"!
  * 
- * Each level features a UNIQUE VISUAL THEME relative to its technology:
- * - Level 1: Localhost Wireframe (Terminal blue & cyan)
- * - Level 2: HTML Raw Document (Pure white canvas with black <div> elements!)
- * - Level 3: CSS Stylesheet (Dark mode with neon purple & magenta box models)
- * - Level 4: JavaScript Event Loop (Carbon black with glowing JS yellow stacks)
- * - Level 5: Git Merge Conflict (Split diff with green additions & red deletion lasers)
- * - Level 6: Kernel Panic / Boss (Void black with flashing crimson hex memory dumps)
- * 
- * Hints are provided via top-right notification cards instead of in-world clutter.
+ * STRICT ARCHITECTURAL CONSTRAINTS:
+ * - ALL exit doors are grounded at x: 880, y: 452 (bottom touches y: 480).
+ * - ALL terminals (CSS, Test, AI, story) are firmly on the ground floor at y: 448 (NO flying terminals!).
+ * - Platform steps never exceed 65-75px vertically, ensuring every jump is reachable!
  */
 
 export const LEVELS = [
   // ==========================================
-  // NÍVEL 1: LOCALHOST (Tutorial & Boot)
+  // GRUPO 1: HTML (NÍVEIS 1 - 3)
+  // Tema: Canvas Branco e Blocos Pretos Estruturais
   // ==========================================
   {
     id: 1,
-    name: 'NÍVEL 1: LOCALHOST',
-    nameEn: 'LEVEL 1: LOCALHOST',
-    subtitle: 'Ambiente de Testes do Kernel',
-    subEn: 'Kernel Test Environment',
-    unlockedAbility: 'NENHUMA',
-    targetTime: 20, // 20s for speedrun star
-    playerStart: { x: 80, y: 440 },
-    theme: {
-      key: 'localhost',
-      bgColor: '#0a0d18',
-      bgTexture: 'bg_level_1',
-      accentColor: '#00f3ff',
-      tag: 'LOCALHOST'
-    },
-    hint: {
-      titlePt: 'DICA: INICIALIZAÇÃO',
-      titleEn: 'HINT: BOOT SEQUENCE',
-      textPt: 'Usa [A/D] para correr e [Espaço/W] para saltar. Segue para a direita até ao Portal de Saída no chão!',
-      textEn: 'Use [A/D] to run and [Space/W] to jump. Reach the ground exit door on the right to proceed!',
-      tag: 'LOCALHOST'
-    },
-    exit: { x: 880, y: 452, locked: false }, // Porta no chão
-    platforms: [
-      // Floor
-      { x: 0, y: 480, w: 960, h: 60, type: 'tile_cyber_accent' },
-      // Left and right walls
-      { x: 0, y: 0, w: 32, h: 480, type: 'tile_cyber' },
-      { x: 928, y: 0, w: 32, h: 480, type: 'tile_cyber' },
-      // Stepping platforms to practice jumping
-      { x: 340, y: 415, w: 100, h: 32, type: 'tile_cyber' },
-      { x: 500, y: 350, w: 100, h: 32, type: 'tile_cyber' },
-      { x: 680, y: 415, w: 100, h: 32, type: 'tile_cyber' }
-    ],
-    htmlFragments: [],
-    buildPoints: [],
-    cssPlatforms: [],
-    cssTerminals: [],
-    jsSwitches: [],
-    hazards: []
-  },
-
-  // ==========================================
-  // NÍVEL 2: ELEMENTOS PERDIDOS (HTML - Pure White Canvas & Black <div> Blocks!)
-  // ==========================================
-  {
-    id: 2,
-    name: 'NÍVEL 2: ELEMENTOS PERDIDOS',
-    nameEn: 'LEVEL 2: MISSING ELEMENTS',
-    subtitle: 'Módulo HTML: <div> e Estrutura',
-    subEn: 'HTML Module: <div> & Structure',
+    name: 'NÍVEL 1: HTML I - INTRODUÇÃO AOS ELEMENTOS',
+    nameEn: 'LEVEL 1: HTML I - ELEMENT BASICS',
+    subtitle: 'Módulo HTML: Bloco <div/> e Estrutura',
+    subEn: 'HTML Module: <div/> Block & Structure',
     unlockedAbility: 'HTML',
-    targetTime: 30,
+    targetTime: 20,
     playerStart: { x: 80, y: 440 },
     theme: {
       key: 'html',
-      bgColor: '#ffffff', // Pure white canvas as requested!
+      bgColor: '#ffffff',
       bgTexture: 'bg_level_2',
       accentColor: '#000000',
       tag: 'HTML5'
     },
     hint: {
-      titlePt: 'DICA: ESTRUTURA HTML',
-      titleEn: 'HINT: HTML STRUCTURE',
-      textPt: 'O módulo HTML está sem estilos! Salta pelos blocos pretos <div/> para apanhar os 2 fragmentos <> e prime [E] no ponto de construção para erguer a ponte <div>!',
-      textEn: 'HTML module is unstyled! Jump across the black <div> blocks to collect 2 fragments <>, then press [E] at the blueprint to erect the <div> bridge!',
+      titlePt: 'DICA: ESTRUTURA HTML I',
+      titleEn: 'HINT: HTML STRUCTURE I',
+      textPt: 'O módulo HTML constrói a base da página! Salta para o bloco preto para apanhar o fragmento <div/> e prime [E] no chão para erguer a ponte!',
+      textEn: 'HTML builds the page foundation! Jump onto the black block to grab the <div/> fragment and press [E] on the ground to erect the bridge!',
       tag: 'HTML5'
     },
-    exit: { x: 880, y: 452, locked: false }, // Porta no chão
+    exit: { x: 880, y: 452, locked: false },
     platforms: [
-      // Left ledge (ground) - Solid black block
-      { x: 0, y: 480, w: 320, h: 60, type: 'tile_html_black_accent' },
-      // Step 1: 70px above floor
-      { x: 100, y: 410, w: 90, h: 32, type: 'tile_html_black' },
-      // Step 2: 70px above Step 1
-      { x: 210, y: 340, w: 90, h: 32, type: 'tile_html_black' },
-      // Right landing ledge with exit
-      { x: 640, y: 480, w: 320, h: 60, type: 'tile_html_black_accent' },
-      // Walls
+      { x: 0, y: 480, w: 340, h: 60, type: 'tile_html_black_accent' },
+      { x: 600, y: 480, w: 360, h: 60, type: 'tile_html_black_accent' },
       { x: 0, y: 0, w: 32, h: 480, type: 'tile_html_black' },
-      { x: 928, y: 0, w: 32, h: 480, type: 'tile_html_black' }
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_html_black' },
+      { x: 150, y: 410, w: 90, h: 32, type: 'tile_html_black' }
     ],
-    // Black spikes with red 404 tip on the white background
     hazards: [
-      { x: 320, y: 512, w: 320, h: 28, type: 'spikes', texture: 'hazard_spikes_html', active: true }
+      { x: 340, y: 512, w: 260, h: 28, type: 'spikes', texture: 'hazard_spikes_html', active: true }
     ],
     htmlFragments: [
-      { id: 'f1', x: 145, y: 365 },
-      { id: 'f2', x: 255, y: 295 }
+      { id: 'f1', x: 195, y: 365 }
     ],
     buildPoints: [
       {
-        id: 'bridge_gap',
-        x: 320,
+        id: 'bridge_h1',
+        x: 340,
         y: 480,
-        w: 320,
+        w: 260,
         h: 32,
-        cost: 2,
+        cost: 1,
         label: '<div class="bridge">',
         ghostTexture: 'tile_html_ghost',
         solidTexture: 'tile_html_bridge'
@@ -129,17 +74,135 @@ export const LEVELS = [
     jsSwitches: []
   },
 
-  // ==========================================
-  // NÍVEL 3: ESTILOS CORROMPIDOS (CSS - Dark Mode & Neon Styling)
-  // ==========================================
+  {
+    id: 2,
+    name: 'NÍVEL 2: HTML II - BLOCOS ANINHADOS',
+    nameEn: 'LEVEL 2: HTML II - NESTED BLOCKS',
+    subtitle: 'Módulo HTML: <section> e <article>',
+    subEn: 'HTML Module: <section> & <article>',
+    unlockedAbility: 'HTML',
+    targetTime: 28,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'html',
+      bgColor: '#ffffff',
+      bgTexture: 'bg_level_2',
+      accentColor: '#000000',
+      tag: 'HTML5'
+    },
+    hint: {
+      titlePt: 'DICA: ESTRUTURA HTML II',
+      titleEn: 'HINT: HTML STRUCTURE II',
+      textPt: 'Estruturas aninhadas! Salta pelos blocos pretos para recolher 2 fragmentos de código e ergue a ponte no fosso!',
+      textEn: 'Nested structures! Jump across black blocks to collect 2 code fragments and erect the bridge over the pit!',
+      tag: 'HTML5'
+    },
+    exit: { x: 880, y: 452, locked: false },
+    platforms: [
+      { x: 0, y: 480, w: 340, h: 60, type: 'tile_html_black_accent' },
+      { x: 620, y: 480, w: 340, h: 60, type: 'tile_html_black_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_html_black' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_html_black' },
+      { x: 130, y: 410, w: 90, h: 32, type: 'tile_html_black' },
+      { x: 230, y: 340, w: 90, h: 32, type: 'tile_html_black' }
+    ],
+    hazards: [
+      { x: 340, y: 512, w: 280, h: 28, type: 'spikes', texture: 'hazard_spikes_html', active: true }
+    ],
+    htmlFragments: [
+      { id: 'f1', x: 175, y: 365 },
+      { id: 'f2', x: 275, y: 295 }
+    ],
+    buildPoints: [
+      {
+        id: 'bridge_h2',
+        x: 340,
+        y: 480,
+        w: 280,
+        h: 32,
+        cost: 2,
+        label: '<section class="bridge">',
+        ghostTexture: 'tile_html_ghost',
+        solidTexture: 'tile_html_bridge'
+      }
+    ],
+    cssPlatforms: [],
+    cssTerminals: [],
+    jsSwitches: []
+  },
+
   {
     id: 3,
-    name: 'NÍVEL 3: ESTILOS CORROMPIDOS',
-    nameEn: 'LEVEL 3: BROKEN STYLESHEET',
-    subtitle: 'Módulo CSS: display e opacidade',
-    subEn: 'CSS Module: display & opacity',
-    unlockedAbility: 'CSS',
+    name: 'NÍVEL 3: HTML III - DOCUMENTO SEMÂNTICO',
+    nameEn: 'LEVEL 3: HTML III - SEMANTIC DOCUMENT',
+    subtitle: 'Módulo HTML: <header>, <main> e <footer>',
+    subEn: 'HTML Module: <header>, <main> & <footer>',
+    unlockedAbility: 'HTML',
     targetTime: 32,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'html',
+      bgColor: '#ffffff',
+      bgTexture: 'bg_level_2',
+      accentColor: '#000000',
+      tag: 'HTML5'
+    },
+    hint: {
+      titlePt: 'DICA: DOCUMENTO SEMÂNTICO',
+      titleEn: 'HINT: SEMANTIC DOCUMENT',
+      textPt: 'Documento completo! Recolhe os 3 fragmentos semânticos nos patamares para construir a grande ponte central!',
+      textEn: 'Complete document! Collect 3 semantic fragments across platforms to build the grand central bridge!',
+      tag: 'HTML5'
+    },
+    exit: { x: 880, y: 452, locked: false },
+    platforms: [
+      { x: 0, y: 480, w: 320, h: 60, type: 'tile_html_black_accent' },
+      { x: 640, y: 480, w: 320, h: 60, type: 'tile_html_black_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_html_black' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_html_black' },
+      { x: 90, y: 410, w: 70, h: 32, type: 'tile_html_black' },
+      { x: 170, y: 340, w: 70, h: 32, type: 'tile_html_black' },
+      { x: 250, y: 270, w: 70, h: 32, type: 'tile_html_black' },
+      { x: 740, y: 410, w: 80, h: 32, type: 'tile_html_black' }
+    ],
+    hazards: [
+      { x: 320, y: 512, w: 320, h: 28, type: 'spikes', texture: 'hazard_spikes_html', active: true }
+    ],
+    htmlFragments: [
+      { id: 'f1', x: 125, y: 365 },
+      { id: 'f2', x: 205, y: 295 },
+      { id: 'f3', x: 285, y: 225 }
+    ],
+    buildPoints: [
+      {
+        id: 'bridge_h3',
+        x: 320,
+        y: 480,
+        w: 320,
+        h: 32,
+        cost: 3,
+        label: '<main class="semantic-bridge">',
+        ghostTexture: 'tile_html_ghost',
+        solidTexture: 'tile_html_bridge'
+      }
+    ],
+    cssPlatforms: [],
+    cssTerminals: [],
+    jsSwitches: []
+  },
+
+  // ==========================================
+  // GRUPO 2: CSS (NÍVEIS 4 - 6)
+  // Tema: Folha de Estilos Neon, combinando HTML + CSS
+  // ==========================================
+  {
+    id: 4,
+    name: 'NÍVEL 4: CSS I - DISPLAY E VISIBILIDADE',
+    nameEn: 'LEVEL 4: CSS I - DISPLAY & VISIBILITY',
+    subtitle: 'Módulo CSS: display: block / none',
+    subEn: 'CSS Module: display: block / none',
+    unlockedAbility: 'CSS',
+    targetTime: 28,
     playerStart: { x: 80, y: 440 },
     theme: {
       key: 'css',
@@ -151,53 +214,35 @@ export const LEVELS = [
     hint: {
       titlePt: 'DICA: FOLHA DE ESTILOS CSS',
       titleEn: 'HINT: CSS STYLESHEET',
-      textPt: 'Regras de visualização corrompidas! Prime [E] na consola CSS para alternar a barreira entre display: block (Sólido) e display: none (Fantasma)!',
-      textEn: 'Display rules corrupted! Press [E] at the CSS console to toggle the barrier between display: block (Solid) and display: none (Ghost)!',
+      textPt: 'Regras de visualização corrompidas! Usa a consola CSS no chão [E] para alternar a barreira entre display: block e display: none!',
+      textEn: 'Display rules corrupted! Use the ground CSS console [E] to toggle the barrier between display: block and display: none!',
       tag: 'CSS3'
     },
-    exit: { x: 880, y: 452, locked: false }, // Porta no chão
+    exit: { x: 880, y: 452, locked: false },
     platforms: [
-      // Base Floor
       { x: 0, y: 480, w: 960, h: 60, type: 'tile_css_styled_accent' },
-      // Walls
       { x: 0, y: 0, w: 32, h: 480, type: 'tile_css_styled' },
       { x: 928, y: 0, w: 32, h: 480, type: 'tile_css_styled' },
-      // Steps for access
-      { x: 100, y: 380, w: 100, h: 32, type: 'tile_css_styled' },
-      { x: 220, y: 310, w: 100, h: 32, type: 'tile_css_styled' }
+      { x: 120, y: 410, w: 90, h: 32, type: 'tile_css_styled' },
+      { x: 230, y: 340, w: 90, h: 32, type: 'tile_css_styled' }
     ],
     cssPlatforms: [
       {
-        id: 'barrier_1',
-        x: 480,
+        id: 'barrier_l4',
+        x: 520,
         y: 160,
         w: 32,
         h: 320,
         initialSolid: true,
         label: 'barrier'
-      },
-      {
-        id: 'bridge_step',
-        x: 580,
-        y: 400,
-        w: 120,
-        h: 32,
-        initialSolid: false,
-        label: 'stepper'
       }
     ],
     cssTerminals: [
       {
-        x: 320,
-        y: 432,
-        targetGroup: 'all_css_1',
+        x: 340,
+        y: 480, // FIRMLY ON GROUND FLOOR
+        targetGroup: 'css_l4',
         label: 'CSS: Toggle display'
-      },
-      {
-        x: 270,
-        y: 262,
-        targetGroup: 'all_css_1',
-        label: 'CSS: Retorno'
       }
     ],
     htmlFragments: [],
@@ -206,17 +251,166 @@ export const LEVELS = [
     hazards: []
   },
 
+  {
+    id: 5,
+    name: 'NÍVEL 5: CSS II - ESPECIFICIDADE E ESTRUTURA',
+    nameEn: 'LEVEL 5: CSS II - SPECIFICITY & STRUCTURE',
+    subtitle: 'Integração HTML + CSS',
+    subEn: 'HTML + CSS Integration',
+    unlockedAbility: 'HTML & CSS',
+    targetTime: 34,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'css',
+      bgColor: '#140e24',
+      bgTexture: 'bg_level_3',
+      accentColor: '#a855f7',
+      tag: 'HTML + CSS'
+    },
+    hint: {
+      titlePt: 'DICA: ESPECIFICIDADE (HTML + CSS)',
+      titleEn: 'HINT: SPECIFICITY (HTML + CSS)',
+      textPt: 'Desafio combinado! Apanha os 2 fragmentos HTML para erguer a ponte <nav/> e usa a consola CSS no chão para desativar a barreira!',
+      textEn: 'Combined challenge! Collect 2 HTML fragments to build the <nav/> bridge, and use the ground CSS console to disable the barrier!',
+      tag: 'HTML + CSS'
+    },
+    exit: { x: 880, y: 452, locked: false },
+    platforms: [
+      { x: 0, y: 480, w: 340, h: 60, type: 'tile_css_styled_accent' },
+      { x: 580, y: 480, w: 380, h: 60, type: 'tile_css_styled_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_css_styled' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_css_styled' },
+      { x: 120, y: 410, w: 90, h: 32, type: 'tile_css_styled' },
+      { x: 230, y: 340, w: 90, h: 32, type: 'tile_css_styled' }
+    ],
+    hazards: [
+      { x: 340, y: 512, w: 240, h: 28, type: 'spikes', active: true }
+    ],
+    htmlFragments: [
+      { id: 'f1', x: 165, y: 365 },
+      { id: 'f2', x: 275, y: 295 }
+    ],
+    buildPoints: [
+      {
+        id: 'bridge_l5',
+        x: 340,
+        y: 480,
+        w: 240,
+        h: 32,
+        cost: 2,
+        label: '<nav class="bridge">'
+      }
+    ],
+    cssPlatforms: [
+      {
+        id: 'barrier_l5',
+        x: 700,
+        y: 160,
+        w: 32,
+        h: 320,
+        initialSolid: true,
+        label: 'barrier'
+      }
+    ],
+    cssTerminals: [
+      {
+        x: 60,
+        y: 480, // FIRMLY ON OPEN GROUND FLOOR
+        targetGroup: 'css_l5',
+        label: 'CSS: Specificity Override'
+      }
+    ],
+    jsSwitches: []
+  },
+
+  {
+    id: 6,
+    name: 'NÍVEL 6: CSS III - BOX MODEL & LASERS',
+    nameEn: 'LEVEL 6: CSS III - BOX MODEL & LASERS',
+    subtitle: 'HTML + CSS + Lasers de Deleção',
+    subEn: 'HTML + CSS + Deletion Lasers',
+    unlockedAbility: 'HTML & CSS',
+    targetTime: 38,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'css',
+      bgColor: '#140e24',
+      bgTexture: 'bg_level_3',
+      accentColor: '#a855f7',
+      tag: 'CSS3'
+    },
+    hint: {
+      titlePt: 'DICA: BOX MODEL & LASERS',
+      titleEn: 'HINT: BOX MODEL & LASERS',
+      textPt: 'Avançado! Constrói a ponte com fragmentos HTML e aciona a consola CSS no chão para desativar o laser de overflow!',
+      textEn: 'Advanced! Build the bridge with HTML fragments and activate the ground CSS console to disable the overflow laser!',
+      tag: 'CSS3'
+    },
+    exit: { x: 880, y: 452, locked: false },
+    platforms: [
+      // Left ground
+      { x: 0, y: 480, w: 340, h: 60, type: 'tile_css_styled_accent' },
+      // Right ground
+      { x: 600, y: 480, w: 360, h: 60, type: 'tile_css_styled_accent' },
+      // Walls
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_css_styled' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_css_styled' },
+      // Steps for fragments
+      { x: 130, y: 410, w: 90, h: 32, type: 'tile_css_styled' },
+      { x: 230, y: 340, w: 90, h: 32, type: 'tile_css_styled' }
+    ],
+    hazards: [
+      { x: 340, y: 512, w: 260, h: 28, type: 'spikes', active: true },
+      {
+        x: 750,
+        y: 360,
+        w: 20,
+        h: 120,
+        type: 'laser',
+        active: true,
+        cssToggleable: true,
+        targetGroup: 'css_l6'
+      }
+    ],
+    htmlFragments: [
+      { id: 'f1', x: 175, y: 365 },
+      { id: 'f2', x: 275, y: 295 }
+    ],
+    buildPoints: [
+      {
+        id: 'bridge_l6',
+        x: 340,
+        y: 480,
+        w: 260,
+        h: 32,
+        cost: 2,
+        label: '<div class="box-model-bridge">'
+      }
+    ],
+    cssTerminals: [
+      {
+        x: 280,
+        y: 480, // ON GROUND FLOOR
+        targetGroup: 'css_l6',
+        label: 'CSS: Disable Overflow Laser'
+      }
+    ],
+    cssPlatforms: [],
+    jsSwitches: []
+  },
+
   // ==========================================
-  // NÍVEL 4: LOOP INFINITO (JavaScript - Carbon & JS Yellow Event Loop)
+  // GRUPO 3: JAVASCRIPT (NÍVEIS 7 - 9)
+  // Tema: Event Loop, Callbacks & Promises, integrando HTML + CSS
   // ==========================================
   {
-    id: 4,
-    name: 'NÍVEL 4: LOOP INFINITO',
-    nameEn: 'LEVEL 4: INFINITE LOOP',
-    subtitle: 'Módulo JS: Callbacks e Sequência',
-    subEn: 'JS Module: Callbacks & Sequence',
+    id: 7,
+    name: 'NÍVEL 7: JS I - CALLBACKS & SEQUÊNCIA',
+    nameEn: 'LEVEL 7: JS I - CALLBACKS & SEQUENCE',
+    subtitle: 'Módulo JS: Callbacks e Ordem de Execução',
+    subEn: 'JS Module: Callbacks & Execution Order',
     unlockedAbility: 'JAVASCRIPT',
-    targetTime: 35,
+    targetTime: 30,
     playerStart: { x: 80, y: 440 },
     theme: {
       key: 'js',
@@ -226,30 +420,27 @@ export const LEVELS = [
       tag: 'JAVASCRIPT'
     },
     hint: {
-      titlePt: 'DICA: ASYNC EVENT LOOP',
-      titleEn: 'HINT: ASYNC EVENT LOOP',
-      textPt: 'A porta está trancada por um loop assíncrono! Ordem das Promises: 1º [2] (init) → 2º [1] (fetchData) → 3º [3] (renderUI). Prime os botões por essa ordem!',
-      textEn: 'Door is locked in an infinite async loop! Promise order: 1st [2] (init) → 2nd [1] (fetchData) → 3rd [3] (renderUI). Trigger buttons in order: 2 → 1 → 3!',
+      titlePt: 'DICA: CALLBACKS JS I',
+      titleEn: 'HINT: JS CALLBACKS I',
+      textPt: 'Porta trancada por uma sequência síncrona! Prime os botões na ordem: [1] -> [2] -> [3] para destrancar a porta de saída no chão!',
+      textEn: 'Door locked by sync sequence! Press buttons in order: [1] -> [2] -> [3] to unlock the ground exit door!',
       tag: 'ES6+'
     },
-    exit: { x: 880, y: 452, locked: true }, // Porta trancada no chão até resolver JS
+    exit: { x: 880, y: 452, locked: true },
     platforms: [
-      // Base Floor
       { x: 0, y: 480, w: 960, h: 60, type: 'tile_js_stack_accent' },
-      // Walls
       { x: 0, y: 0, w: 32, h: 480, type: 'tile_js_stack' },
       { x: 928, y: 0, w: 32, h: 480, type: 'tile_js_stack' },
-      // Steps for the 3 switches
-      { x: 300, y: 410, w: 100, h: 32, type: 'tile_js_stack' },
-      { x: 470, y: 340, w: 100, h: 32, type: 'tile_js_stack' },
-      { x: 640, y: 410, w: 100, h: 32, type: 'tile_js_stack' }
+      { x: 250, y: 410, w: 100, h: 32, type: 'tile_js_stack' },
+      { x: 450, y: 340, w: 100, h: 32, type: 'tile_js_stack' },
+      { x: 650, y: 410, w: 100, h: 32, type: 'tile_js_stack' }
     ],
     jsSwitches: [
-      { id: 1, x: 350, y: 370 },
-      { id: 2, x: 520, y: 300 },
-      { id: 3, x: 690, y: 370 }
+      { id: 1, x: 300, y: 370 },
+      { id: 2, x: 500, y: 300 },
+      { id: 3, x: 700, y: 370 }
     ],
-    jsSequence: [2, 1, 3], // Required sequence
+    jsSequence: [1, 2, 3],
     htmlFragments: [],
     buildPoints: [],
     cssPlatforms: [],
@@ -257,194 +448,662 @@ export const LEVELS = [
     hazards: []
   },
 
-  // ==========================================
-  // NÍVEL 5: CONFLITO DE FUSÃO (Git Merge Conflict - Green Additions & Red Lasers)
-  // ==========================================
   {
-    id: 5,
-    name: 'NÍVEL 5: CONFLITO DE FUSÃO',
-    nameEn: 'LEVEL 5: MERGE CONFLICT',
-    subtitle: 'Integração HTML + CSS + Lasers',
-    subEn: 'HTML + CSS + Lasers Integration',
-    unlockedAbility: 'HTML & CSS',
-    targetTime: 45,
+    id: 8,
+    name: 'NÍVEL 8: JS II - ASYNC / AWAIT & HTML',
+    nameEn: 'LEVEL 8: JS II - ASYNC / AWAIT & HTML',
+    subtitle: 'Integração HTML + JavaScript',
+    subEn: 'HTML + JavaScript Integration',
+    unlockedAbility: 'HTML & JS',
+    targetTime: 36,
     playerStart: { x: 80, y: 440 },
     theme: {
-      key: 'git',
-      bgColor: '#0b1319',
-      bgTexture: 'bg_level_5',
-      accentColor: '#10b981',
-      tag: 'GIT MERGE'
+      key: 'js',
+      bgColor: '#101012',
+      bgTexture: 'bg_level_4',
+      accentColor: '#f7df1e',
+      tag: 'HTML + JS'
     },
     hint: {
-      titlePt: 'DICA: CONFLITO GIT MERGE',
-      titleEn: 'HINT: GIT MERGE CONFLICT',
-      textPt: 'O branch de produção está em conflito! Apanha os fragmentos HTML para erguer a ponte verde <nav/> e usa a consola CSS para desativar o laser de deleção!',
-      textEn: 'Branch conflict! Collect HTML fragments to erect the green <nav/> bridge, and use the CSS console to disable the red deletion laser!',
-      tag: 'GIT'
+      titlePt: 'DICA: ASYNC/AWAIT (HTML + JS)',
+      titleEn: 'HINT: ASYNC/AWAIT (HTML + JS)',
+      textPt: 'Recolhe 2 fragmentos HTML para erguer a ponte sobre o fosso e resolve a sequência de Promises: [2] -> [1] -> [3]!',
+      textEn: 'Collect 2 HTML fragments to build the bridge across the pit, then resolve Promise sequence: [2] -> [1] -> [3]!',
+      tag: 'HTML + JS'
     },
-    exit: { x: 880, y: 452, locked: false }, // Porta no chão
+    exit: { x: 880, y: 452, locked: true },
     platforms: [
-      // Left ground
-      { x: 0, y: 480, w: 380, h: 60, type: 'tile_git_accent' },
-      // Right ground (where the exit door sits)
-      { x: 780, y: 480, w: 180, h: 60, type: 'tile_git_accent' },
-      // Walls
-      { x: 0, y: 0, w: 32, h: 480, type: 'tile_git_add' },
-      { x: 928, y: 0, w: 32, h: 480, type: 'tile_git_add' },
-      // Steps for fragments
-      { x: 120, y: 410, w: 90, h: 32, type: 'tile_git_add' },
-      { x: 230, y: 340, w: 90, h: 32, type: 'tile_git_add' }
+      { x: 0, y: 480, w: 320, h: 60, type: 'tile_js_stack_accent' },
+      { x: 580, y: 480, w: 380, h: 60, type: 'tile_js_stack_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_js_stack' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_js_stack' },
+      // Left steps for HTML fragments:
+      { x: 100, y: 410, w: 80, h: 32, type: 'tile_js_stack' },
+      { x: 190, y: 340, w: 80, h: 32, type: 'tile_js_stack' },
+      // Right steps for JS switches:
+      { x: 630, y: 410, w: 80, h: 32, type: 'tile_js_stack' },
+      { x: 730, y: 340, w: 80, h: 32, type: 'tile_js_stack' }
+    ],
+    hazards: [
+      { x: 320, y: 512, w: 260, h: 28, type: 'spikes', active: true }
     ],
     htmlFragments: [
-      { id: 'f1', x: 165, y: 365 },
-      { id: 'f2', x: 275, y: 295 }
+      { id: 'f1', x: 140, y: 365 },
+      { id: 'f2', x: 230, y: 295 }
     ],
     buildPoints: [
       {
-        id: 'bridge_high',
-        x: 380,
+        id: 'bridge_l8',
+        x: 320,
         y: 480,
-        w: 220,
+        w: 260,
         h: 32,
         cost: 2,
-        label: '<nav class="bridge">'
+        label: '<div class="async-bridge">'
       }
     ],
-    cssPlatforms: [
-      {
-        id: 'css_step_m',
-        x: 630,
-        y: 420,
-        w: 120,
-        h: 32,
-        initialSolid: false,
-        label: 'css-platform'
-      }
+    jsSwitches: [
+      { id: 1, x: 670, y: 370 },
+      { id: 2, x: 770, y: 300 },
+      { id: 3, x: 830, y: 440 }
     ],
-    cssTerminals: [
-      {
-        x: 340,
-        y: 432,
-        targetGroup: 'merge_css',
-        label: 'CSS: Toggle Laser & Platform'
-      }
+    jsSequence: [2, 1, 3],
+    cssPlatforms: [],
+    cssTerminals: []
+  },
+
+  {
+    id: 9,
+    name: 'NÍVEL 9: JS III - O EVENT LOOP INTEGRADO',
+    nameEn: 'LEVEL 9: JS III - INTEGRATED EVENT LOOP',
+    subtitle: 'Integração Completa HTML + CSS + JS',
+    subEn: 'Full HTML + CSS + JS Integration',
+    unlockedAbility: 'HTML + CSS + JS',
+    targetTime: 42,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'js',
+      bgColor: '#101012',
+      bgTexture: 'bg_level_4',
+      accentColor: '#f7df1e',
+      tag: 'STACK WEB'
+    },
+    hint: {
+      titlePt: 'DICA: EVENT LOOP (HTML + CSS + JS)',
+      titleEn: 'HINT: EVENT LOOP (HTML + CSS + JS)',
+      textPt: 'A grande integração! Constrói a ponte, desativa o laser na consola CSS no chão e resolve a sequência assíncrona [3] -> [1] -> [2]!',
+      textEn: 'Grand integration! Build bridge, disable laser at ground CSS console, and solve async sequence [3] -> [1] -> [2]!',
+      tag: 'STACK WEB'
+    },
+    exit: { x: 880, y: 452, locked: true },
+    platforms: [
+      { x: 0, y: 480, w: 320, h: 60, type: 'tile_js_stack_accent' },
+      { x: 560, y: 480, w: 400, h: 60, type: 'tile_js_stack_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_js_stack' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_js_stack' },
+      // Left steps for HTML fragments:
+      { x: 100, y: 410, w: 80, h: 32, type: 'tile_js_stack' },
+      { x: 190, y: 340, w: 80, h: 32, type: 'tile_js_stack' },
+      // Right steps for JS switches:
+      { x: 620, y: 410, w: 80, h: 32, type: 'tile_js_stack' },
+      { x: 710, y: 340, w: 80, h: 32, type: 'tile_js_stack' }
     ],
     hazards: [
-      // Ground spikes in the gap
-      { x: 380, y: 512, w: 400, h: 28, type: 'spikes', active: true },
-      // Laser beam blocking passage before the exit (disabled by CSS terminal!)
+      { x: 320, y: 512, w: 240, h: 28, type: 'spikes', active: true },
       {
-        x: 770,
+        x: 780,
         y: 360,
         w: 20,
         h: 120,
         type: 'laser',
         active: true,
         cssToggleable: true,
-        targetGroup: 'merge_css'
+        targetGroup: 'css_l9'
       }
     ],
-    jsSwitches: []
-  },
-
-  // ==========================================
-  // NÍVEL 6: EXCEÇÃO NÃO TRATADA (Boss Final - Glitch Core & Kernel Panic)
-  // ==========================================
-  {
-    id: 6,
-    name: 'NÍVEL 6: EXCEÇÃO NÃO TRATADA',
-    nameEn: 'LEVEL 6: UNHANDLED EXCEPTION',
-    subtitle: 'Destruição do Vírus Glitch',
-    subEn: 'Purging the Glitch Virus',
-    unlockedAbility: 'HTML + CSS + JS',
-    targetTime: 60,
-    playerStart: { x: 70, y: 440 },
-    theme: {
-      key: 'boss',
-      bgColor: '#050308',
-      bgTexture: 'bg_level_6',
-      accentColor: '#ef4444',
-      tag: 'KERNEL PANIC'
-    },
-    hint: {
-      titlePt: 'DICA: RESTAURAÇÃO TOTAL',
-      titleEn: 'HINT: FULL SYSTEM PURGE',
-      textPt: 'ALERTA MÁXIMO! Recolhe 3 fragmentos para erguer a ponte central <main/>, altera o CSS para solidificar os acessos e aciona a sequência JS [3 → 2 → 1] para destruir o vírus!',
-      textEn: 'MAXIMUM ALERT! Collect 3 fragments for the <main/> bridge, toggle CSS to solidify access steps, and enter JS sequence [3 → 2 → 1] to terminate the virus!',
-      tag: 'KERNEL'
-    },
-    exit: { x: 880, y: 452, locked: true }, // Porta no chão abre ao matar o boss!
-    glitchCore: {
-      x: 480,
-      y: 150,
-      name: 'GLITCH_VIRUS.EXE'
-    },
-    platforms: [
-      // Ground left and right
-      { x: 0, y: 480, w: 320, h: 60, type: 'tile_corrupted_accent' },
-      { x: 640, y: 480, w: 320, h: 60, type: 'tile_corrupted_accent' },
-      // Walls
-      { x: 0, y: 0, w: 32, h: 480, type: 'tile_corrupted_hex' },
-      { x: 928, y: 0, w: 32, h: 480, type: 'tile_corrupted_hex' },
-      // Steps for fragments
-      { x: 80, y: 410, w: 90, h: 32, type: 'tile_corrupted_hex' },
-      { x: 780, y: 410, w: 90, h: 32, type: 'tile_corrupted_hex' },
-      // Center switch platform directly under the boss
-      { x: 380, y: 345, w: 200, h: 32, type: 'tile_corrupted_hex' }
-    ],
     htmlFragments: [
-      { id: 'f1', x: 200, y: 440 }, // Ground level
-      { id: 'f2', x: 125, y: 365 }, // Left step
-      { id: 'f3', x: 825, y: 365 }  // Right step
+      { id: 'f1', x: 140, y: 365 },
+      { id: 'f2', x: 230, y: 295 }
     ],
     buildPoints: [
       {
-        id: 'boss_bridge',
+        id: 'bridge_l9',
         x: 320,
         y: 480,
-        w: 320,
+        w: 240,
         h: 32,
-        cost: 3,
-        label: '<main class="system-bridge">'
-      }
-    ],
-    cssPlatforms: [
-      {
-        id: 'boss_css_step',
-        x: 260,
-        y: 410,
-        w: 90,
-        h: 32,
-        initialSolid: false,
-        label: 'step-left'
-      },
-      {
-        id: 'boss_css_step_r',
-        x: 610,
-        y: 410,
-        w: 90,
-        h: 32,
-        initialSolid: false,
-        label: 'step-right'
+        cost: 2,
+        label: '<div class="loop-bridge">'
       }
     ],
     cssTerminals: [
       {
-        x: 140,
-        y: 432,
-        targetGroup: 'boss_css',
-        label: 'CSS: Solidificar Acessos'
+        x: 60,
+        y: 480, // ON OPEN GROUND FLOOR
+        targetGroup: 'css_l9',
+        label: 'CSS: Clear Laser'
       }
     ],
     jsSwitches: [
-      { id: 1, x: 410, y: 305 },
-      { id: 2, x: 480, y: 305 },
-      { id: 3, x: 550, y: 305 }
+      { id: 1, x: 660, y: 370 },
+      { id: 2, x: 750, y: 300 },
+      { id: 3, x: 830, y: 440 }
     ],
-    jsSequence: [3, 2, 1], // Boss termination sequence
+    jsSequence: [3, 1, 2],
+    cssPlatforms: []
+  },
+
+  // ==========================================
+  // GRUPO 4: TESTES & PERFORMANCE (NÍVEIS 10 - 12)
+  // Tema: Profiler, Bugs a disparar erros e Terminais de Teste no Chão
+  // ==========================================
+  {
+    id: 10,
+    name: 'NÍVEL 10: QA I - O BUG DISPARADOR',
+    nameEn: 'LEVEL 10: QA I - ERROR DISPATCHER BUG',
+    subtitle: 'Módulo QA: Bug Zombie & Desempenho',
+    subEn: 'QA Module: Zombie Bug & Performance',
+    unlockedAbility: 'TESTES & PERFORMANCE',
+    targetTime: 32,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'testing',
+      bgColor: '#081015',
+      bgTexture: 'bg_level_5',
+      accentColor: '#10b981',
+      tag: 'QA / TESTES'
+    },
+    hint: {
+      titlePt: 'DICA: TESTES & ERROS I',
+      titleEn: 'HINT: TESTING & ERRORS I',
+      textPt: 'Um processo zumbi está a disparar orbes de erro! Esquiva-te dos projéteis e alcança a consola de testes no chão para correr npm test --fix!',
+      textEn: 'A zombie process is firing error projectiles! Dodge past them and reach the ground test console to run npm test --fix!',
+      tag: 'QA'
+    },
+    exit: { x: 880, y: 452, locked: true },
+    platforms: [
+      { x: 0, y: 480, w: 960, h: 60, type: 'tile_test_runner_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_test_runner' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_test_runner' },
+      { x: 160, y: 410, w: 100, h: 32, type: 'tile_test_runner' },
+      { x: 300, y: 340, w: 100, h: 32, type: 'tile_test_runner' },
+      { x: 680, y: 382, w: 90, h: 32, type: 'tile_test_runner' } // Bug perch
+    ],
+    shootingBugs: [
+      { id: 'bug_10', x: 725, y: 348, dir: -1, fireRate: 1700, speed: 200, range: 750 }
+    ],
+    testTerminals: [
+      { x: 520, y: 480, label: 'TEST: npm test --fix' } // ON GROUND FLOOR
+    ],
+    htmlFragments: [],
+    buildPoints: [],
+    cssPlatforms: [],
+    cssTerminals: [],
+    jsSwitches: [],
+    hazards: []
+  },
+
+  {
+    id: 11,
+    name: 'NÍVEL 11: QA II - TESTES DE REGRESSÃO',
+    nameEn: 'LEVEL 11: QA II - REGRESSION TESTING',
+    subtitle: 'Integração HTML + Testes de Regressão',
+    subEn: 'HTML + Regression Testing Integration',
+    unlockedAbility: 'HTML & TESTES',
+    targetTime: 38,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'testing',
+      bgColor: '#081015',
+      bgTexture: 'bg_level_5',
+      accentColor: '#10b981',
+      tag: 'HTML + QA'
+    },
+    hint: {
+      titlePt: 'DICA: REGRESSÃO (HTML + QA)',
+      titleEn: 'HINT: REGRESSION (HTML + QA)',
+      textPt: 'Apanha os fragmentos HTML para erguer a ponte sobre os espigões enquanto te esquivas dos projéteis, e corre npm test --fix na consola no chão!',
+      textEn: 'Collect HTML fragments to build bridge over spikes while dodging error orbs, then run npm test --fix at the ground console!',
+      tag: 'HTML + QA'
+    },
+    exit: { x: 880, y: 452, locked: true },
+    platforms: [
+      { x: 0, y: 480, w: 340, h: 60, type: 'tile_test_runner_accent' },
+      { x: 580, y: 480, w: 380, h: 60, type: 'tile_test_runner_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_test_runner' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_test_runner' },
+      { x: 130, y: 410, w: 90, h: 32, type: 'tile_test_runner' },
+      { x: 230, y: 340, w: 90, h: 32, type: 'tile_test_runner' },
+      { x: 700, y: 382, w: 90, h: 32, type: 'tile_test_runner' } // Bug perch
+    ],
     hazards: [
-      { x: 320, y: 512, w: 320, h: 28, type: 'spikes', active: true }
-    ]
+      { x: 340, y: 512, w: 240, h: 28, type: 'spikes', active: true }
+    ],
+    htmlFragments: [
+      { id: 'f1', x: 175, y: 365 },
+      { id: 'f2', x: 275, y: 295 }
+    ],
+    buildPoints: [
+      {
+        id: 'bridge_l11',
+        x: 340,
+        y: 480,
+        w: 240,
+        h: 32,
+        cost: 2,
+        label: '<div class="qa-bridge">'
+      }
+    ],
+    shootingBugs: [
+      { id: 'bug_11', x: 745, y: 348, dir: -1, fireRate: 1600, speed: 210, range: 750 }
+    ],
+    testTerminals: [
+      { x: 620, y: 480, label: 'TEST: npm test --fix' } // ON GROUND FLOOR
+    ],
+    cssPlatforms: [],
+    cssTerminals: [],
+    jsSwitches: []
+  },
+
+  {
+    id: 12,
+    name: 'NÍVEL 12: QA III - TESTES DE CARGA & PERFORMANCE',
+    nameEn: 'LEVEL 12: QA III - LOAD & PERFORMANCE TESTS',
+    subtitle: 'Integração HTML + CSS + Testes de Carga',
+    subEn: 'HTML + CSS + Load Testing Integration',
+    unlockedAbility: 'HTML + CSS + QA',
+    targetTime: 44,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'testing',
+      bgColor: '#081015',
+      bgTexture: 'bg_level_5',
+      accentColor: '#10b981',
+      tag: 'QA STACK'
+    },
+    hint: {
+      titlePt: 'DICA: PERFORMANCE (HTML + CSS + QA)',
+      titleEn: 'HINT: PERFORMANCE (HTML + CSS + QA)',
+      textPt: 'Sobrecarga de sistema! Constrói a ponte, usa o terminal CSS no chão para desligar o laser e executa a consola de testes no chão para pacificar o bug!',
+      textEn: 'System overload! Build bridge, use ground CSS terminal to kill laser, and execute ground test console to patch the bug!',
+      tag: 'QA STACK'
+    },
+    exit: { x: 880, y: 452, locked: true },
+    platforms: [
+      { x: 0, y: 480, w: 320, h: 60, type: 'tile_test_runner_accent' },
+      { x: 560, y: 480, w: 400, h: 60, type: 'tile_test_runner_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_test_runner' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_test_runner' },
+      { x: 120, y: 410, w: 90, h: 32, type: 'tile_test_runner' },
+      { x: 220, y: 340, w: 90, h: 32, type: 'tile_test_runner' },
+      { x: 740, y: 382, w: 90, h: 32, type: 'tile_test_runner' } // Bug perch
+    ],
+    hazards: [
+      { x: 320, y: 512, w: 240, h: 28, type: 'spikes', active: true },
+      {
+        x: 600,
+        y: 360,
+        w: 20,
+        h: 120,
+        type: 'laser',
+        active: true,
+        cssToggleable: true,
+        targetGroup: 'css_l12'
+      }
+    ],
+    htmlFragments: [
+      { id: 'f1', x: 165, y: 365 },
+      { id: 'f2', x: 265, y: 295 }
+    ],
+    buildPoints: [
+      {
+        id: 'bridge_l12',
+        x: 320,
+        y: 480,
+        w: 240,
+        h: 32,
+        cost: 2,
+        label: '<div class="perf-bridge">'
+      }
+    ],
+    cssTerminals: [
+      {
+        x: 240,
+        y: 480, // ON GROUND FLOOR
+        targetGroup: 'css_l12',
+        label: 'CSS: Overload Laser Off'
+      }
+    ],
+    shootingBugs: [
+      { id: 'bug_12', x: 785, y: 348, dir: -1, fireRate: 1500, speed: 220, range: 750 }
+    ],
+    testTerminals: [
+      { x: 680, y: 480, label: 'TEST: npm test --fix' } // ON GROUND FLOOR
+    ],
+    cssPlatforms: [],
+    jsSwitches: []
+  },
+
+  // ==========================================
+  // GRUPO 5: INTELIGÊNCIA ARTIFICIAL (NÍVEIS 13 - 15)
+  // Tema: Redes Neuronais, Disparo do AI Copilot e Consolas de Inferência no Chão
+  // ==========================================
+  {
+    id: 13,
+    name: 'NÍVEL 13: AI I - O AGENTE AUTÓNOMO',
+    nameEn: 'LEVEL 13: AI I - THE AUTONOMOUS AGENT',
+    subtitle: 'Módulo IA: Disparo do Copilot & Tokens',
+    subEn: 'AI Module: Copilot Launch & Tokens',
+    unlockedAbility: 'INTELIGÊNCIA ARTIFICIAL',
+    targetTime: 38,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'ai',
+      bgColor: '#070814',
+      bgTexture: 'bg_level_6',
+      accentColor: '#8b5cf6',
+      tag: 'AI / NEURAL'
+    },
+    hint: {
+      titlePt: 'DICA: AGENTE AUTÓNOMO I',
+      titleEn: 'HINT: AUTONOMOUS AGENT I',
+      textPt: 'Os 3 tokens neurais estão demasiado altos para saltares! Prime [F] ou CLICA no ecrã para atirar o AI Copilot a buscá-los, e ativa a consola neural no chão!',
+      textEn: 'The 3 neural tokens are too high to jump! Press [F] or CLICK the screen to launch the AI Copilot to fetch them, then activate the ground neural console!',
+      tag: 'AI'
+    },
+    exit: { x: 880, y: 452, locked: true },
+    hasAiCopilot: true,
+    platforms: [
+      { x: 0, y: 480, w: 420, h: 60, type: 'tile_ai_accent' },
+      { x: 680, y: 480, w: 280, h: 60, type: 'tile_ai_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_ai_synapse' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_ai_synapse' },
+      { x: 150, y: 410, w: 90, h: 32, type: 'tile_ai_synapse' },
+      { x: 260, y: 350, w: 90, h: 32, type: 'tile_ai_synapse' },
+      { x: 740, y: 410, w: 90, h: 32, type: 'tile_ai_synapse' },
+      // Elevated sky perches for high tokens
+      { x: 168, y: 150, w: 64, h: 16, type: 'tile_ai_synapse' },
+      { x: 488, y: 130, w: 64, h: 16, type: 'tile_ai_synapse' },
+      { x: 788, y: 150, w: 64, h: 16, type: 'tile_ai_synapse' }
+    ],
+    hazards: [
+      { x: 420, y: 512, w: 260, h: 28, type: 'spikes', active: true }
+    ],
+    aiTokens: [
+      { id: 'tok_prompt', name: 'PROMPT', x: 200, y: 110 },
+      { id: 'tok_weights', name: 'WEIGHTS', x: 520, y: 90 },
+      { id: 'tok_attention', name: 'ATTENTION', x: 820, y: 110 }
+    ],
+    aiTerminals: [
+      { x: 300, y: 480, cost: 3, label: 'AI: RUN INFERENCE' } // ON GROUND FLOOR
+    ],
+    aiBridges: [
+      {
+        id: 'ai_bridge_13',
+        x: 420,
+        y: 480,
+        w: 260,
+        h: 32,
+        ghostTexture: 'tile_ai_bridge_ghost',
+        solidTexture: 'tile_ai_bridge_solid'
+      }
+    ],
+    htmlFragments: [],
+    buildPoints: [],
+    cssPlatforms: [],
+    cssTerminals: [],
+    jsSwitches: []
+  },
+
+  {
+    id: 14,
+    name: 'NÍVEL 14: AI II - FINE-TUNING & ESTRUTURA',
+    nameEn: 'LEVEL 14: AI II - FINE-TUNING & STRUCTURE',
+    subtitle: 'Integração HTML + Inteligência Artificial',
+    subEn: 'HTML + Artificial Intelligence Integration',
+    unlockedAbility: 'HTML & AI',
+    targetTime: 42,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'ai',
+      bgColor: '#070814',
+      bgTexture: 'bg_level_6',
+      accentColor: '#8b5cf6',
+      tag: 'HTML + AI'
+    },
+    hint: {
+      titlePt: 'DICA: FINE-TUNING (HTML + AI)',
+      titleEn: 'HINT: FINE-TUNING (HTML + AI)',
+      textPt: 'Apanha os fragmentos HTML para erguer a ponte inicial, e atira o AI Copilot com [F] ou clique para recolher os 3 tokens no céu!',
+      textEn: 'Collect HTML fragments to build initial bridge, and launch AI Copilot with [F] or click to fetch the 3 tokens in the sky!',
+      tag: 'HTML + AI'
+    },
+    exit: { x: 880, y: 452, locked: true },
+    hasAiCopilot: true,
+    platforms: [
+      { x: 0, y: 480, w: 280, h: 60, type: 'tile_ai_accent' },
+      { x: 460, y: 480, w: 120, h: 60, type: 'tile_ai_accent' },
+      { x: 760, y: 480, w: 200, h: 60, type: 'tile_ai_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_ai_synapse' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_ai_synapse' },
+      { x: 120, y: 410, w: 80, h: 32, type: 'tile_ai_synapse' },
+      { x: 200, y: 340, w: 80, h: 32, type: 'tile_ai_synapse' },
+      // High perches for tokens
+      { x: 200, y: 140, w: 64, h: 16, type: 'tile_ai_synapse' },
+      { x: 500, y: 120, w: 64, h: 16, type: 'tile_ai_synapse' },
+      { x: 800, y: 140, w: 64, h: 16, type: 'tile_ai_synapse' }
+    ],
+    hazards: [
+      { x: 280, y: 512, w: 180, h: 28, type: 'spikes', active: true },
+      { x: 580, y: 512, w: 180, h: 28, type: 'spikes', active: true }
+    ],
+    htmlFragments: [
+      { id: 'f1', x: 160, y: 365 },
+      { id: 'f2', x: 240, y: 295 }
+    ],
+    buildPoints: [
+      {
+        id: 'bridge_l14',
+        x: 280,
+        y: 480,
+        w: 180,
+        h: 32,
+        cost: 2,
+        label: '<div class="ai-input">'
+      }
+    ],
+    aiTokens: [
+      { id: 'tok_prompt', name: 'PROMPT', x: 232, y: 100 },
+      { id: 'tok_weights', name: 'WEIGHTS', x: 532, y: 80 },
+      { id: 'tok_attention', name: 'ATTENTION', x: 832, y: 100 }
+    ],
+    aiTerminals: [
+      { x: 520, y: 480, cost: 3, label: 'AI: INFERENCE RUNNER' } // ON GROUND FLOOR
+    ],
+    aiBridges: [
+      {
+        id: 'ai_bridge_14',
+        x: 580,
+        y: 480,
+        w: 180,
+        h: 32,
+        ghostTexture: 'tile_ai_bridge_ghost',
+        solidTexture: 'tile_ai_bridge_solid'
+      }
+    ],
+    cssPlatforms: [],
+    cssTerminals: [],
+    jsSwitches: []
+  },
+
+  {
+    id: 15,
+    name: 'NÍVEL 15: AI III - REDE NEURONAL MULTI-CAMADA',
+    nameEn: 'LEVEL 15: AI III - MULTI-LAYER NEURAL NET',
+    subtitle: 'Integração CSS + QA + Inteligência Artificial',
+    subEn: 'CSS + QA + Artificial Intelligence Integration',
+    unlockedAbility: 'CSS + QA + AI',
+    targetTime: 48,
+    playerStart: { x: 80, y: 440 },
+    theme: {
+      key: 'ai',
+      bgColor: '#070814',
+      bgTexture: 'bg_level_6',
+      accentColor: '#8b5cf6',
+      tag: 'CSS + QA + AI'
+    },
+    hint: {
+      titlePt: 'DICA: MULTI-CAMADA (CSS + QA + AI)',
+      titleEn: 'HINT: MULTI-LAYER (CSS + QA + AI)',
+      textPt: 'Desafio extremo! Desvia-te do bug atirador, usa a consola CSS no chão para desativar a barreira e atira o AI Copilot [F / Clique] para apanhar os tokens no céu!',
+      textEn: 'Extreme challenge! Dodge the shooting bug, use ground CSS console to kill barrier, and launch AI Copilot [F / Click] to gather sky tokens!',
+      tag: 'CSS + QA + AI'
+    },
+    exit: { x: 880, y: 452, locked: true },
+    hasAiCopilot: true,
+    platforms: [
+      { x: 0, y: 480, w: 420, h: 60, type: 'tile_ai_accent' },
+      { x: 640, y: 480, w: 320, h: 60, type: 'tile_ai_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_ai_synapse' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_ai_synapse' },
+      { x: 120, y: 410, w: 90, h: 32, type: 'tile_ai_synapse' },
+      { x: 220, y: 340, w: 90, h: 32, type: 'tile_ai_synapse' },
+      { x: 600, y: 382, w: 90, h: 32, type: 'tile_ai_synapse' }, // Bug perch
+      // High perches for tokens
+      { x: 168, y: 150, w: 64, h: 16, type: 'tile_ai_synapse' },
+      { x: 488, y: 120, w: 64, h: 16, type: 'tile_ai_synapse' },
+      { x: 808, y: 150, w: 64, h: 16, type: 'tile_ai_synapse' }
+    ],
+    hazards: [
+      { x: 420, y: 512, w: 220, h: 28, type: 'spikes', active: true }
+    ],
+    shootingBugs: [
+      { id: 'bug_15', x: 645, y: 348, dir: -1, fireRate: 1800, speed: 200, range: 600 }
+    ],
+    cssPlatforms: [
+      {
+        id: 'barrier_l15',
+        x: 440,
+        y: 160,
+        w: 32,
+        h: 320,
+        initialSolid: true,
+        label: 'barrier'
+      }
+    ],
+    cssTerminals: [
+      {
+        x: 220,
+        y: 480, // ON GROUND FLOOR
+        targetGroup: 'css_l15',
+        label: 'CSS: Toggle Layer Barrier'
+      }
+    ],
+    aiTokens: [
+      { id: 'tok_prompt', name: 'PROMPT', x: 200, y: 110 },
+      { id: 'tok_weights', name: 'WEIGHTS', x: 520, y: 80 },
+      { id: 'tok_attention', name: 'ATTENTION', x: 840, y: 110 }
+    ],
+    aiTerminals: [
+      { x: 340, y: 480, cost: 3, label: 'AI: DEEP INFERENCE' } // ON GROUND FLOOR
+    ],
+    aiBridges: [
+      {
+        id: 'ai_bridge_15',
+        x: 420,
+        y: 480,
+        w: 220,
+        h: 32,
+        ghostTexture: 'tile_ai_bridge_ghost',
+        solidTexture: 'tile_ai_bridge_solid'
+      }
+    ],
+    htmlFragments: [],
+    buildPoints: [],
+    jsSwitches: []
+  },
+
+  // ==========================================
+  // GRUPO 6: BATALHA FINAL (NÍVEL 16)
+  // Tema: Batalha Final contra o Vírus Gigante com o Martelo Web (HTML + CSS + JS)
+  // ==========================================
+  {
+    id: 16,
+    name: 'NÍVEL 16: BATALHA FINAL: O MARTELO WEB',
+    nameEn: 'LEVEL 16: FINAL BATTLE: THE WEB HAMMER',
+    subtitle: 'HTML (Estrutura) + CSS (Ativação) + JS (Animação)',
+    subEn: 'HTML (Structure) + CSS (Enable) + JS (Animation)',
+    unlockedAbility: 'HTML + CSS + JS (O MARTELO)',
+    targetTime: 65,
+    playerStart: { x: 70, y: 440 },
+    theme: {
+      key: 'boss',
+      bgColor: '#050308',
+      bgTexture: 'bg_level_8',
+      accentColor: '#ef4444',
+      tag: 'BOSS BATTLE'
+    },
+    hint: {
+      titlePt: 'BATALHA FINAL: O MARTELO WEB',
+      titleEn: 'FINAL BATTLE: THE WEB HAMMER',
+      textPt: '1. Apanha os 2 fragmentos HTML e ergue o Martelo (<div id="hammer"/>)!\n2. Ativa o CSS na consola do chão para o energizar!\n3. Aciona o botão JS para animar o martelo e ESMAGAR o Vírus Gigante enquanto te esquivas dos seus tiros!',
+      textEn: '1. Collect 2 HTML fragments and build the Hammer (<div id="hammer"/>)!\n2. Enable CSS at the ground console to energize it!\n3. Trigger the JS button to animate the hammer and SMASH the Giant Virus while dodging its shots!',
+      tag: 'BOSS'
+    },
+    exit: { x: 880, y: 452, locked: true }, // Opens when giant virus is smashed
+    glitchCore: {
+      x: 480,
+      y: 130,
+      name: 'VIRUS_GIGANTE.EXE',
+      fireRate: 1800,
+      speed: 210
+    },
+    giantHammer: {
+      x: 480,
+      y: 240
+    },
+    platforms: [
+      // Solid arena floor with side steps
+      { x: 0, y: 480, w: 960, h: 60, type: 'tile_corrupted_accent' },
+      { x: 0, y: 0, w: 32, h: 480, type: 'tile_corrupted_hex' },
+      { x: 928, y: 0, w: 32, h: 480, type: 'tile_corrupted_hex' },
+      // Left steps for HTML fragments
+      { x: 70, y: 410, w: 80, h: 32, type: 'tile_corrupted_hex' },
+      { x: 160, y: 340, w: 80, h: 32, type: 'tile_corrupted_hex' },
+      // Center raised pedestal for the JS animation switch
+      { x: 420, y: 410, w: 120, h: 32, type: 'tile_corrupted_hex' },
+      // Right step for arena variety
+      { x: 760, y: 410, w: 90, h: 32, type: 'tile_corrupted_hex' }
+    ],
+    htmlFragments: [
+      { id: 'f1', x: 110, y: 365 }, // Left step 1
+      { id: 'f2', x: 200, y: 295 }  // Left step 2
+    ],
+    buildPoints: [
+      {
+        id: 'hammer_bp',
+        x: 432,
+        y: 200,
+        w: 96,
+        h: 96,
+        cost: 2,
+        isHammer: true,
+        label: '<div id="hammer"/>',
+        ghostTexture: 'giant_hammer_ghost'
+      }
+    ],
+    cssTerminals: [
+      {
+        x: 80,
+        y: 480, // FIRMLY ON GROUND FLOOR
+        targetGroup: 'boss_hammer_css',
+        label: 'CSS: Enable <hammer/>'
+      }
+    ],
+    jsSwitches: [
+      { id: 1, x: 480, y: 370 }
+    ],
+    jsSequence: [1],
+    hazards: []
   }
 ];

@@ -1,7 +1,123 @@
-/**
- * TextureGenerator - Generates high-contrast, polished pixel-art textures
- * dynamically using HTML5 Canvas. Zero external image dependencies!
- */
+import { Storage } from '../systems/Storage.js';
+
+export const SKINS_DATA = {
+  default: {
+    id: 'default',
+    namePt: 'Developer Clássico',
+    nameEn: 'Classic Developer',
+    descPt: 'Hoodie preto, calças de ganga e headphones',
+    descEn: 'Black hoodie, denim jeans and headphones',
+    headband: '#22252e',
+    headbandAccent: '#ff3355',
+    hair: '#5c3317',
+    hairHighlight: '#7d4922',
+    skin: '#ffd2b6',
+    skinShade: '#e2aa8e',
+    eyeColor: '#1c202a',
+    hpOuter: '#181a20',
+    hpLed: '#ff3355',
+    hpCushion: '#2e313b',
+    hoodieBody: '#18181c',
+    hoodieCollar: '#101014',
+    hoodieHighlight: '#2c2d38',
+    hoodiePocket: '#111115',
+    drawstring: '#e6e6e6',
+    drawstringTip: '#ffffff',
+    pants: '#2e5788',
+    pantsHighlight: '#4878b2',
+    pantsShadow: '#1c385c',
+    sneakerBody: '#ffffff',
+    sneakerStripe: '#ff3355',
+    sneakerSole: '#1c1c22'
+  },
+  cyber: {
+    id: 'cyber',
+    namePt: 'Cyber Hacker',
+    nameEn: 'Cyber Hacker',
+    descPt: 'Hoodie néon ciano/magenta com reflexos futuristas',
+    descEn: 'Neon cyan/magenta futuristic glow',
+    headband: '#0f172a',
+    headbandAccent: '#00f3ff',
+    hair: '#cbd5e1',
+    hairHighlight: '#f8fafc',
+    skin: '#ffedd5',
+    skinShade: '#fed7aa',
+    eyeColor: '#00f3ff',
+    hpOuter: '#0f172a',
+    hpLed: '#00f3ff',
+    hpCushion: '#1e293b',
+    hoodieBody: '#0b1120',
+    hoodieCollar: '#070b14',
+    hoodieHighlight: '#00f3ff',
+    hoodiePocket: '#0f172a',
+    drawstring: '#f43f5e',
+    drawstringTip: '#00f3ff',
+    pants: '#1e1b4b',
+    pantsHighlight: '#38bdf8',
+    pantsShadow: '#0f0e26',
+    sneakerBody: '#00f3ff',
+    sneakerStripe: '#f43f5e',
+    sneakerSole: '#020617'
+  },
+  stealth: {
+    id: 'stealth',
+    namePt: 'Dark Mode Coder',
+    nameEn: 'Dark Mode Coder',
+    descPt: 'Modo escuro total com verde terminal',
+    descEn: 'Total dark mode with terminal green',
+    headband: '#0a0a0a',
+    headbandAccent: '#10b981',
+    hair: '#1e293b',
+    hairHighlight: '#334155',
+    skin: '#fed7aa',
+    skinShade: '#fcd34d',
+    eyeColor: '#10b981',
+    hpOuter: '#0a0a0a',
+    hpLed: '#10b981',
+    hpCushion: '#171717',
+    hoodieBody: '#09090b',
+    hoodieCollar: '#050507',
+    hoodieHighlight: '#27272a',
+    hoodiePocket: '#18181b',
+    drawstring: '#10b981',
+    drawstringTip: '#34d399',
+    pants: '#18181b',
+    pantsHighlight: '#27272a',
+    pantsShadow: '#09090b',
+    sneakerBody: '#18181b',
+    sneakerStripe: '#10b981',
+    sneakerSole: '#09090b'
+  },
+  synth: {
+    id: 'synth',
+    namePt: 'Synthwave Retro',
+    nameEn: 'Synthwave Retro',
+    descPt: 'Roxo retro dos anos 80 e ganga violeta',
+    descEn: '80s retro purple & violet denim',
+    headband: '#3b0764',
+    headbandAccent: '#e879f9',
+    hair: '#b45309',
+    hairHighlight: '#d97706',
+    skin: '#ffd2b6',
+    skinShade: '#e2aa8e',
+    eyeColor: '#e879f9',
+    hpOuter: '#3b0764',
+    hpLed: '#e879f9',
+    hpCushion: '#581c87',
+    hoodieBody: '#581c87',
+    hoodieCollar: '#3b0764',
+    hoodieHighlight: '#9333ea',
+    hoodiePocket: '#3b0764',
+    drawstring: '#facc15',
+    drawstringTip: '#fde047',
+    pants: '#6b21a8',
+    pantsHighlight: '#a855f7',
+    pantsShadow: '#3b0764',
+    sneakerBody: '#ffffff',
+    sneakerStripe: '#e879f9',
+    sneakerSole: '#1e1b4b'
+  }
+};
 
 export class TextureGenerator {
   static generateAll(scene) {
@@ -14,6 +130,8 @@ export class TextureGenerator {
     TextureGenerator.createHazardTextures(scene);
     TextureGenerator.createExitPortal(scene);
     TextureGenerator.createGlitchCore(scene);
+    TextureGenerator.createGiantHammerTextures(scene);
+    TextureGenerator.createAiSprites(scene);
     TextureGenerator.createParticleTextures(scene);
   }
 
@@ -104,182 +222,420 @@ export class TextureGenerator {
     ctx4.fillText('}', 10, 104);
     scene.textures.addCanvas('bg_level_4', bg4);
 
-    // 5. Level 5: Git Merge Conflict (Split Diff Editor with Green/Red Lines)
+    // 5. Level 5: Testes & Performance (DevTools Profiler / Test Suite / Latency Markers)
     const { canvas: bg5, ctx: ctx5 } = TextureGenerator.createCanvas(128, 128);
-    ctx5.fillStyle = '#0b1319';
+    ctx5.fillStyle = '#091118';
     ctx5.fillRect(0, 0, 128, 128);
-    ctx5.strokeStyle = '#182633';
+    ctx5.strokeStyle = '#132838';
     ctx5.lineWidth = 1;
     ctx5.strokeRect(0.5, 0.5, 127, 127);
-    // Git conflict markers
-    ctx5.fillStyle = '#059669';
+    // Latency & Profiler metrics
+    ctx5.fillStyle = '#10b981';
     ctx5.font = 'bold 8px monospace';
-    ctx5.fillText('<<<<<<< HEAD (local)', 8, 22);
-    ctx5.fillText('+ <nav class="bridge">', 8, 38);
-    ctx5.fillStyle = '#475569';
-    ctx5.fillText('======= [MERGE]', 8, 56);
-    ctx5.fillStyle = '#dc2626';
-    ctx5.fillText('- <laser active="true">', 8, 74);
-    ctx5.fillStyle = '#0284c7';
-    ctx5.fillText('>>>>>>> branch-origin', 8, 92);
+    ctx5.fillText('> PASS: test_suite.ts', 8, 20);
+    ctx5.fillText('  ✓ render(): 16.6ms [60fps]', 8, 38);
+    ctx5.fillStyle = '#f59e0b';
+    ctx5.fillText('  ! memory_leak: 84.2MB', 8, 56);
+    ctx5.fillStyle = '#ef4444';
+    ctx5.fillText('  ✗ ERROR_BUG_ACTIVE: 500', 8, 76);
+    ctx5.fillStyle = '#38bdf8';
+    ctx5.fillText('  expect(system).toBeOk()', 8, 96);
     scene.textures.addCanvas('bg_level_5', bg5);
 
-    // 6. Level 6: Kernel Panic Void (Intense Pitch Black with Glitch Hex Dumps)
+    // 6. Level 6: Inteligência Artificial (Deep Neural Network Synapses & Tensor Matrices)
     const { canvas: bg6, ctx: ctx6 } = TextureGenerator.createCanvas(128, 128);
-    ctx6.fillStyle = '#050308';
+    ctx6.fillStyle = '#070814';
     ctx6.fillRect(0, 0, 128, 128);
-    ctx6.strokeStyle = '#2b0716';
+    ctx6.strokeStyle = '#1b1a3d';
     ctx6.lineWidth = 1;
     ctx6.strokeRect(0.5, 0.5, 127, 127);
-    // Corrupted hexadecimal crash dump
-    ctx6.fillStyle = '#5c1228';
+    // Synaptic connections & model tokens
+    ctx6.fillStyle = '#8b5cf6';
     ctx6.font = 'bold 8px monospace';
-    ctx6.fillText('CRITICAL_KERNEL_PANIC', 8, 20);
-    ctx6.fillStyle = '#e11d48';
-    ctx6.fillText('0x7FFF0044: EXCEPTION', 8, 38);
-    ctx6.fillText('SIGSEGV: CORE CORRUPTED', 8, 56);
-    ctx6.fillStyle = '#9f1239';
-    ctx6.fillText('VIRUS PID: 666 (RUN)', 8, 76);
-    ctx6.fillText('MEMORY DUMP [0xDEADBEEF]', 8, 96);
+    ctx6.fillText('> MODEL: LLM_COPILOT_v4', 8, 20);
+    ctx6.fillStyle = '#a78bfa';
+    ctx6.fillText('  Attention(Q, K, V) / √d', 8, 38);
+    ctx6.fillText('  Embedding[768] ~ Converged', 8, 56);
+    ctx6.fillStyle = '#00e5ff';
+    ctx6.fillText('  Prompt: "restore_bridge"', 8, 76);
+    ctx6.fillStyle = '#10b981';
+    ctx6.fillText('  Inference Loss: 0.001', 8, 96);
     scene.textures.addCanvas('bg_level_6', bg6);
+
+    // 7. Level 7: Git Merge Conflict (Split Diff Editor with Green/Red Lines)
+    const { canvas: bg7, ctx: ctx7 } = TextureGenerator.createCanvas(128, 128);
+    ctx7.fillStyle = '#0b1319';
+    ctx7.fillRect(0, 0, 128, 128);
+    ctx7.strokeStyle = '#182633';
+    ctx7.lineWidth = 1;
+    ctx7.strokeRect(0.5, 0.5, 127, 127);
+    // Git conflict markers
+    ctx7.fillStyle = '#059669';
+    ctx7.font = 'bold 8px monospace';
+    ctx7.fillText('<<<<<<< HEAD (local)', 8, 22);
+    ctx7.fillText('+ <nav class="bridge">', 8, 38);
+    ctx7.fillStyle = '#475569';
+    ctx7.fillText('======= [MERGE]', 8, 56);
+    ctx7.fillStyle = '#dc2626';
+    ctx7.fillText('- <laser active="true">', 8, 74);
+    ctx7.fillStyle = '#0284c7';
+    ctx7.fillText('>>>>>>> branch-origin', 8, 92);
+    scene.textures.addCanvas('bg_level_7', bg7);
+
+    // 8. Level 8: Kernel Panic Void (Intense Pitch Black with Glitch Hex Dumps)
+    const { canvas: bg8, ctx: ctx8 } = TextureGenerator.createCanvas(128, 128);
+    ctx8.fillStyle = '#050308';
+    ctx8.fillRect(0, 0, 128, 128);
+    ctx8.strokeStyle = '#2b0716';
+    ctx8.lineWidth = 1;
+    ctx8.strokeRect(0.5, 0.5, 127, 127);
+    // Corrupted hexadecimal crash dump
+    ctx8.fillStyle = '#5c1228';
+    ctx8.font = 'bold 8px monospace';
+    ctx8.fillText('CRITICAL_KERNEL_PANIC', 8, 20);
+    ctx8.fillStyle = '#e11d48';
+    ctx8.fillText('0x7FFF0044: EXCEPTION', 8, 38);
+    ctx8.fillText('SIGSEGV: CORE CORRUPTED', 8, 56);
+    ctx8.fillStyle = '#9f1239';
+    ctx8.fillText('VIRUS PID: 666 (RUN)', 8, 76);
+    ctx8.fillText('MEMORY DUMP [0xDEADBEEF]', 8, 96);
+    scene.textures.addCanvas('bg_level_8', bg8);
   }
 
-  // --- Player Sprites ---
-  static createPlayerSprites(scene) {
-    // 32x32 frames: Idle (4 frames), Run (4 frames), Jump (1 frame)
-    // Palette:
-    // Hoodie: Dark charcoal #1e2230, shadow #131620, highlight #2d3348
-    // Neon Cyan Visor/Eyes: #00f3ff, glow #0099b8
-    // Pants: Dark navy #181d2a
-    // Sneakers: Cyan #00f3ff & white #ffffff
-    // Hair: Dark brown #2b1d0c
+  // --- Player Sprites with Multi-Skin Support ---
+  static drawCharacterFrame(ctx, xOffset, frameType, tick = 0, p = SKINS_DATA.default) {
+    const ox = xOffset;
+    const oy = 0;
 
-    const drawCharacter = (ctx, xOffset, frameType, tick = 0) => {
-      const ox = xOffset;
-      const oy = 0;
+    // Subtle breathing bob in idle
+    const bob = frameType === 'idle' ? (tick % 2 === 0 ? 0 : 1) : 0;
 
-      // Draw head & hood
-      // Hood outline
-      ctx.fillStyle = '#11141e';
-      ctx.fillRect(ox + 10, oy + 6, 12, 11);
-      // Hood inner/color
-      ctx.fillStyle = '#222838';
-      ctx.fillRect(ox + 11, oy + 7, 10, 9);
+    // 1. OVER-EAR HEADPHONES (Top Headband Arch)
+    ctx.fillStyle = p.headband;
+    ctx.fillRect(ox + 11, oy + 3 + bob, 10, 2);
+    ctx.fillStyle = p.headbandAccent;
+    ctx.fillRect(ox + 13, oy + 2 + bob, 6, 2);
 
-      // Face shadow & skin
-      ctx.fillStyle = '#0d1017';
-      ctx.fillRect(ox + 12, oy + 9, 8, 7);
+    // 2. HAIR
+    ctx.fillStyle = p.hair;
+    ctx.fillRect(ox + 11, oy + 5 + bob, 10, 4);
+    ctx.fillRect(ox + 12, oy + 4 + bob, 8, 2);
+    ctx.fillRect(ox + 12, oy + 8 + bob, 8, 2);
+    ctx.fillRect(ox + 12, oy + 10 + bob, 2, 1);
+    ctx.fillRect(ox + 16, oy + 10 + bob, 3, 1);
+    // Highlights
+    ctx.fillStyle = p.hairHighlight;
+    ctx.fillRect(ox + 14, oy + 5 + bob, 4, 2);
 
-      // Cyber Visor / Glasses (Glowing Cyan)
-      ctx.fillStyle = '#00f3ff';
-      ctx.fillRect(ox + 14, oy + 10, 6, 2);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(ox + 16, oy + 10, 2, 1);
+    // 3. FACE & SKIN
+    ctx.fillStyle = p.skin;
+    ctx.fillRect(ox + 12, oy + 9 + bob, 8, 5);
+    ctx.fillRect(ox + 13, oy + 14 + bob, 6, 2); // chin
+    // Face shading
+    ctx.fillStyle = p.skinShade;
+    ctx.fillRect(ox + 12, oy + 13 + bob, 8, 1);
+    // Eyes with specular glint
+    ctx.fillStyle = p.eyeColor;
+    ctx.fillRect(ox + 14, oy + 11 + bob, 2, 2);
+    ctx.fillRect(ox + 18, oy + 11 + bob, 2, 2);
+    ctx.fillStyle = '#ffffff'; // sparkle
+    ctx.fillRect(ox + 15, oy + 11 + bob, 1, 1);
+    ctx.fillRect(ox + 19, oy + 11 + bob, 1, 1);
 
-      // Torso / Hoodie
-      const bob = frameType === 'idle' ? (tick % 2 === 0 ? 0 : 1) : 0;
-      ctx.fillStyle = '#1b2030';
-      ctx.fillRect(ox + 10, oy + 16 + bob, 12, 9);
-      // Hoodie zipper / neon trim
-      ctx.fillStyle = '#00f3ff';
-      ctx.fillRect(ox + 15, oy + 16 + bob, 2, 8);
+    // 4. OVER-EAR HEADPHONES (Earcups on sides of head)
+    // Left earcup
+    ctx.fillStyle = p.hpOuter;
+    ctx.fillRect(ox + 8, oy + 7 + bob, 3, 7);
+    ctx.fillStyle = p.hpLed;
+    ctx.fillRect(ox + 8, oy + 9 + bob, 2, 3);
+    ctx.fillStyle = p.hpCushion;
+    ctx.fillRect(ox + 10, oy + 8 + bob, 2, 5);
 
-      // Arms / Hands
-      ctx.fillStyle = '#222838';
-      if (frameType === 'run') {
-        const armSwing = (tick % 4);
-        if (armSwing === 0 || armSwing === 2) {
-          ctx.fillRect(ox + 8, oy + 17 + bob, 3, 7);
-          ctx.fillRect(ox + 21, oy + 17 + bob, 3, 7);
-        } else if (armSwing === 1) {
-          ctx.fillRect(ox + 7, oy + 16 + bob, 3, 6);
-          ctx.fillRect(ox + 22, oy + 18 + bob, 3, 7);
-        } else {
-          ctx.fillRect(ox + 7, oy + 18 + bob, 3, 7);
-          ctx.fillRect(ox + 22, oy + 16 + bob, 3, 6);
-        }
-      } else if (frameType === 'jump') {
-        ctx.fillRect(ox + 7, oy + 14, 3, 8);
-        ctx.fillRect(ox + 22, oy + 14, 3, 8);
+    // Right earcup
+    ctx.fillStyle = p.hpOuter;
+    ctx.fillRect(ox + 21, oy + 7 + bob, 3, 7);
+    ctx.fillStyle = p.hpLed;
+    ctx.fillRect(ox + 22, oy + 9 + bob, 2, 3);
+    ctx.fillStyle = p.hpCushion;
+    ctx.fillRect(ox + 20, oy + 8 + bob, 2, 5);
+
+    // 5. HOODIE (Torso & Collar)
+    ctx.fillStyle = p.hoodieCollar;
+    ctx.fillRect(ox + 11, oy + 15 + bob, 10, 2);
+    ctx.fillStyle = p.hoodieBody;
+    ctx.fillRect(ox + 10, oy + 16 + bob, 12, 8);
+    // Shoulder highlight
+    ctx.fillStyle = p.hoodieHighlight;
+    ctx.fillRect(ox + 10, oy + 16 + bob, 12, 1);
+    // Kangaroo pocket
+    ctx.fillStyle = p.hoodiePocket;
+    ctx.fillRect(ox + 12, oy + 20 + bob, 8, 4);
+    ctx.fillStyle = p.hoodieHighlight;
+    ctx.fillRect(ox + 12, oy + 20 + bob, 8, 1);
+    // Drawstrings with aglets
+    ctx.fillStyle = p.drawstring;
+    ctx.fillRect(ox + 13, oy + 17 + bob, 1, 4);
+    ctx.fillRect(ox + 18, oy + 17 + bob, 1, 4);
+    ctx.fillStyle = p.drawstringTip;
+    ctx.fillRect(ox + 13, oy + 20 + bob, 1, 1);
+    ctx.fillRect(ox + 18, oy + 20 + bob, 1, 1);
+
+    // 6. ARMS & HANDS
+    ctx.fillStyle = p.hoodieBody;
+    if (frameType === 'run') {
+      const step = tick % 4;
+      if (step === 0) {
+        ctx.fillRect(ox + 7, oy + 18 + bob, 3, 5);
+        ctx.fillRect(ox + 22, oy + 16 + bob, 3, 5);
+        ctx.fillStyle = p.skin;
+        ctx.fillRect(ox + 7, oy + 23 + bob, 2, 2);
+        ctx.fillRect(ox + 22, oy + 21 + bob, 2, 2);
+      } else if (step === 1) {
+        ctx.fillRect(ox + 8, oy + 17 + bob, 3, 5);
+        ctx.fillRect(ox + 21, oy + 17 + bob, 3, 5);
+        ctx.fillStyle = p.skin;
+        ctx.fillRect(ox + 8, oy + 22 + bob, 2, 2);
+        ctx.fillRect(ox + 21, oy + 22 + bob, 2, 2);
+      } else if (step === 2) {
+        ctx.fillRect(ox + 7, oy + 16 + bob, 3, 5);
+        ctx.fillRect(ox + 22, oy + 18 + bob, 3, 5);
+        ctx.fillStyle = p.skin;
+        ctx.fillRect(ox + 7, oy + 21 + bob, 2, 2);
+        ctx.fillRect(ox + 22, oy + 23 + bob, 2, 2);
       } else {
-        // Idle
-        ctx.fillRect(ox + 8, oy + 17 + bob, 2, 7);
-        ctx.fillRect(ox + 22, oy + 17 + bob, 2, 7);
+        ctx.fillRect(ox + 8, oy + 17 + bob, 3, 5);
+        ctx.fillRect(ox + 21, oy + 17 + bob, 3, 5);
+        ctx.fillStyle = p.skin;
+        ctx.fillRect(ox + 8, oy + 22 + bob, 2, 2);
+        ctx.fillRect(ox + 21, oy + 22 + bob, 2, 2);
       }
+    } else if (frameType === 'jump') {
+      ctx.fillRect(ox + 7, oy + 14, 3, 6);
+      ctx.fillRect(ox + 22, oy + 14, 3, 6);
+      ctx.fillStyle = p.skin;
+      ctx.fillRect(ox + 7, oy + 20, 3, 2);
+      ctx.fillRect(ox + 22, oy + 20, 3, 2);
+    } else {
+      ctx.fillRect(ox + 8, oy + 17 + bob, 2, 6);
+      ctx.fillRect(ox + 22, oy + 17 + bob, 2, 6);
+      ctx.fillStyle = p.skin;
+      ctx.fillRect(ox + 8, oy + 23 + bob, 2, 2);
+      ctx.fillRect(ox + 22, oy + 23 + bob, 2, 2);
+    }
 
-      // Legs & Sneakers
-      ctx.fillStyle = '#121622'; // pants
-      if (frameType === 'idle') {
-        ctx.fillRect(ox + 11, oy + 25 + bob, 4, 4);
-        ctx.fillRect(ox + 17, oy + 25 + bob, 4, 4);
-        // Sneakers
-        ctx.fillStyle = '#00f3ff';
-        ctx.fillRect(ox + 10, oy + 29 + bob, 5, 3);
-        ctx.fillRect(ox + 17, oy + 29 + bob, 5, 3);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(ox + 10, oy + 31 + bob, 5, 1);
-        ctx.fillRect(ox + 17, oy + 31 + bob, 5, 1);
-      } else if (frameType === 'run') {
-        const step = tick % 4;
-        if (step === 0) {
-          ctx.fillRect(ox + 9, oy + 25, 4, 4);
-          ctx.fillRect(ox + 18, oy + 24, 4, 5);
-          ctx.fillStyle = '#00f3ff';
-          ctx.fillRect(ox + 8, oy + 29, 6, 3);
-          ctx.fillRect(ox + 19, oy + 28, 5, 3);
-        } else if (step === 1) {
-          ctx.fillRect(ox + 11, oy + 24, 4, 5);
-          ctx.fillRect(ox + 17, oy + 24, 4, 5);
-          ctx.fillStyle = '#00f3ff';
-          ctx.fillRect(ox + 10, oy + 29, 5, 3);
-          ctx.fillRect(ox + 17, oy + 29, 5, 3);
-        } else if (step === 2) {
-          ctx.fillRect(ox + 18, oy + 25, 4, 4);
-          ctx.fillRect(ox + 10, oy + 24, 4, 5);
-          ctx.fillStyle = '#00f3ff';
-          ctx.fillRect(ox + 18, oy + 29, 6, 3);
-          ctx.fillRect(ox + 9, oy + 28, 5, 3);
-        } else {
-          ctx.fillRect(ox + 11, oy + 24, 4, 5);
-          ctx.fillRect(ox + 17, oy + 24, 4, 5);
-          ctx.fillStyle = '#00f3ff';
-          ctx.fillRect(ox + 11, oy + 28, 5, 3);
-          ctx.fillRect(ox + 16, oy + 28, 5, 3);
-        }
-      } else if (frameType === 'jump') {
-        // Jump pose: legs tucked slightly
-        ctx.fillRect(ox + 10, oy + 24, 4, 4);
+    // 7. PANTS & SNEAKERS
+    if (frameType === 'idle') {
+      ctx.fillStyle = p.pants;
+      ctx.fillRect(ox + 11, oy + 24 + bob, 4, 5);
+      ctx.fillRect(ox + 17, oy + 24 + bob, 4, 5);
+      ctx.fillStyle = p.pantsHighlight;
+      ctx.fillRect(ox + 12, oy + 26 + bob, 2, 2);
+      ctx.fillRect(ox + 18, oy + 26 + bob, 2, 2);
+      ctx.fillStyle = p.pantsShadow;
+      ctx.fillRect(ox + 15, oy + 24 + bob, 2, 4);
+
+      // Sneakers
+      ctx.fillStyle = p.sneakerBody;
+      ctx.fillRect(ox + 10, oy + 29 + bob, 5, 2);
+      ctx.fillRect(ox + 17, oy + 29 + bob, 5, 2);
+      ctx.fillStyle = p.sneakerStripe;
+      ctx.fillRect(ox + 11, oy + 29 + bob, 2, 1);
+      ctx.fillRect(ox + 18, oy + 29 + bob, 2, 1);
+      ctx.fillStyle = p.sneakerSole;
+      ctx.fillRect(ox + 10, oy + 31 + bob, 5, 1);
+      ctx.fillRect(ox + 17, oy + 31 + bob, 5, 1);
+    } else if (frameType === 'run') {
+      const step = tick % 4;
+      ctx.fillStyle = p.pants;
+      if (step === 0) {
+        ctx.fillRect(ox + 9, oy + 24, 4, 5);
         ctx.fillRect(ox + 18, oy + 23, 4, 5);
-        ctx.fillStyle = '#00f3ff';
-        ctx.fillRect(ox + 9, oy + 27, 5, 3);
-        ctx.fillRect(ox + 18, oy + 27, 5, 3);
+        ctx.fillStyle = p.pantsHighlight;
+        ctx.fillRect(ox + 19, oy + 24, 2, 2);
+        ctx.fillStyle = p.sneakerBody;
+        ctx.fillRect(ox + 8, oy + 29, 6, 2);
+        ctx.fillRect(ox + 19, oy + 28, 5, 2);
+        ctx.fillStyle = p.sneakerStripe;
+        ctx.fillRect(ox + 10, oy + 29, 2, 1);
+        ctx.fillRect(ox + 20, oy + 28, 2, 1);
+        ctx.fillStyle = p.sneakerSole;
+        ctx.fillRect(ox + 8, oy + 31, 6, 1);
+        ctx.fillRect(ox + 19, oy + 30, 5, 1);
+      } else if (step === 1) {
+        ctx.fillRect(ox + 11, oy + 24, 4, 5);
+        ctx.fillRect(ox + 17, oy + 24, 4, 5);
+        ctx.fillStyle = p.pantsHighlight;
+        ctx.fillRect(ox + 12, oy + 25, 2, 2);
+        ctx.fillRect(ox + 18, oy + 25, 2, 2);
+        ctx.fillStyle = p.sneakerBody;
+        ctx.fillRect(ox + 10, oy + 29, 5, 2);
+        ctx.fillRect(ox + 17, oy + 29, 5, 2);
+        ctx.fillStyle = p.sneakerStripe;
+        ctx.fillRect(ox + 11, oy + 29, 2, 1);
+        ctx.fillRect(ox + 18, oy + 29, 2, 1);
+        ctx.fillStyle = p.sneakerSole;
+        ctx.fillRect(ox + 10, oy + 31, 5, 1);
+        ctx.fillRect(ox + 17, oy + 31, 5, 1);
+      } else if (step === 2) {
+        ctx.fillRect(ox + 18, oy + 24, 4, 5);
+        ctx.fillRect(ox + 10, oy + 23, 4, 5);
+        ctx.fillStyle = p.pantsHighlight;
+        ctx.fillRect(ox + 11, oy + 24, 2, 2);
+        ctx.fillStyle = p.sneakerBody;
+        ctx.fillRect(ox + 18, oy + 29, 6, 2);
+        ctx.fillRect(ox + 9, oy + 28, 5, 2);
+        ctx.fillStyle = p.sneakerStripe;
+        ctx.fillRect(ox + 20, oy + 29, 2, 1);
+        ctx.fillRect(ox + 10, oy + 28, 2, 1);
+        ctx.fillStyle = p.sneakerSole;
+        ctx.fillRect(ox + 18, oy + 31, 6, 1);
+        ctx.fillRect(ox + 9, oy + 30, 5, 1);
+      } else {
+        ctx.fillRect(ox + 11, oy + 24, 4, 5);
+        ctx.fillRect(ox + 17, oy + 24, 4, 5);
+        ctx.fillStyle = p.pantsHighlight;
+        ctx.fillRect(ox + 12, oy + 25, 2, 2);
+        ctx.fillRect(ox + 18, oy + 25, 2, 2);
+        ctx.fillStyle = p.sneakerBody;
+        ctx.fillRect(ox + 11, oy + 29, 5, 2);
+        ctx.fillRect(ox + 16, oy + 29, 5, 2);
+        ctx.fillStyle = p.sneakerStripe;
+        ctx.fillRect(ox + 12, oy + 29, 2, 1);
+        ctx.fillRect(ox + 17, oy + 29, 2, 1);
+        ctx.fillStyle = p.sneakerSole;
+        ctx.fillRect(ox + 11, oy + 31, 5, 1);
+        ctx.fillRect(ox + 16, oy + 31, 5, 1);
       }
-    };
+    } else if (frameType === 'jump') {
+      ctx.fillStyle = p.pants;
+      ctx.fillRect(ox + 10, oy + 23, 4, 4);
+      ctx.fillRect(ox + 18, oy + 22, 4, 5);
+      ctx.fillStyle = p.pantsHighlight;
+      ctx.fillRect(ox + 11, oy + 24, 2, 2);
+      ctx.fillRect(ox + 19, oy + 23, 2, 2);
+      ctx.fillStyle = p.sneakerBody;
+      ctx.fillRect(ox + 9, oy + 27, 5, 2);
+      ctx.fillRect(ox + 18, oy + 27, 5, 2);
+      ctx.fillStyle = p.sneakerStripe;
+      ctx.fillRect(ox + 10, oy + 27, 2, 1);
+      ctx.fillRect(ox + 19, oy + 27, 2, 1);
+      ctx.fillStyle = p.sneakerSole;
+      ctx.fillRect(ox + 9, oy + 29, 5, 1);
+      ctx.fillRect(ox + 18, oy + 29, 5, 1);
+    }
+  }
 
-    // Idle sheet: 128x32 (4 frames)
+  static createPlayerSprites(scene) {
+    const activeSkin = Storage.getSkin() || 'default';
+
+    // Generate sheets for all available skins
+    Object.keys(SKINS_DATA).forEach(skinKey => {
+      const palette = SKINS_DATA[skinKey];
+
+      // Idle sheet: 128x32 (4 frames)
+      const { canvas: idleCanvas, ctx: idleCtx } = TextureGenerator.createCanvas(128, 32);
+      for (let i = 0; i < 4; i++) {
+        TextureGenerator.drawCharacterFrame(idleCtx, i * 32, 'idle', i, palette);
+      }
+      const idleTex = scene.textures.addCanvas(`player_idle_${skinKey}`, idleCanvas);
+      for (let i = 0; i < 4; i++) {
+        idleTex.add(i, 0, i * 32, 0, 32, 32);
+      }
+
+      // Run sheet: 128x32 (4 frames)
+      const { canvas: runCanvas, ctx: runCtx } = TextureGenerator.createCanvas(128, 32);
+      for (let i = 0; i < 4; i++) {
+        TextureGenerator.drawCharacterFrame(runCtx, i * 32, 'run', i, palette);
+      }
+      const runTex = scene.textures.addCanvas(`player_run_${skinKey}`, runCanvas);
+      for (let i = 0; i < 4; i++) {
+        runTex.add(i, 0, i * 32, 0, 32, 32);
+      }
+
+      // Jump frame: 32x32
+      const { canvas: jumpCanvas, ctx: jumpCtx } = TextureGenerator.createCanvas(32, 32);
+      TextureGenerator.drawCharacterFrame(jumpCtx, 0, 'jump', 0, palette);
+      scene.textures.addCanvas(`player_jump_${skinKey}`, jumpCanvas);
+    });
+
+    // Alias active skin to default keys 'player_idle', 'player_run', 'player_jump'
+    TextureGenerator.applySkinToActiveTextures(scene, activeSkin);
+  }
+
+  static applySkinToActiveTextures(scene, skinKey) {
+    const palette = SKINS_DATA[skinKey] || SKINS_DATA.default;
+
+    // Remove existing if present to cleanly replace
+    if (scene.textures.exists('player_idle')) scene.textures.remove('player_idle');
+    if (scene.textures.exists('player_run')) scene.textures.remove('player_run');
+    if (scene.textures.exists('player_jump')) scene.textures.remove('player_jump');
+
+    // Create active idle
     const { canvas: idleCanvas, ctx: idleCtx } = TextureGenerator.createCanvas(128, 32);
     for (let i = 0; i < 4; i++) {
-      drawCharacter(idleCtx, i * 32, 'idle', i);
+      TextureGenerator.drawCharacterFrame(idleCtx, i * 32, 'idle', i, palette);
     }
     const idleTex = scene.textures.addCanvas('player_idle', idleCanvas);
     for (let i = 0; i < 4; i++) {
       idleTex.add(i, 0, i * 32, 0, 32, 32);
     }
 
-    // Run sheet: 128x32 (4 frames)
+    // Create active run
     const { canvas: runCanvas, ctx: runCtx } = TextureGenerator.createCanvas(128, 32);
     for (let i = 0; i < 4; i++) {
-      drawCharacter(runCtx, i * 32, 'run', i);
+      TextureGenerator.drawCharacterFrame(runCtx, i * 32, 'run', i, palette);
     }
     const runTex = scene.textures.addCanvas('player_run', runCanvas);
     for (let i = 0; i < 4; i++) {
       runTex.add(i, 0, i * 32, 0, 32, 32);
     }
 
-    // Jump frame: 32x32
+    // Create active jump
     const { canvas: jumpCanvas, ctx: jumpCtx } = TextureGenerator.createCanvas(32, 32);
-    drawCharacter(jumpCtx, 0, 'jump', 0);
+    TextureGenerator.drawCharacterFrame(jumpCtx, 0, 'jump', 0, palette);
     scene.textures.addCanvas('player_jump', jumpCanvas);
+
+    // Rebind animations if animation manager exists
+    if (scene.anims) {
+      if (scene.anims.exists('idle')) scene.anims.remove('idle');
+      if (scene.anims.exists('run')) scene.anims.remove('run');
+      scene.anims.create({
+        key: 'idle',
+        frames: scene.anims.generateFrameNumbers('player_idle', { start: 0, end: 3 }),
+        frameRate: 6,
+        repeat: -1
+      });
+      scene.anims.create({
+        key: 'run',
+        frames: scene.anims.generateFrameNumbers('player_run', { start: 0, end: 3 }),
+        frameRate: 11,
+        repeat: -1
+      });
+    }
+  }
+
+  // Draw clean standalone preview of a skin onto an HTML canvas element
+  static drawSkinPreview(canvas, skinKey = 'default') {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const palette = SKINS_DATA[skinKey] || SKINS_DATA.default;
+    const offCanvas = document.createElement('canvas');
+    offCanvas.width = 32;
+    offCanvas.height = 32;
+    const offCtx = offCanvas.getContext('2d');
+    offCtx.imageSmoothingEnabled = false;
+    TextureGenerator.drawCharacterFrame(offCtx, 0, 'idle', 0, palette);
+
+    const scale = Math.min(canvas.width / 32, canvas.height / 32);
+    const dw = 32 * scale;
+    const dh = 32 * scale;
+    const dx = Math.round((canvas.width - dw) / 2);
+    const dy = Math.round((canvas.height - dh) / 2);
+    ctx.drawImage(offCanvas, dx, dy, dw, dh);
   }
 
   // --- Tiles and Platforms ---
@@ -572,6 +928,96 @@ export class TextureGenerator {
     hxaCtx.textBaseline = 'middle';
     hxaCtx.fillText('KERNEL', 16, 17);
     scene.textures.addCanvas('tile_corrupted_accent', hexAccent);
+
+    // --- LEVEL 5: Testes & Performance (Profiler & Assertion tiles) ---
+    const { canvas: testTile, ctx: ttCtx } = TextureGenerator.createCanvas(32, 32);
+    ttCtx.fillStyle = '#0a171d';
+    ttCtx.fillRect(0, 0, 32, 32);
+    ttCtx.strokeStyle = '#10b981';
+    ttCtx.lineWidth = 1.5;
+    ttCtx.strokeRect(1, 1, 30, 30);
+    ttCtx.fillStyle = '#10b981';
+    ttCtx.fillRect(0, 0, 32, 2);
+    ttCtx.font = 'bold 7px monospace';
+    ttCtx.textAlign = 'center';
+    ttCtx.textBaseline = 'middle';
+    ttCtx.fillText('✓ PASS', 16, 16);
+    scene.textures.addCanvas('tile_test_runner', testTile);
+
+    const { canvas: testAccent, ctx: ttaCtx } = TextureGenerator.createCanvas(32, 32);
+    ttaCtx.fillStyle = '#061014';
+    ttaCtx.fillRect(0, 0, 32, 32);
+    ttaCtx.fillStyle = '#10b981';
+    ttaCtx.fillRect(0, 0, 32, 3);
+    ttaCtx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+    ttaCtx.strokeRect(2, 4, 28, 26);
+    ttaCtx.fillStyle = '#ffffff';
+    ttaCtx.font = 'bold 7px monospace';
+    ttaCtx.textAlign = 'center';
+    ttaCtx.textBaseline = 'middle';
+    ttaCtx.fillText('TEST', 16, 17);
+    scene.textures.addCanvas('tile_test_accent', testAccent);
+
+    // --- LEVEL 6: Inteligência Artificial (Neural Network & Synapse tiles) ---
+    const { canvas: aiTile, ctx: aiCtx } = TextureGenerator.createCanvas(32, 32);
+    aiCtx.fillStyle = '#0f1026';
+    aiCtx.fillRect(0, 0, 32, 32);
+    aiCtx.strokeStyle = '#8b5cf6';
+    aiCtx.lineWidth = 1.5;
+    aiCtx.strokeRect(1, 1, 30, 30);
+    aiCtx.fillStyle = '#8b5cf6';
+    aiCtx.fillRect(0, 0, 32, 2);
+    aiCtx.fillStyle = '#c4b5fd';
+    aiCtx.font = 'bold 7px monospace';
+    aiCtx.textAlign = 'center';
+    aiCtx.textBaseline = 'middle';
+    aiCtx.fillText('[AI]', 16, 16);
+    scene.textures.addCanvas('tile_ai_synapse', aiTile);
+
+    const { canvas: aiAccent, ctx: aiaCtx } = TextureGenerator.createCanvas(32, 32);
+    aiaCtx.fillStyle = '#0a0b1c';
+    aiaCtx.fillRect(0, 0, 32, 32);
+    aiaCtx.fillStyle = '#8b5cf6';
+    aiaCtx.fillRect(0, 0, 32, 3);
+    aiaCtx.strokeStyle = 'rgba(139, 92, 246, 0.4)';
+    aiaCtx.strokeRect(2, 4, 28, 26);
+    aiaCtx.fillStyle = '#ffffff';
+    aiaCtx.font = 'bold 7px monospace';
+    aiaCtx.textAlign = 'center';
+    aiaCtx.textBaseline = 'middle';
+    aiaCtx.fillText('NEURAL', 16, 17);
+    scene.textures.addCanvas('tile_ai_accent', aiAccent);
+
+    // AI Bridge Ghost & Solid
+    const { canvas: aiGhost, ctx: aigCtx } = TextureGenerator.createCanvas(32, 32);
+    aigCtx.fillStyle = 'rgba(139, 92, 246, 0.08)';
+    aigCtx.fillRect(1, 1, 30, 30);
+    aigCtx.strokeStyle = '#8b5cf6';
+    aigCtx.lineWidth = 1.5;
+    aigCtx.setLineDash([4, 4]);
+    aigCtx.strokeRect(1.5, 1.5, 29, 29);
+    aigCtx.setLineDash([]);
+    aigCtx.fillStyle = '#a78bfa';
+    aigCtx.font = 'bold 7px monospace';
+    aigCtx.textAlign = 'center';
+    aigCtx.textBaseline = 'middle';
+    aigCtx.fillText('[INFER]', 16, 16);
+    scene.textures.addCanvas('tile_ai_bridge_ghost', aiGhost);
+
+    const { canvas: aiSolid, ctx: aisCtx } = TextureGenerator.createCanvas(32, 32);
+    aisCtx.fillStyle = '#170f38';
+    aisCtx.fillRect(0, 0, 32, 32);
+    aisCtx.strokeStyle = '#00e5ff';
+    aisCtx.lineWidth = 2;
+    aisCtx.strokeRect(1, 1, 30, 30);
+    aisCtx.fillStyle = '#8b5cf6';
+    aisCtx.fillRect(0, 0, 32, 3);
+    aisCtx.fillStyle = '#ffffff';
+    aisCtx.font = 'bold 7px monospace';
+    aisCtx.textAlign = 'center';
+    aisCtx.textBaseline = 'middle';
+    aisCtx.fillText('SYNAPSE', 16, 16);
+    scene.textures.addCanvas('tile_ai_bridge_solid', aiSolid);
   }
 
   // --- Terminals ---
@@ -616,6 +1062,8 @@ export class TextureGenerator {
     makeTerminal('terminal_css', '#a855f7', 'CSS', 'STYLE');
     makeTerminal('terminal_js', '#ffe600', 'JS', 'EXEC');
     makeTerminal('terminal_info', '#05ffa1', 'KERNEL', 'LOG');
+    makeTerminal('terminal_test', '#10b981', 'TEST', 'FIX');
+    makeTerminal('terminal_ai', '#8b5cf6', 'AI', 'INFER');
   }
 
   // --- JavaScript Switches ---
@@ -660,7 +1108,7 @@ export class TextureGenerator {
 
   // --- Items ---
   static createItemTextures(scene) {
-    // HTML Code Fragment: Glowing cyan 24x24 diamond with "<>"
+    // 1. HTML Code Fragment: Glowing cyan 24x24 diamond with "<>"
     const { canvas, ctx } = TextureGenerator.createCanvas(24, 24);
     ctx.fillStyle = '#00f3ff';
     ctx.beginPath();
@@ -687,8 +1135,24 @@ export class TextureGenerator {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('<>', 12, 12);
-
     scene.textures.addCanvas('item_html_fragment', canvas);
+
+    // 2. AI Neural Data Token: 24x24 glowing neural tensor token with matrix brackets and cyan/violet core
+    const { canvas: aiTokenCanvas, ctx: aiTokCtx } = TextureGenerator.createCanvas(24, 24);
+    aiTokCtx.fillStyle = '#8b5cf6';
+    aiTokCtx.beginPath();
+    aiTokCtx.arc(12, 12, 11, 0, Math.PI * 2);
+    aiTokCtx.fill();
+    aiTokCtx.fillStyle = '#0e0b24';
+    aiTokCtx.beginPath();
+    aiTokCtx.arc(12, 12, 8.5, 0, Math.PI * 2);
+    aiTokCtx.fill();
+    aiTokCtx.fillStyle = '#00e5ff';
+    aiTokCtx.font = 'bold 8px monospace';
+    aiTokCtx.textAlign = 'center';
+    aiTokCtx.textBaseline = 'middle';
+    aiTokCtx.fillText('[AI]', 12, 12);
+    scene.textures.addCanvas('item_ai_token', aiTokenCanvas);
   }
 
   // --- Hazards ---
@@ -749,6 +1213,123 @@ export class TextureGenerator {
       hsCtx.fillRect(i * 8 + 3, 10, 2, 5);
     }
     scene.textures.addCanvas('hazard_spikes_html', htmlSpikeCanvas);
+
+    // 5. Active Bug Shooter Entity: 32x32 (Glitched error-firing bug)
+    const { canvas: bugCanvas, ctx: bCtx } = TextureGenerator.createCanvas(32, 32);
+    // Dark beetle shell
+    bCtx.fillStyle = '#1c0612';
+    bCtx.fillRect(6, 8, 20, 18);
+    bCtx.fillStyle = '#881337';
+    bCtx.fillRect(8, 10, 16, 14);
+    // Bug legs (6 circuit legs)
+    bCtx.fillStyle = '#4c0519';
+    bCtx.fillRect(2, 10, 5, 2);
+    bCtx.fillRect(2, 16, 5, 2);
+    bCtx.fillRect(2, 22, 5, 2);
+    bCtx.fillRect(25, 10, 5, 2);
+    bCtx.fillRect(25, 16, 5, 2);
+    bCtx.fillRect(25, 22, 5, 2);
+    // Antennae
+    bCtx.fillRect(9, 3, 2, 6);
+    bCtx.fillRect(21, 3, 2, 6);
+    bCtx.fillStyle = '#ef4444';
+    bCtx.fillRect(8, 2, 4, 2);
+    bCtx.fillRect(20, 2, 4, 2);
+    // Glowing red eyes
+    bCtx.fillStyle = '#ef4444';
+    bCtx.fillRect(10, 9, 3, 3);
+    bCtx.fillRect(19, 9, 3, 3);
+    bCtx.fillStyle = '#ffffff';
+    bCtx.fillRect(11, 9, 1, 1);
+    bCtx.fillRect(20, 9, 1, 1);
+    // Glowing cannon / core on back
+    bCtx.fillStyle = '#ff0055';
+    bCtx.fillRect(13, 15, 6, 6);
+    bCtx.fillStyle = '#ffffff';
+    bCtx.fillRect(15, 17, 2, 2);
+    scene.textures.addCanvas('hazard_bug', bugCanvas);
+
+    // 6. Patched Bug (Green Pacified Bug with Checkmark)
+    const { canvas: bugPatchedCanvas, ctx: bpCtx } = TextureGenerator.createCanvas(32, 32);
+    bpCtx.fillStyle = '#062018';
+    bpCtx.fillRect(6, 8, 20, 18);
+    bpCtx.fillStyle = '#065f46';
+    bpCtx.fillRect(8, 10, 16, 14);
+    // Legs
+    bpCtx.fillStyle = '#047857';
+    bpCtx.fillRect(2, 10, 5, 2);
+    bpCtx.fillRect(2, 16, 5, 2);
+    bpCtx.fillRect(2, 22, 5, 2);
+    bpCtx.fillRect(25, 10, 5, 2);
+    bpCtx.fillRect(25, 16, 5, 2);
+    bpCtx.fillRect(25, 22, 5, 2);
+    // Calm green eyes
+    bpCtx.fillStyle = '#10b981';
+    bpCtx.fillRect(10, 9, 3, 3);
+    bpCtx.fillRect(19, 9, 3, 3);
+    // Green checkmark on shell
+    bpCtx.fillStyle = '#10b981';
+    bpCtx.font = 'bold 11px monospace';
+    bpCtx.textAlign = 'center';
+    bpCtx.textBaseline = 'middle';
+    bpCtx.fillText('✓', 16, 17);
+    scene.textures.addCanvas('hazard_bug_patched', bugPatchedCanvas);
+
+    // 7. Error Projectile Orb: 16x16 (Discharged by bug)
+    const { canvas: orbCanvas, ctx: orbCtx } = TextureGenerator.createCanvas(16, 16);
+    orbCtx.fillStyle = 'rgba(239, 68, 68, 0.4)';
+    orbCtx.beginPath();
+    orbCtx.arc(8, 8, 7.5, 0, Math.PI * 2);
+    orbCtx.fill();
+    orbCtx.fillStyle = '#ef4444';
+    orbCtx.beginPath();
+    orbCtx.arc(8, 8, 5.5, 0, Math.PI * 2);
+    orbCtx.fill();
+    orbCtx.fillStyle = '#ffffff';
+    orbCtx.beginPath();
+    orbCtx.arc(7, 6, 2, 0, Math.PI * 2);
+    orbCtx.fill();
+    scene.textures.addCanvas('hazard_error_orb', orbCanvas);
+  }
+
+  // --- AI Companion Sprites ---
+  static createAiSprites(scene) {
+    // 24x24 Floating AI Copilot Drone
+    const { canvas, ctx } = TextureGenerator.createCanvas(24, 24);
+    // Halo / outer field
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.25)';
+    ctx.beginPath();
+    ctx.arc(12, 12, 11, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Drone chassis (sleek white rounded capsule)
+    ctx.fillStyle = '#f8fafc';
+    ctx.beginPath();
+    ctx.arc(12, 11, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#cbd5e1';
+    ctx.fillRect(5, 11, 14, 3);
+
+    // Visor screen / Scanner Eye
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(7, 8, 10, 6);
+    ctx.fillStyle = '#00e5ff';
+    ctx.fillRect(9, 9, 6, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(11, 10, 2, 2);
+
+    // Antenna
+    ctx.fillStyle = '#64748b';
+    ctx.fillRect(11, 1, 2, 3);
+    ctx.fillStyle = '#a855f7';
+    ctx.fillRect(10, 0, 4, 2);
+
+    // Dual micro thrusters
+    ctx.fillStyle = '#00e5ff';
+    ctx.fillRect(8, 18, 2, 3);
+    ctx.fillRect(14, 18, 2, 3);
+
+    scene.textures.addCanvas('ai_copilot', canvas);
   }
 
   // --- Exit Portal ---
@@ -822,6 +1403,147 @@ export class TextureGenerator {
     ctx.fillRect(26, 56, 12, 6);
 
     scene.textures.addCanvas('glitch_core', canvas);
+
+    // 96x96 Giant Corrupted Virus Boss
+    const { canvas: bCanvas, ctx: bCtx } = TextureGenerator.createCanvas(96, 96);
+    // Outer glitch spikes
+    bCtx.fillStyle = '#450a1e';
+    bCtx.fillRect(8, 8, 80, 80);
+    bCtx.strokeStyle = '#ff0055';
+    bCtx.lineWidth = 3;
+    bCtx.strokeRect(8, 8, 80, 80);
+
+    // Corrupted CPU Core
+    bCtx.fillStyle = '#170510';
+    bCtx.fillRect(16, 16, 64, 64);
+    bCtx.strokeStyle = '#ef4444';
+    bCtx.lineWidth = 2;
+    bCtx.strokeRect(16, 16, 64, 64);
+
+    // Core pulsing warning area
+    bCtx.fillStyle = '#ff0055';
+    bCtx.fillRect(24, 24, 48, 48);
+
+    // Menacing giant cyber eyes / matrix
+    bCtx.fillStyle = '#ffe600';
+    bCtx.fillRect(30, 36, 12, 12);
+    bCtx.fillRect(54, 36, 12, 12);
+    bCtx.fillStyle = '#ffffff';
+    bCtx.fillRect(34, 40, 4, 4);
+    bCtx.fillRect(58, 40, 4, 4);
+
+    // Angry digital brow
+    bCtx.fillStyle = '#000000';
+    bCtx.fillRect(28, 32, 40, 4);
+
+    // Claws / Corrupted ports
+    bCtx.fillStyle = '#ff007f';
+    bCtx.fillRect(2, 38, 8, 20);
+    bCtx.fillRect(86, 38, 8, 20);
+    bCtx.fillRect(38, 2, 20, 8);
+    bCtx.fillRect(38, 86, 20, 8);
+
+    // Virus Name Tag
+    bCtx.fillStyle = '#ffffff';
+    bCtx.font = 'bold 8px monospace';
+    bCtx.textAlign = 'center';
+    bCtx.fillText('VIRUS_GIGANTE.EXE', 48, 64);
+
+    scene.textures.addCanvas('boss_giant_virus', bCanvas);
+  }
+
+  // --- Giant Web Hammer (HTML -> CSS -> JS Boss Weapon) ---
+  static createGiantHammerTextures(scene) {
+    // 1. Giant Hammer Ghost (Blueprint outline for HTML build point) - 96x96
+    const { canvas: ghGhost, ctx: ghgCtx } = TextureGenerator.createCanvas(96, 96);
+    ghgCtx.fillStyle = 'rgba(0, 243, 255, 0.08)';
+    ghgCtx.fillRect(20, 10, 56, 36); // Hammer head
+    ghgCtx.fillRect(44, 46, 8, 44);   // Handle
+
+    ghgCtx.strokeStyle = '#00f3ff';
+    ghgCtx.lineWidth = 2;
+    ghgCtx.setLineDash([4, 4]);
+    ghgCtx.strokeRect(20, 10, 56, 36);
+    ghgCtx.strokeRect(44, 46, 8, 44);
+    ghgCtx.setLineDash([]);
+
+    ghgCtx.fillStyle = '#00f3ff';
+    ghgCtx.font = 'bold 8px monospace';
+    ghgCtx.textAlign = 'center';
+    ghgCtx.fillText('<div id="hammer"/>', 48, 30);
+    scene.textures.addCanvas('giant_hammer_ghost', ghGhost);
+
+    // 2. Giant Hammer Disabled (HTML Built, but gray/dim - waiting for CSS) - 96x96
+    const { canvas: ghOff, ctx: ghoCtx } = TextureGenerator.createCanvas(96, 96);
+    // Handle
+    ghoCtx.fillStyle = '#374151';
+    ghoCtx.fillRect(44, 46, 8, 44);
+    ghoCtx.strokeStyle = '#4b5563';
+    ghoCtx.lineWidth = 1.5;
+    ghoCtx.strokeRect(44, 46, 8, 44);
+
+    // Giant Hammer Head
+    ghoCtx.fillStyle = '#1f2937';
+    ghoCtx.fillRect(20, 10, 56, 36);
+    ghoCtx.strokeStyle = '#6b7280';
+    ghoCtx.lineWidth = 2;
+    ghoCtx.strokeRect(20, 10, 56, 36);
+
+    // Inactive steel rivets
+    ghoCtx.fillStyle = '#9ca3af';
+    ghoCtx.fillRect(24, 14, 4, 4);
+    ghoCtx.fillRect(68, 14, 4, 4);
+    ghoCtx.fillRect(24, 38, 4, 4);
+    ghoCtx.fillRect(68, 38, 4, 4);
+
+    ghoCtx.font = 'bold 9px monospace';
+    ghoCtx.textAlign = 'center';
+    ghoCtx.fillStyle = '#9ca3af';
+    ghoCtx.fillText('<HTML: BUILT>', 48, 28);
+    ghoCtx.font = '7px monospace';
+    ghoCtx.fillText('[DISABLED]', 48, 38);
+    scene.textures.addCanvas('giant_hammer_off', ghOff);
+
+    // 3. Giant Hammer Active (Enabled by CSS! Energized with glowing neon purple/cyan) - 96x96
+    const { canvas: ghOn, ctx: ghnCtx } = TextureGenerator.createCanvas(96, 96);
+    // Handle with cyber grips
+    ghnCtx.fillStyle = '#1e1b4b';
+    ghnCtx.fillRect(44, 46, 8, 44);
+    ghnCtx.strokeStyle = '#a855f7';
+    ghnCtx.lineWidth = 2;
+    ghnCtx.strokeRect(44, 46, 8, 44);
+
+    // Handle neon rings
+    ghnCtx.fillStyle = '#00f3ff';
+    ghnCtx.fillRect(43, 56, 10, 3);
+    ghnCtx.fillRect(43, 70, 10, 3);
+
+    // Giant Hammer Head (Glowing cyber block)
+    ghnCtx.fillStyle = '#110a26';
+    ghnCtx.fillRect(18, 8, 60, 40);
+    ghnCtx.strokeStyle = '#00e5ff';
+    ghnCtx.lineWidth = 3;
+    ghnCtx.strokeRect(18, 8, 60, 40);
+
+    // Inner neon core
+    ghnCtx.strokeStyle = '#a855f7';
+    ghnCtx.lineWidth = 1.5;
+    ghnCtx.strokeRect(22, 12, 52, 32);
+
+    // Impact striking plates on both sides
+    ghnCtx.fillStyle = '#ffe600';
+    ghnCtx.fillRect(14, 14, 4, 28);
+    ghnCtx.fillRect(78, 14, 4, 28);
+
+    // Active text & electric energy
+    ghnCtx.font = 'bold 9px monospace';
+    ghnCtx.textAlign = 'center';
+    ghnCtx.fillStyle = '#00e5ff';
+    ghnCtx.fillText('{CSS: ENABLED}', 48, 26);
+    ghnCtx.fillStyle = '#f7df1e';
+    ghnCtx.font = 'bold 8px monospace';
+    ghnCtx.fillText('READY TO SMASH', 48, 38);
+    scene.textures.addCanvas('giant_hammer_on', ghOn);
   }
 
   // --- Particle Textures ---

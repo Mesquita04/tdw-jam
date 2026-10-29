@@ -6,18 +6,18 @@ const STORAGE_KEY = 'ctrl_alt_escape_v1_save';
 
 export class Storage {
   static defaultData() {
+    const levels = {};
+    for (let i = 1; i <= 16; i++) {
+      levels[i] = { completed: false, stars: 0, bestTime: null, deaths: 0 };
+    }
     return {
       unlockedLevel: 1,
       muted: false,
-      lang: 'en',
-      levels: {
-        1: { completed: false, stars: 0, bestTime: null, deaths: 0 },
-        2: { completed: false, stars: 0, bestTime: null, deaths: 0 },
-        3: { completed: false, stars: 0, bestTime: null, deaths: 0 },
-        4: { completed: false, stars: 0, bestTime: null, deaths: 0 },
-        5: { completed: false, stars: 0, bestTime: null, deaths: 0 },
-        6: { completed: false, stars: 0, bestTime: null, deaths: 0 },
-      }
+      musicMuted: false,
+      sfxMuted: false,
+      skin: 'default',
+      lang: 'pt',
+      levels
     };
   }
 
@@ -31,7 +31,10 @@ export class Storage {
       return {
         unlockedLevel: Math.max(1, parsed.unlockedLevel || 1),
         muted: !!parsed.muted,
-        lang: parsed.lang || 'en',
+        musicMuted: !!parsed.musicMuted,
+        sfxMuted: !!parsed.sfxMuted,
+        skin: parsed.skin || 'default',
+        lang: parsed.lang || 'pt',
         levels: { ...def.levels, ...(parsed.levels || {}) }
       };
     } catch (e) {
@@ -70,7 +73,7 @@ export class Storage {
     };
 
     // Unlock next level if currently on highest
-    if (levelId < 6 && data.unlockedLevel <= levelId) {
+    if (levelId < 16 && data.unlockedLevel <= levelId) {
       data.unlockedLevel = levelId + 1;
     }
 
@@ -85,6 +88,36 @@ export class Storage {
   static setMuted(val) {
     const data = Storage.load();
     data.muted = !!val;
+    Storage.save(data);
+  }
+
+  static isMusicMuted() {
+    return Storage.load().musicMuted;
+  }
+
+  static setMusicMuted(val) {
+    const data = Storage.load();
+    data.musicMuted = !!val;
+    Storage.save(data);
+  }
+
+  static isSfxMuted() {
+    return Storage.load().sfxMuted;
+  }
+
+  static setSfxMuted(val) {
+    const data = Storage.load();
+    data.sfxMuted = !!val;
+    Storage.save(data);
+  }
+
+  static getSkin() {
+    return Storage.load().skin || 'default';
+  }
+
+  static setSkin(val) {
+    const data = Storage.load();
+    data.skin = val || 'default';
     Storage.save(data);
   }
 

@@ -6,8 +6,13 @@ export class SoundManager {
   constructor() {
     this.ctx = null;
     this.muted = false;
+    this.musicMuted = false;
+    this.sfxMuted = false;
     this.masterGain = null;
     this.initialized = false;
+    this.bgmPlaying = false;
+    this.bgmInterval = null;
+    this.bgmStep = 0;
   }
 
   init() {
@@ -36,15 +41,119 @@ export class SoundManager {
   }
 
   setMuted(muted) {
-    this.muted = muted;
+    this.muted = !!muted;
     if (this.masterGain && this.ctx) {
-      this.masterGain.gain.setValueAtTime(muted ? 0 : 0.25, this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(this.muted ? 0 : 0.25, this.ctx.currentTime);
+    }
+    if (this.muted) {
+      this.stopBgm();
+    } else if (!this.musicMuted) {
+      this.startBgm();
     }
     return this.muted;
   }
 
+  setMusicMuted(muted) {
+    this.musicMuted = !!muted;
+    if (this.musicMuted) {
+      this.stopBgm();
+    } else if (!this.muted) {
+      this.startBgm();
+    }
+    return this.musicMuted;
+  }
+
+  setSfxMuted(muted) {
+    this.sfxMuted = !!muted;
+    return this.sfxMuted;
+  }
+
+  // --- Real-time Web Audio Background Music (BGM Synthesizer) ---
+  startBgm() {
+    if (this.bgmPlaying || this.musicMuted || this.muted) return;
+    this.ensureContext();
+    if (!this.ctx || !this.masterGain) return;
+
+    this.bgmPlaying = true;
+    this.bgmStep = 0;
+
+    // Cyberpunk synthwave progression: Am -> F -> C -> G
+    const bassNotes = [
+      110.00, 110.00, 110.00, 110.00, // A2
+      87.31,  87.31,  87.31,  87.31,  // F2
+      130.81, 130.81, 130.81, 130.81, // C3
+      98.00,  98.00,  98.00,  98.00   // G2
+    ];
+
+    const leadNotes = [
+      220.00, 261.63, 329.63, 440.00, // A3, C4, E4, A4
+      174.61, 220.00, 261.63, 349.23, // F3, A3, C4, F4
+      261.63, 329.63, 392.00, 523.25, // C4, E4, G4, C5
+      196.00, 246.94, 293.66, 392.00  // G3, B3, D4, G4
+    ];
+
+    const stepIntervalMs = 180; // ~166 BPM 16th note cyber clock
+
+    this.bgmInterval = setInterval(() => {
+      if (!this.bgmPlaying || this.musicMuted || this.muted || !this.ctx || this.ctx.state === 'suspended') return;
+
+      const idx = this.bgmStep % 16;
+      this.bgmStep++;
+
+      const now = this.ctx.currentTime;
+      const bFreq = bassNotes[idx];
+      const lFreq = leadNotes[idx];
+
+      try {
+        // 1. Warm Triangle Bass
+        const bassOsc = this.ctx.createOscillator();
+        const bassGain = this.ctx.createGain();
+        bassOsc.type = 'triangle';
+        bassOsc.frequency.setValueAtTime(bFreq, now);
+
+        bassGain.gain.setValueAtTime(0.08, now);
+        bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+
+        bassOsc.connect(bassGain);
+        bassGain.connect(this.masterGain);
+        bassOsc.start(now);
+        bassOsc.stop(now + 0.16);
+
+        // 2. Filtered Analog Arpeggio Lead
+        const leadOsc = this.ctx.createOscillator();
+        const leadGain = this.ctx.createGain();
+        leadOsc.type = 'sawtooth';
+        leadOsc.frequency.setValueAtTime(lFreq, now);
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(850, now);
+        filter.frequency.exponentialRampToValueAtTime(320, now + 0.14);
+
+        leadGain.gain.setValueAtTime(0.04, now);
+        leadGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+        leadOsc.connect(filter);
+        filter.connect(leadGain);
+        leadGain.connect(this.masterGain);
+        leadOsc.start(now);
+        leadOsc.stop(now + 0.14);
+      } catch (e) {
+        // Safe catch for tab suspend
+      }
+    }, stepIntervalMs);
+  }
+
+  stopBgm() {
+    this.bgmPlaying = false;
+    if (this.bgmInterval) {
+      clearInterval(this.bgmInterval);
+      this.bgmInterval = null;
+    }
+  }
+
   playTone(freq, type = 'square', duration = 0.1, gainVal = 0.3, freqEnd = null) {
-    if (this.muted) return;
+    if (this.muted || this.sfxMuted) return;
     this.ensureContext();
     if (!this.ctx || !this.masterGain) return;
 
@@ -121,7 +230,7 @@ export class SoundManager {
   }
 
   playHurt() {
-    if (this.muted) return;
+    if (this.muted || this.sfxMuted) return;
     this.ensureContext();
     if (!this.ctx || !this.masterGain) return;
 
@@ -157,6 +266,34 @@ export class SoundManager {
     }
   }
 
+  playBugShoot() {
+    this.playTone(550, 'sawtooth', 0.09, 0.22, 110);
+  }
+
+  playTestPass() {
+    this.playTone(440, 'triangle', 0.1, 0.3, 660);
+    setTimeout(() => {
+      this.playTone(660, 'sine', 0.18, 0.35, 880);
+    }, 70);
+  }
+
+  playAiInference() {
+    const sweep = [220, 330, 440, 554, 659, 880];
+    sweep.forEach((f, i) => {
+      setTimeout(() => {
+        this.playTone(f, 'sine', 0.16, 0.22);
+      }, i * 60);
+    });
+  }
+
+  playAiLaunch() {
+    this.playTone(320, 'sine', 0.2, 0.35, 1200);
+  }
+
+  playAiToken() {
+    this.playTone(700, 'sine', 0.08, 0.3, 1100);
+  }
+
   playLevelComplete() {
     const notes = [440, 554.37, 659.25, 880];
     notes.forEach((f, i) => {
@@ -173,6 +310,20 @@ export class SoundManager {
         this.playTone(f, 'square', 0.25, 0.25);
       }, i * 140);
     });
+  }
+
+  playHammerSmash() {
+    this.playTone(400, 'sawtooth', 0.25, 0.45, 60);
+    setTimeout(() => {
+      this.playTone(150, 'triangle', 0.3, 0.5, 30);
+    }, 40);
+  }
+
+  playExplosion() {
+    this.playTone(200, 'square', 0.4, 0.5, 30);
+    setTimeout(() => {
+      this.playTone(90, 'sawtooth', 0.5, 0.45, 20);
+    }, 50);
   }
 }
 

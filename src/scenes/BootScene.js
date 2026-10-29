@@ -27,7 +27,6 @@ export class BootScene extends Phaser.Scene {
       repeat: -1
     });
 
-    // Start with GameScene ready
-    this.scene.start('GameScene');
+    // GameScene is NOT auto-started here. It starts when the user clicks Play.
   }
 }
