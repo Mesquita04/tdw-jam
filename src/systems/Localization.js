@@ -199,7 +199,7 @@ export const TRANSLATIONS = {
 
     // Title Screen
     gameTitle: 'TDW: ALT-F4',
-    tagline: 'uma experiência TDW',
+    tagline: 'a TDW experience',
     btnPlay: 'PLAY',
     btnContinue: 'CONTINUE',
     btnLevelSelect: 'CHOOSE LEVEL',

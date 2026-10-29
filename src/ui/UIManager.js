@@ -651,10 +651,17 @@ export class UIManager {
 
   applyTranslations() {
     const isEn = i18n.getLang() === 'en';
+    document.title = isEn ? 'TDW: ALT-F4 — a TDW experience' : 'TDW: ALT-F4 — uma experiência TDW';
 
     // Title (Main Menu)
     const titleTagline = document.getElementById('title-tagline');
-    if (titleTagline) titleTagline.textContent = i18n.t('tagline');
+    if (titleTagline) {
+      titleTagline.innerHTML = `&gt; "${i18n.t('tagline')}" <span class="term-cursor">█</span>`;
+    }
+    const splashTagline = document.getElementById('splash-tagline');
+    if (splashTagline) {
+      splashTagline.textContent = `"${i18n.t('tagline')}"`;
+    }
     const lblPlay = document.getElementById('lbl-btn-play');
     if (lblPlay) lblPlay.textContent = i18n.t('btnPlay');
     const lblContinue = document.getElementById('lbl-btn-continue');
