@@ -5,7 +5,7 @@
 
 export class TextureGenerator {
   static generateAll(scene) {
-    TextureGenerator.createBgGrid(scene);
+    TextureGenerator.createBackgroundTextures(scene);
     TextureGenerator.createPlayerSprites(scene);
     TextureGenerator.createTileTextures(scene);
     TextureGenerator.createTerminalTextures(scene);
@@ -26,29 +26,122 @@ export class TextureGenerator {
     return { canvas, ctx };
   }
 
-  // --- Background Grid ---
-  static createBgGrid(scene) {
-    const { canvas, ctx } = TextureGenerator.createCanvas(64, 64);
-    ctx.fillStyle = '#0a0d18';
-    ctx.fillRect(0, 0, 64, 64);
+  // --- Background Textures (Unique visual theme per level!) ---
+  static createBackgroundTextures(scene) {
+    // 1. Level 1: Localhost Wireframe & Blueprint (Dark Blue-Slate)
+    const { canvas: bg1, ctx: ctx1 } = TextureGenerator.createCanvas(64, 64);
+    ctx1.fillStyle = '#0a0d18';
+    ctx1.fillRect(0, 0, 64, 64);
+    ctx1.strokeStyle = '#141c30';
+    ctx1.lineWidth = 1;
+    ctx1.strokeRect(0.5, 0.5, 63, 63);
+    ctx1.fillStyle = '#1e293b';
+    ctx1.font = '8px monospace';
+    ctx1.fillText('> 127.0.0.1', 6, 20);
+    ctx1.fillStyle = '#00f3ff';
+    ctx1.fillRect(6, 28, 4, 2); // Blinking cursor
+    scene.textures.addCanvas('bg_level_1', bg1);
+    scene.textures.addCanvas('bg_grid', bg1); // Backward compatibility
 
-    // Subtle digital grid lines
-    ctx.strokeStyle = '#141c30';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(0, 63.5);
-    ctx.lineTo(64, 63.5);
-    ctx.moveTo(63.5, 0);
-    ctx.lineTo(63.5, 64);
-    ctx.stroke();
+    // 2. Level 2: HTML Raw Document (Pure Clean White Paper with Black Tags!)
+    const { canvas: bg2, ctx: ctx2 } = TextureGenerator.createCanvas(128, 128);
+    ctx2.fillStyle = '#ffffff'; // Pure white canvas as requested!
+    ctx2.fillRect(0, 0, 128, 128);
+    // Subtle document margin rule (faint light-gray)
+    ctx2.strokeStyle = '#f1f5f9';
+    ctx2.lineWidth = 1;
+    ctx2.strokeRect(0.5, 0.5, 127, 127);
+    ctx2.strokeStyle = '#e2e8f0';
+    ctx2.strokeRect(8.5, 8.5, 111, 111);
+    // Faint unstyled HTML watermarks in light gray
+    ctx2.fillStyle = '#cbd5e1';
+    ctx2.font = 'bold 9px monospace';
+    ctx2.fillText('<!DOCTYPE html>', 12, 24);
+    ctx2.fillText('<html>', 12, 40);
+    ctx2.fillText('  <body>', 12, 56);
+    ctx2.fillText('    <main id="app">', 12, 72);
+    ctx2.fillText('    </main>', 12, 92);
+    ctx2.fillText('</html>', 12, 108);
+    scene.textures.addCanvas('bg_level_2', bg2);
 
-    // Subtle micro binary dots
-    ctx.fillStyle = '#1c2844';
-    ctx.fillRect(8, 8, 2, 2);
-    ctx.fillRect(40, 24, 2, 2);
-    ctx.fillRect(20, 48, 2, 2);
+    // 3. Level 3: CSS Stylesheet Dark Mode (Deep Violet with Neon Syntax)
+    const { canvas: bg3, ctx: ctx3 } = TextureGenerator.createCanvas(128, 128);
+    ctx3.fillStyle = '#140e24';
+    ctx3.fillRect(0, 0, 128, 128);
+    ctx3.strokeStyle = '#22163b';
+    ctx3.lineWidth = 1;
+    ctx3.strokeRect(0.5, 0.5, 127, 127);
+    // Faint neon purple & magenta CSS rules
+    ctx3.fillStyle = '#4c2d7a';
+    ctx3.font = 'bold 9px monospace';
+    ctx3.fillText('.hero-banner {', 10, 24);
+    ctx3.fillStyle = '#a855f7';
+    ctx3.fillText('  display: flex;', 10, 42);
+    ctx3.fillText('  box-shadow: neon;', 10, 60);
+    ctx3.fillStyle = '#ff007f';
+    ctx3.fillText('  filter: blur(0);', 10, 78);
+    ctx3.fillStyle = '#4c2d7a';
+    ctx3.fillText('}', 10, 96);
+    scene.textures.addCanvas('bg_level_3', bg3);
 
-    scene.textures.addCanvas('bg_grid', canvas);
+    // 4. Level 4: JavaScript Event Loop & Carbon Grid (Deep Charcoal & JS Yellow)
+    const { canvas: bg4, ctx: ctx4 } = TextureGenerator.createCanvas(128, 128);
+    ctx4.fillStyle = '#101012';
+    ctx4.fillRect(0, 0, 128, 128);
+    ctx4.strokeStyle = '#232213';
+    ctx4.lineWidth = 1;
+    ctx4.strokeRect(0.5, 0.5, 127, 127);
+    // JS Event Loop & Promise syntax
+    ctx4.fillStyle = '#443f16';
+    ctx4.font = 'bold 9px monospace';
+    ctx4.fillText('> async function() {', 10, 24);
+    ctx4.fillStyle = '#f7df1e';
+    ctx4.fillText('  await Promise.all();', 10, 44);
+    ctx4.fillText('  queueMicrotask();', 10, 64);
+    ctx4.fillStyle = '#ca8a04';
+    ctx4.fillText('  return resolve(1);', 10, 84);
+    ctx4.fillStyle = '#443f16';
+    ctx4.fillText('}', 10, 104);
+    scene.textures.addCanvas('bg_level_4', bg4);
+
+    // 5. Level 5: Git Merge Conflict (Split Diff Editor with Green/Red Lines)
+    const { canvas: bg5, ctx: ctx5 } = TextureGenerator.createCanvas(128, 128);
+    ctx5.fillStyle = '#0b1319';
+    ctx5.fillRect(0, 0, 128, 128);
+    ctx5.strokeStyle = '#182633';
+    ctx5.lineWidth = 1;
+    ctx5.strokeRect(0.5, 0.5, 127, 127);
+    // Git conflict markers
+    ctx5.fillStyle = '#059669';
+    ctx5.font = 'bold 8px monospace';
+    ctx5.fillText('<<<<<<< HEAD (local)', 8, 22);
+    ctx5.fillText('+ <nav class="bridge">', 8, 38);
+    ctx5.fillStyle = '#475569';
+    ctx5.fillText('======= [MERGE]', 8, 56);
+    ctx5.fillStyle = '#dc2626';
+    ctx5.fillText('- <laser active="true">', 8, 74);
+    ctx5.fillStyle = '#0284c7';
+    ctx5.fillText('>>>>>>> branch-origin', 8, 92);
+    scene.textures.addCanvas('bg_level_5', bg5);
+
+    // 6. Level 6: Kernel Panic Void (Intense Pitch Black with Glitch Hex Dumps)
+    const { canvas: bg6, ctx: ctx6 } = TextureGenerator.createCanvas(128, 128);
+    ctx6.fillStyle = '#050308';
+    ctx6.fillRect(0, 0, 128, 128);
+    ctx6.strokeStyle = '#2b0716';
+    ctx6.lineWidth = 1;
+    ctx6.strokeRect(0.5, 0.5, 127, 127);
+    // Corrupted hexadecimal crash dump
+    ctx6.fillStyle = '#5c1228';
+    ctx6.font = 'bold 8px monospace';
+    ctx6.fillText('CRITICAL_KERNEL_PANIC', 8, 20);
+    ctx6.fillStyle = '#e11d48';
+    ctx6.fillText('0x7FFF0044: EXCEPTION', 8, 38);
+    ctx6.fillText('SIGSEGV: CORE CORRUPTED', 8, 56);
+    ctx6.fillStyle = '#9f1239';
+    ctx6.fillText('VIRUS PID: 666 (RUN)', 8, 76);
+    ctx6.fillText('MEMORY DUMP [0xDEADBEEF]', 8, 96);
+    scene.textures.addCanvas('bg_level_6', bg6);
   }
 
   // --- Player Sprites ---
@@ -296,6 +389,189 @@ export class TextureGenerator {
     cgCtx.textBaseline = 'middle';
     cgCtx.fillText('NONE', 16, 16);
     scene.textures.addCanvas('tile_css_ghost', cssGhost);
+
+    // ========================================================
+    // THEMED TILES PER LEVEL TYPE (Unique visuals per tech!)
+    // ========================================================
+
+    // --- LEVEL 2: HTML Raw Document (Black <div> blocks on pure white!) ---
+    // 7. HTML Black Block (<div/>)
+    const { canvas: htmlBlack, ctx: hbCtx } = TextureGenerator.createCanvas(32, 32);
+    hbCtx.fillStyle = '#050505'; // Jet black
+    hbCtx.fillRect(0, 0, 32, 32);
+    hbCtx.strokeStyle = '#ffffff'; // Crisp white border
+    hbCtx.lineWidth = 1.5;
+    hbCtx.strokeRect(1, 1, 30, 30);
+    hbCtx.fillStyle = '#ffffff';
+    hbCtx.font = 'bold 8px monospace';
+    hbCtx.textAlign = 'center';
+    hbCtx.textBaseline = 'middle';
+    hbCtx.fillText('<div/>', 16, 16);
+    scene.textures.addCanvas('tile_html_black', htmlBlack);
+
+    // 8. HTML Black Accent (Header / Ground)
+    const { canvas: htmlAccent, ctx: haCtx } = TextureGenerator.createCanvas(32, 32);
+    haCtx.fillStyle = '#000000';
+    haCtx.fillRect(0, 0, 32, 32);
+    haCtx.fillStyle = '#ffffff';
+    haCtx.fillRect(0, 0, 32, 3); // White top border line
+    haCtx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    haCtx.strokeRect(2, 4, 28, 26);
+    haCtx.font = 'bold 7px monospace';
+    haCtx.textAlign = 'center';
+    haCtx.textBaseline = 'middle';
+    haCtx.fillText('<main>', 16, 17);
+    scene.textures.addCanvas('tile_html_black_accent', htmlAccent);
+
+    // 9. HTML Ghost Blueprint on White (Dashed black box)
+    const { canvas: htmlGhost, ctx: hgCtx } = TextureGenerator.createCanvas(32, 32);
+    hgCtx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+    hgCtx.fillRect(1, 1, 30, 30);
+    hgCtx.strokeStyle = '#000000';
+    hgCtx.lineWidth = 2;
+    hgCtx.setLineDash([4, 4]);
+    hgCtx.strokeRect(1, 1, 30, 30);
+    hgCtx.setLineDash([]);
+    hgCtx.fillStyle = '#000000';
+    hgCtx.font = 'bold 8px monospace';
+    hgCtx.textAlign = 'center';
+    hgCtx.textBaseline = 'middle';
+    hgCtx.fillText('<div/>', 16, 16);
+    scene.textures.addCanvas('tile_html_ghost', htmlGhost);
+
+    // 10. HTML Built Solid Bridge on White
+    const { canvas: htmlSolid, ctx: hsCtx } = TextureGenerator.createCanvas(32, 32);
+    hsCtx.fillStyle = '#000000';
+    hsCtx.fillRect(0, 0, 32, 32);
+    hsCtx.strokeStyle = '#ffffff';
+    hsCtx.lineWidth = 2;
+    hsCtx.strokeRect(1, 1, 30, 30);
+    hsCtx.fillStyle = '#ffffff';
+    hsCtx.font = 'bold 8px monospace';
+    hsCtx.textAlign = 'center';
+    hsCtx.textBaseline = 'middle';
+    hsCtx.fillText('<div/>', 16, 16);
+    scene.textures.addCanvas('tile_html_bridge', htmlSolid);
+
+    // --- LEVEL 3: CSS Styled Platforms (Dark Mode & Glowing Neon Borders) ---
+    // 11. CSS Styled Platform
+    const { canvas: cssStyled, ctx: cstCtx } = TextureGenerator.createCanvas(32, 32);
+    cstCtx.fillStyle = '#1c1033';
+    cstCtx.fillRect(0, 0, 32, 32);
+    cstCtx.strokeStyle = '#a855f7';
+    cstCtx.lineWidth = 1.5;
+    cstCtx.strokeRect(1, 1, 30, 30);
+    cstCtx.fillStyle = '#c084fc';
+    cstCtx.fillRect(0, 0, 32, 2);
+    cstCtx.font = 'bold 7px monospace';
+    cstCtx.textAlign = 'center';
+    cstCtx.textBaseline = 'middle';
+    cstCtx.fillText('.style', 16, 16);
+    scene.textures.addCanvas('tile_css_styled', cssStyled);
+
+    const { canvas: cssAccent, ctx: caCtx } = TextureGenerator.createCanvas(32, 32);
+    caCtx.fillStyle = '#22143e';
+    caCtx.fillRect(0, 0, 32, 32);
+    caCtx.fillStyle = '#ff007f';
+    caCtx.fillRect(0, 0, 32, 3); // Neon magenta top
+    caCtx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+    caCtx.strokeRect(2, 4, 28, 26);
+    caCtx.fillStyle = '#ffffff';
+    caCtx.font = 'bold 7px monospace';
+    caCtx.textAlign = 'center';
+    caCtx.textBaseline = 'middle';
+    caCtx.fillText('{ css }', 16, 17);
+    scene.textures.addCanvas('tile_css_styled_accent', cssAccent);
+
+    // --- LEVEL 4: JavaScript Execution Stack (JS Yellow & Carbon) ---
+    // 12. JS Stack Tile
+    const { canvas: jsTile, ctx: jsCtx } = TextureGenerator.createCanvas(32, 32);
+    jsCtx.fillStyle = '#18181b';
+    jsCtx.fillRect(0, 0, 32, 32);
+    jsCtx.strokeStyle = '#f7df1e';
+    jsCtx.lineWidth = 1.5;
+    jsCtx.strokeRect(1, 1, 30, 30);
+    jsCtx.fillStyle = '#f7df1e';
+    jsCtx.fillRect(0, 0, 32, 2);
+    jsCtx.font = 'bold 8px monospace';
+    jsCtx.textAlign = 'center';
+    jsCtx.textBaseline = 'middle';
+    jsCtx.fillText('[stack]', 16, 16);
+    scene.textures.addCanvas('tile_js_stack', jsTile);
+
+    const { canvas: jsAccent, ctx: jsaCtx } = TextureGenerator.createCanvas(32, 32);
+    jsaCtx.fillStyle = '#141416';
+    jsaCtx.fillRect(0, 0, 32, 32);
+    jsaCtx.fillStyle = '#f7df1e';
+    jsaCtx.fillRect(0, 0, 32, 3); // Bold JS yellow top
+    jsaCtx.strokeStyle = 'rgba(247, 223, 30, 0.4)';
+    jsaCtx.strokeRect(2, 4, 28, 26);
+    jsaCtx.font = 'bold 7px monospace';
+    jsaCtx.textAlign = 'center';
+    jsaCtx.textBaseline = 'middle';
+    jsaCtx.fillText('> JS', 16, 17);
+    scene.textures.addCanvas('tile_js_stack_accent', jsAccent);
+
+    // --- LEVEL 5: Git Merge Conflict (Diff additions & branch line) ---
+    // 13. Git Diff Add Platform
+    const { canvas: gitAdd, ctx: gaCtx } = TextureGenerator.createCanvas(32, 32);
+    gaCtx.fillStyle = '#064e3b';
+    gaCtx.fillRect(0, 0, 32, 32);
+    gaCtx.strokeStyle = '#10b981';
+    gaCtx.lineWidth = 1.5;
+    gaCtx.strokeRect(1, 1, 30, 30);
+    gaCtx.fillStyle = '#10b981';
+    gaCtx.fillRect(0, 0, 32, 2);
+    gaCtx.fillStyle = '#ffffff';
+    gaCtx.font = 'bold 8px monospace';
+    gaCtx.textAlign = 'center';
+    gaCtx.textBaseline = 'middle';
+    gaCtx.fillText('+ diff', 16, 16);
+    scene.textures.addCanvas('tile_git_add', gitAdd);
+
+    const { canvas: gitAccent, ctx: gtaCtx } = TextureGenerator.createCanvas(32, 32);
+    gtaCtx.fillStyle = '#04382a';
+    gtaCtx.fillRect(0, 0, 32, 32);
+    gtaCtx.fillStyle = '#10b981';
+    gtaCtx.fillRect(0, 0, 32, 3); // Bold diff green
+    gtaCtx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+    gtaCtx.strokeRect(2, 4, 28, 26);
+    gtaCtx.fillStyle = '#ffffff';
+    gtaCtx.font = 'bold 7px monospace';
+    gtaCtx.textAlign = 'center';
+    gtaCtx.textBaseline = 'middle';
+    gtaCtx.fillText('+ HEAD', 16, 17);
+    scene.textures.addCanvas('tile_git_accent', gitAccent);
+
+    // --- LEVEL 6: Kernel Panic Corrupted Hex ---
+    // 14. Corrupted Hex Memory Tile
+    const { canvas: hexTile, ctx: hxCtx } = TextureGenerator.createCanvas(32, 32);
+    hxCtx.fillStyle = '#08030a';
+    hxCtx.fillRect(0, 0, 32, 32);
+    hxCtx.strokeStyle = '#ef4444';
+    hxCtx.lineWidth = 1.5;
+    hxCtx.strokeRect(1, 1, 30, 30);
+    hxCtx.fillStyle = '#ef4444';
+    hxCtx.fillRect(0, 0, 32, 2);
+    hxCtx.font = 'bold 7px monospace';
+    hxCtx.textAlign = 'center';
+    hxCtx.textBaseline = 'middle';
+    hxCtx.fillText('0xERR', 16, 16);
+    scene.textures.addCanvas('tile_corrupted_hex', hexTile);
+
+    const { canvas: hexAccent, ctx: hxaCtx } = TextureGenerator.createCanvas(32, 32);
+    hxaCtx.fillStyle = '#050207';
+    hxaCtx.fillRect(0, 0, 32, 32);
+    hxaCtx.fillStyle = '#ef4444';
+    hxaCtx.fillRect(0, 0, 32, 3); // Flashing red top
+    hxaCtx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+    hxaCtx.strokeRect(2, 4, 28, 26);
+    hxaCtx.fillStyle = '#ffffff';
+    hxaCtx.font = 'bold 7px monospace';
+    hxaCtx.textAlign = 'center';
+    hxaCtx.textBaseline = 'middle';
+    hxaCtx.fillText('KERNEL', 16, 17);
+    scene.textures.addCanvas('tile_corrupted_accent', hexAccent);
   }
 
   // --- Terminals ---
@@ -455,6 +731,24 @@ export class TextureGenerator {
     tCtx.fillStyle = '#ff007f';
     tCtx.fillRect(6, 6, 8, 8);
     scene.textures.addCanvas('laser_emitter', turretCanvas);
+
+    // 4. HTML Raw Spikes (Black thorns with red 404 tip for Level 2 white document)
+    const { canvas: htmlSpikeCanvas, ctx: hsCtx } = TextureGenerator.createCanvas(32, 32);
+    hsCtx.fillStyle = '#000000'; // Black spikes
+    for (let i = 0; i < 4; i++) {
+      hsCtx.beginPath();
+      hsCtx.moveTo(i * 8, 32);
+      hsCtx.lineTo(i * 8 + 4, 10);
+      hsCtx.lineTo(i * 8 + 8, 32);
+      hsCtx.closePath();
+      hsCtx.fill();
+    }
+    // Red 404 error tips
+    hsCtx.fillStyle = '#dc2626';
+    for (let i = 0; i < 4; i++) {
+      hsCtx.fillRect(i * 8 + 3, 10, 2, 5);
+    }
+    scene.textures.addCanvas('hazard_spikes_html', htmlSpikeCanvas);
   }
 
   // --- Exit Portal ---

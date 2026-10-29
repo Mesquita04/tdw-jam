@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-C6Q4geLu.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-1ZF3AxEZ.css">
+  <script type="module" crossorigin src="./assets/index-CPXnX2pl.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DrTgbzJ5.css">
 </head>
 <body>
   <div id="game-app">
@@ -49,6 +49,29 @@
           <button id="btn-pause-hud" class="btn-icon" title="Pausa [ESC]" aria-label="Pausa">⏸</button>
         </div>
       </div>
+
+      <!-- Top-Right Level Hint Notification Card -->
+      <div id="hud-hint-card" class="hint-notification-card">
+        <div class="hint-card-header">
+          <div class="hint-card-title-group">
+            <span class="hint-card-icon">💡</span>
+            <span id="hint-card-title" class="hint-card-title">DICA DO SISTEMA</span>
+          </div>
+          <button id="btn-toggle-hint" class="hint-card-btn" title="Minimizar Dica">−</button>
+        </div>
+        <div class="hint-card-body" id="hint-card-body">
+          <!-- Text written dynamically per level and language -->
+        </div>
+        <div class="hint-card-footer">
+          <span class="hint-card-tag" id="hint-card-tag">HTML5</span>
+          <span class="hint-card-sub" id="hint-card-sub">OBJETIVO ATIVO</span>
+        </div>
+      </div>
+
+      <!-- Minimized Hint Pill (appears when hint is minimized) -->
+      <button id="btn-hint-pill" class="hint-minimized-pill hidden" title="Ver Dica">
+        <span class="hint-pill-icon">💡</span> <span id="hint-pill-text">DICA</span>
+      </button>
 
       <!-- In-Game Toast Notification Banner -->
       <div id="toast-banner" class="toast-banner hidden"></div>

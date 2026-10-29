@@ -43,8 +43,10 @@ export class GameScene extends Phaser.Scene {
     this.activeInteractable = null;
     this.jsSequenceEntered = [];
 
-    // Background Cyber Grid
-    this.add.tileSprite(480, 270, 960, 540, 'bg_grid');
+    // Background Cyber Grid / Themed Background
+    const theme = this.levelConfig.theme || { bgColor: '#0a0d18', bgTexture: 'bg_level_1' };
+    this.cameras.main.setBackgroundColor(theme.bgColor || '#0a0d18');
+    this.bgSprite = this.add.tileSprite(480, 270, 960, 540, theme.bgTexture || 'bg_level_1');
 
     // Groups
     this.platformsGroup = this.physics.add.staticGroup();
@@ -124,8 +126,9 @@ export class GameScene extends Phaser.Scene {
 
       if (h.type === 'spikes') {
         const count = Math.max(1, Math.round(h.w / 32));
+        const tex = h.texture || 'hazard_spikes';
         for (let i = 0; i < count; i++) {
-          const spk = this.hazardGroup.create(h.x + i * 32 + 16, h.y + 16, 'hazard_spikes');
+          const spk = this.hazardGroup.create(h.x + i * 32 + 16, h.y + 16, tex);
           spk.refreshBody();
           hazardObj.sprites.push(spk);
         }
@@ -150,7 +153,8 @@ export class GameScene extends Phaser.Scene {
     if (!this.levelConfig.buildPoints) return;
 
     this.levelConfig.buildPoints.forEach(bp => {
-      const ghost = this.add.image(bp.x + bp.w / 2, bp.y + bp.h / 2, 'tile_bridge_ghost');
+      const ghostTex = bp.ghostTexture || (this.levelConfig.theme?.key === 'html' ? 'tile_html_ghost' : 'tile_bridge_ghost');
+      const ghost = this.add.image(bp.x + bp.w / 2, bp.y + bp.h / 2, ghostTex);
       ghost.setDisplaySize(bp.w, bp.h);
 
       this.buildPoints.push({
@@ -427,6 +431,11 @@ export class GameScene extends Phaser.Scene {
     const deltaSec = delta / 1000;
     this.levelTime += deltaSec;
 
+    // Slow parallax background drift
+    if (this.bgSprite) {
+      this.bgSprite.tilePositionX += 0.15;
+    }
+
     // Animate HTML fragments
     if (this.fragmentItems) {
       this.fragmentItems.getChildren().forEach(frag => {
@@ -686,15 +695,17 @@ export class GameScene extends Phaser.Scene {
 
         // Create solid bridge tiles
         const cols = Math.max(1, Math.round(bp.config.w / 32));
+        const solidTex = bp.config.solidTexture || (this.levelConfig.theme?.key === 'html' ? 'tile_html_bridge' : 'tile_bridge_solid');
         for (let c = 0; c < cols; c++) {
           const bx = bp.config.x + c * 32 + 16;
           const by = bp.config.y + 16;
-          const bTile = this.builtPlatformsGroup.create(bx, by, 'tile_bridge_solid');
+          const bTile = this.builtPlatformsGroup.create(bx, by, solidTex);
           bTile.refreshBody();
         }
 
         sounds.playBuild();
-        this.createParticleBurst(bp.config.x + bp.config.w / 2, bp.config.y + 16, 'particle_cyan', 25);
+        const burstParticle = this.levelConfig.theme?.key === 'html' ? 'particle_magenta' : 'particle_cyan';
+        this.createParticleBurst(bp.config.x + bp.config.w / 2, bp.config.y + 16, burstParticle, 25);
 
         if (this.uiManager) {
           this.uiManager.showToast(i18n.t('bridgeBuilt'), 2500);
@@ -718,9 +729,9 @@ export class GameScene extends Phaser.Scene {
       this.jsSequenceEntered.push(sw.id);
 
       // Determine required sequence
-      const targetSeq = (this.levelConfig.jsTerminals && this.levelConfig.jsTerminals[0])
+      const targetSeq = this.levelConfig.jsSequence || (this.levelConfig.jsTerminals && this.levelConfig.jsTerminals[0]
         ? this.levelConfig.jsTerminals[0].sequence
-        : [1, 2, 3];
+        : [1, 2, 3]);
 
       // Validate so far
       const currentStep = this.jsSequenceEntered.length - 1;

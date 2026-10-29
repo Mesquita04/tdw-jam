@@ -36,6 +36,16 @@ export class UIManager {
     this.interactionPrompt = document.getElementById('interaction-prompt');
     this.promptText = document.getElementById('prompt-text');
 
+    // Top-Right Level Hint Notification Card
+    this.hudHintCard = document.getElementById('hud-hint-card');
+    this.hintCardTitle = document.getElementById('hint-card-title');
+    this.hintCardBody = document.getElementById('hint-card-body');
+    this.hintCardTag = document.getElementById('hint-card-tag');
+    this.hintCardSub = document.getElementById('hint-card-sub');
+    this.btnToggleHint = document.getElementById('btn-toggle-hint');
+    this.btnHintPill = document.getElementById('btn-hint-pill');
+    this.hintPillText = document.getElementById('hint-pill-text');
+
     // Modals
     this.screenPressStart = document.getElementById('screen-press-start');
     this.screenLangSelect = document.getElementById('screen-language-select');
@@ -223,6 +233,25 @@ export class UIManager {
       });
     }
 
+    // Top-Right Level Hint Card minimize / expand toggles
+    if (this.btnToggleHint) {
+      this.btnToggleHint.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playTone(300, 'sine', 0.05, 0.15);
+        if (this.hudHintCard) this.hudHintCard.classList.add('hidden');
+        if (this.btnHintPill) this.btnHintPill.classList.remove('hidden');
+      });
+    }
+
+    if (this.btnHintPill) {
+      this.btnHintPill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playTone(500, 'sine', 0.05, 0.2);
+        if (this.hudHintCard) this.hudHintCard.classList.remove('hidden');
+        if (this.btnHintPill) this.btnHintPill.classList.add('hidden');
+      });
+    }
+
     this.btnMenuPause.addEventListener('click', () => {
       sounds.playJsSwitch(1);
       this.hideAllModals();
@@ -390,6 +419,13 @@ export class UIManager {
 
     // Sound button text
     this.updateSoundButtons(Storage.isMuted());
+
+    // Update active level HUD and hint if playing
+    if (this.currentLevel) {
+      this.hudLevelName.textContent = isEn ? (this.currentLevel.nameEn || this.currentLevel.name) : this.currentLevel.name;
+      this.hudLevelSub.textContent = isEn ? (this.currentLevel.subEn || this.currentLevel.subtitle) : this.currentLevel.subtitle;
+      this.showLevelHint(this.currentLevel);
+    }
   }
 
   updateSoundButtons(isMuted) {
@@ -414,6 +450,8 @@ export class UIManager {
     this.screenTerminal.classList.add('hidden');
     this.screenLevelComplete.classList.add('hidden');
     this.screenVictory.classList.add('hidden');
+    if (this.hudHintCard) this.hudHintCard.classList.add('hidden');
+    if (this.btnHintPill) this.btnHintPill.classList.add('hidden');
     this.hidePrompt();
   }
 
@@ -475,6 +513,28 @@ export class UIManager {
     this.hudLevelSub.textContent = isEn ? (levelConfig.subEn || levelConfig.subtitle) : levelConfig.subtitle;
     this.hudAbility.textContent = `${i18n.t('abilityPrefix')}: ${levelConfig.unlockedAbility}`;
     this.updateHUDStats(0, 0, 0, (levelConfig.htmlFragments || []).length);
+    this.showLevelHint(levelConfig);
+  }
+
+  showLevelHint(levelConfig) {
+    if (!levelConfig || !this.hudHintCard) return;
+    const isEn = i18n.getLang() === 'en';
+    const hint = levelConfig.hint;
+    if (hint) {
+      if (this.hintCardTitle) this.hintCardTitle.textContent = isEn ? (hint.titleEn || 'SYSTEM HINT') : (hint.titlePt || 'DICA DO SISTEMA');
+      if (this.hintCardBody) this.hintCardBody.textContent = isEn ? (hint.textEn || '') : (hint.textPt || '');
+      if (this.hintCardTag) this.hintCardTag.textContent = hint.tag || levelConfig.theme?.tag || 'WEB';
+      if (this.hintCardSub) this.hintCardSub.textContent = isEn ? 'ACTIVE OBJECTIVE' : 'OBJETIVO ATIVO';
+      if (this.hintPillText) this.hintPillText.textContent = isEn ? 'HINT' : 'DICA';
+      this.hudHintCard.classList.remove('hidden');
+      if (this.btnHintPill) this.btnHintPill.classList.add('hidden');
+      this.hudHintCard.style.animation = 'none';
+      void this.hudHintCard.offsetWidth; // force reflow for smooth re-trigger
+      this.hudHintCard.style.animation = 'hintSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+    } else {
+      this.hudHintCard.classList.add('hidden');
+      if (this.btnHintPill) this.btnHintPill.classList.add('hidden');
+    }
   }
 
   updateHUDStats(timeSeconds, deaths, fragmentsCollected, fragmentsTotal) {
