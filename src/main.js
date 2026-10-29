@@ -128,3 +128,6 @@ window.addEventListener('blur', () => {
 // Pre-initialize SoundManager state from storage
 sounds.setMusicMuted(Storage.isMusicMuted());
 sounds.setSfxMuted(Storage.isSfxMuted());
+
+// Start BGM immediately on page load!
+sounds.startBgm();

@@ -21,10 +21,20 @@ export class SoundManager {
   initAudioElement() {
     if (this.bgmAudio) return;
     try {
-      this.bgmAudio = new Audio('/AIHB-8BIT.mp3');
+      this.bgmAudio = document.getElementById('bgm-audio');
+      if (!this.bgmAudio) {
+        this.bgmAudio = new Audio();
+        this.bgmAudio.id = 'bgm-audio';
+        this.bgmAudio.src = new URL('AIHB-8BIT.mp3', window.location.href).href;
+        if (document.body) {
+          document.body.appendChild(this.bgmAudio);
+        }
+      }
       this.bgmAudio.loop = true;
       this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : this.musicVolume;
       this.bgmAudio.preload = 'auto';
+      this.bgmAudio.setAttribute('playsinline', '');
+      this.bgmAudio.setAttribute('webkit-playsinline', '');
     } catch (e) {
       console.warn('Could not initialize BGM audio element:', e);
     }
@@ -105,7 +115,6 @@ export class SoundManager {
   // --- Background Music (AIHB-8BIT.mp3) ---
   startBgm() {
     if (this.musicMuted || this.muted) return;
-    this.ensureContext();
     if (!this.bgmAudio) {
       this.initAudioElement();
     }
@@ -115,15 +124,55 @@ export class SoundManager {
       if (playPromise !== undefined) {
         playPromise.then(() => {
           this.bgmPlaying = true;
+          this.removeAutoplayUnlock();
         }).catch(() => {
-          // Autoplay policy: will start upon first user interaction
+          this.bgmPlaying = false;
+          // Browser Autoplay policy deferred playback: attach one-time global listeners
+          this.setupAutoplayUnlock();
         });
       }
     }
   }
 
+  setupAutoplayUnlock() {
+    if (this.unlockListenersAttached) return;
+    this.unlockListenersAttached = true;
+
+    const unlock = () => {
+      this.ensureContext();
+      if (this.musicMuted || this.muted) return;
+      if (this.bgmAudio) {
+        this.bgmAudio.volume = (this.muted || this.musicMuted) ? 0 : this.musicVolume;
+        const p = this.bgmAudio.play();
+        if (p !== undefined) {
+          p.then(() => {
+            this.bgmPlaying = true;
+            this.removeAutoplayUnlock();
+          }).catch(() => {});
+        }
+      }
+    };
+
+    this.unlockHandler = unlock;
+    const events = ['pointerdown', 'mousedown', 'touchstart', 'keydown', 'click'];
+    events.forEach(evt => {
+      window.addEventListener(evt, unlock, { capture: true, passive: true });
+    });
+  }
+
+  removeAutoplayUnlock() {
+    if (!this.unlockHandler) return;
+    const events = ['pointerdown', 'mousedown', 'touchstart', 'keydown', 'click'];
+    events.forEach(evt => {
+      window.removeEventListener(evt, this.unlockHandler, { capture: true });
+    });
+    this.unlockListenersAttached = false;
+    this.unlockHandler = null;
+  }
+
   stopBgm() {
     this.bgmPlaying = false;
+    this.removeAutoplayUnlock();
     if (this.bgmAudio) {
       this.bgmAudio.pause();
     }

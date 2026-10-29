@@ -22,6 +22,7 @@ export class UIManager {
     this.updateAudioButtons();
     this.updateTelemetry();
     this.updateTitleCreditsButton();
+    sounds.startBgm();
   }
 
   cacheElements() {
@@ -171,16 +172,17 @@ export class UIManager {
   }
 
   bindEvents() {
-    // 1. First user interaction unlocks Web Audio & BGM
+    // 1. Audio session unlock handler for user interactions
     const ensureAudioSession = () => {
-      if (this.hasStarted) return;
-      this.hasStarted = true;
       sounds.ensureContext();
-      sounds.startBgm();
+      if (!sounds.bgmPlaying) {
+        sounds.startBgm();
+      }
     };
 
-    window.addEventListener('keydown', ensureAudioSession, { once: true });
-    window.addEventListener('pointerdown', ensureAudioSession, { once: true });
+    window.addEventListener('keydown', ensureAudioSession, { capture: true, passive: true });
+    window.addEventListener('pointerdown', ensureAudioSession, { capture: true, passive: true });
+    window.addEventListener('click', ensureAudioSession, { capture: true, passive: true });
 
     const handlePressStart = () => {
       ensureAudioSession();
