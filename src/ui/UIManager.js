@@ -806,6 +806,11 @@ export class UIManager {
     const victorySkinName = document.getElementById('victory-skin-name');
     if (victorySkinName) victorySkinName.textContent = i18n.t('skinCoordinatorName');
 
+    const rollSkinTitle = document.getElementById('roll-skin-unlocked-title');
+    if (rollSkinTitle) rollSkinTitle.textContent = i18n.t('skinUnlockedTitle');
+    const rollSkinName = document.getElementById('roll-skin-name');
+    if (rollSkinName) rollSkinName.textContent = i18n.t('skinCoordinatorName');
+
     // Game Over Modal (Minimal)
     if (this.lblBtnGameOverRetry) this.lblBtnGameOverRetry.textContent = isEn ? 'PLAY AGAIN' : 'JOGAR NOVAMENTE';
     if (this.lblBtnGameOverMenu) this.lblBtnGameOverMenu.textContent = i18n.t('btnGameOverMenu');

@@ -120,7 +120,7 @@ export const SKINS_DATA = {
   coordinator: {
     id: 'coordinator',
     namePt: 'Developer Coordenador',
-    nameEn: 'Lead Coordinator Developer',
+    nameEn: 'Coordinator Developer',
     descPt: 'Homem branco, camisa azul escura, calças de ganga, óculos e cabelo branco em crista',
     descEn: 'Fair skin, dark navy shirt, denim jeans, glasses and white crest hair',
     isCoordinator: true,
