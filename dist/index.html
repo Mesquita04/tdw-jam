@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>CTRL + ALT + ESCAPE — O sistema conta contigo</title>
+  <meta name="description" content="Um jogo retro 2D de plataformas e puzzles focado em desenvolvimento web (HTML, CSS, JS). Desparasita o sistema e restaura o Kernel!" />
+  <!-- Google Fonts: Retro Pixel & Cyberpunk Monospace -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <script type="module" crossorigin src="./assets/index-C6Q4geLu.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-1ZF3AxEZ.css">
+</head>
+<body>
+  <div id="game-app">
+    <!-- Retro Screen Scanline Effect -->
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <!-- Phaser Canvas Container -->
+    <div id="phaser-container"></div>
+
+    <!-- HUD Overlay -->
+    <div id="hud-overlay" class="ui-layer hidden">
+      <div class="hud-top">
+        <div class="hud-left">
+          <div class="hud-badge level-badge" id="hud-level-name">NÍVEL 1: LOCALHOST</div>
+          <div class="hud-sub" id="hud-level-sub">Ambiente de Testes</div>
+        </div>
+
+        <div class="hud-center">
+          <div class="hud-stat timer-box">
+            <span class="hud-icon">⏱</span>
+            <span id="hud-timer">00:00.0</span>
+          </div>
+          <div class="hud-stat fragments-box" id="hud-fragments-box">
+            <span class="hud-icon">&lt;&gt;</span>
+            <span id="hud-fragments">0 / 0</span>
+          </div>
+          <div class="hud-stat deaths-box">
+            <span class="hud-icon">💀</span>
+            <span id="hud-deaths">0</span>
+          </div>
+        </div>
+
+        <div class="hud-right">
+          <div class="hud-badge ability-badge" id="hud-ability">HABILIDADE: NENHUMA</div>
+          <button id="btn-sound-hud" class="btn-icon" title="Ativar/Desativar Som" aria-label="Som">🔊</button>
+          <button id="btn-pause-hud" class="btn-icon" title="Pausa [ESC]" aria-label="Pausa">⏸</button>
+        </div>
+      </div>
+
+      <!-- In-Game Toast Notification Banner -->
+      <div id="toast-banner" class="toast-banner hidden"></div>
+
+      <!-- Quick Hint / Interaction Prompt on Screen -->
+      <div id="interaction-prompt" class="interaction-prompt hidden">
+        <span class="key-badge">E</span> <span id="prompt-text">INTERAGIR</span>
+      </div>
+
+      <!-- Virtual On-Screen Controls for Accessibility & Mobile/Mouse -->
+      <div class="virtual-controls" id="virtual-controls">
+        <div class="virtual-dpad">
+          <button id="vbtn-left" class="vbtn" aria-label="Mover Esquerda">◄</button>
+          <button id="vbtn-right" class="vbtn" aria-label="Mover Direita">►</button>
+        </div>
+        <div class="virtual-actions">
+          <button id="vbtn-interact" class="vbtn vbtn-action" aria-label="Interagir">E</button>
+          <button id="vbtn-jump" class="vbtn vbtn-action vbtn-jump" aria-label="Saltar">▲</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Press Any Button To Start Screen (Splash Screen - In English) -->
+    <div id="screen-press-start" class="ui-modal-overlay">
+      <div class="press-start-box" id="press-start-trigger">
+        <div class="glitch-wrapper">
+          <h1 class="game-title" data-text="CTRL + ALT + ESCAPE">CTRL + ALT + ESCAPE</h1>
+        </div>
+        <p class="tagline" id="splash-tagline">"The system counts on you."</p>
+
+        <div class="title-meta-box">
+          <span class="meta-tag neon-cyan">HTML: BUILD</span>
+          <span class="meta-tag neon-violet">CSS: STYLE</span>
+          <span class="meta-tag neon-yellow">JS: EXECUTE</span>
+        </div>
+
+        <div class="press-start-prompt">
+          <span id="txt-press-any-key">[ PRESS ANY BUTTON TO START ]</span>
+          <span class="press-start-sub" id="txt-press-any-sub">OR CLICK ANYWHERE</span>
+        </div>
+
+        <div class="team-badge-intro">
+          <span class="team-badge-title">NET YAHOO</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Language Selection Screen -->
+    <div id="screen-language-select" class="ui-modal-overlay hidden">
+      <div class="cyber-panel lang-panel">
+        <h2 class="panel-heading" id="lang-modal-heading">SELECT SYSTEM LANGUAGE</h2>
+        <p class="lang-modal-sub" id="lang-modal-sub">Choose your preferred language</p>
+        <div class="lang-buttons-group">
+          <button id="btn-lang-en" class="cyber-btn btn-primary lang-btn">
+            <span class="lang-flag">🇬🇧</span> ENGLISH (EN)
+          </button>
+          <button id="btn-lang-pt" class="cyber-btn btn-secondary lang-btn">
+            <span class="lang-flag">🇵🇹</span> PORTUGUÊS (PT)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Title Screen Modal -->
+    <div id="screen-title" class="ui-modal-overlay hidden">
+      <div class="cyber-panel title-panel">
+        <div class="glitch-wrapper">
+          <h1 class="game-title" data-text="CTRL + ALT + ESCAPE">CTRL + ALT + ESCAPE</h1>
+        </div>
+        <p class="tagline" id="title-tagline">"O sistema conta contigo."</p>
+
+        <div class="title-meta-box">
+          <span class="meta-tag neon-cyan">HTML: BUILD</span>
+          <span class="meta-tag neon-violet">CSS: STYLE</span>
+          <span class="meta-tag neon-yellow">JS: EXECUTE</span>
+        </div>
+
+        <div class="menu-button-group">
+          <button id="btn-play" class="cyber-btn btn-primary">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-play">JOGAR</span> <span class="btn-bracket">]</span>
+          </button>
+          <button id="btn-continue" class="cyber-btn btn-secondary">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-continue">CONTINUAR</span> <span class="btn-bracket">]</span>
+          </button>
+          <button id="btn-level-select" class="cyber-btn">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-levels">SELECIONAR NÍVEL</span> <span class="btn-bracket">]</span>
+          </button>
+          <button id="btn-controls" class="cyber-btn">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-controls">CONTROLOS</span> <span class="btn-bracket">]</span>
+          </button>
+          <button id="btn-credits" class="cyber-btn">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-credits">CRÉDITOS FINAIS</span> <span class="btn-bracket">]</span>
+          </button>
+        </div>
+
+        <div class="title-footer">
+          <button id="btn-toggle-lang-title" class="text-link">IDIOMA: PT 🇵🇹</button>
+          <button id="btn-toggle-sound-title" class="text-link">SOM: ATIVO 🔊</button>
+          <span class="version-tag">NET YAHOO • TDW JAM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Level Select Modal -->
+    <div id="screen-level-select" class="ui-modal-overlay hidden">
+      <div class="cyber-panel levels-panel">
+        <h2 class="panel-heading">SELECIONA O NÍVEL DO SISTEMA</h2>
+        <div class="levels-grid" id="levels-grid-container">
+          <!-- Dynamically populated by UIManager -->
+        </div>
+        <div class="modal-footer">
+          <button id="btn-close-levels" class="cyber-btn">VOLTAR AO MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls Modal -->
+    <div id="screen-controls" class="ui-modal-overlay hidden">
+      <div class="cyber-panel dialog-panel">
+        <h2 class="panel-heading">MANUAL DO DESENVOLVEDOR (CONTROLOS)</h2>
+        <div class="controls-list">
+          <div class="control-row">
+            <span class="control-keys">A / D ou ◄ / ►</span>
+            <span class="control-desc">Mover programador para a esquerda / direita</span>
+          </div>
+          <div class="control-row">
+            <span class="control-keys">ESPAÇO / W / ▲</span>
+            <span class="control-desc">Saltar (altura ajustável e salto dinâmico)</span>
+          </div>
+          <div class="control-row">
+            <span class="control-keys">E</span>
+            <span class="control-desc">Interagir com Terminais, Consolas e Pontos de Construção</span>
+          </div>
+          <div class="control-row">
+            <span class="control-keys">1 / 2 / 3</span>
+            <span class="control-desc">Consultar Habilidades Desbloqueadas (HTML, CSS, JS)</span>
+          </div>
+          <div class="control-row">
+            <span class="control-keys">R</span>
+            <span class="control-desc">Reiniciar rapidamente o nível atual</span>
+          </div>
+          <div class="control-row">
+            <span class="control-keys">ESC</span>
+            <span class="control-desc">Pausar jogo / Abrir menu</span>
+          </div>
+        </div>
+
+        <div class="tutorial-lore-box">
+          <h3>CONCEITOS DE DEPURAÇÃO:</h3>
+          <p><strong>HTML (Build):</strong> Apanha fragmentos &lt;&gt; para erguer pontes e plataformas &lt;div&gt;.</p>
+          <p><strong>CSS (Style):</strong> Altera regras no terminal para transformar elementos entre sólido e fantasma.</p>
+          <p><strong>JavaScript (Execute):</strong> Resolve sequências assíncronas de botões para abrir portais e desativar o vírus!</p>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btn-close-controls" class="cyber-btn btn-primary">ENTENDIDO</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Credits / About Modal -->
+    <div id="screen-credits" class="ui-modal-overlay hidden">
+      <div class="cyber-panel dialog-panel">
+        <h2 class="panel-heading" id="credits-heading">CRÉDITOS FINAIS</h2>
+        <div class="credits-body">
+          <div class="team-highlight-box">
+            <p class="highlight-cyan team-title" id="credits-team-heading"><strong>EQUIPA: NET YAHOO</strong></p>
+            <p class="team-members"><strong>• Francisco Mesquita</strong></p>
+            <p class="team-members"><strong>• Gonçalo Abreu</strong></p>
+            <p class="team-statement" id="credits-team-statement">"Foi tudo feito pelos Net Yahoo, a equipa do Francisco Mesquita e Gonçalo Abreu."</p>
+          </div>
+          <p id="credits-jam-text">Desenvolvido por Net Yahoo para a TDW 24-Hour Game Jam.</p>
+          <hr class="cyber-divider" />
+          <p><strong id="lbl-concept-phil">Conceito & Filosofia:</strong></p>
+          <p id="credits-lore-text">O jogador encarna um desenvolvedor preso no próprio servidor web. O HTML constrói a fundação, o CSS molda e estiliza o espaço, e o JavaScript executa a lógica vital para restaurar o sistema operacional.</p>
+          <hr class="cyber-divider" />
+          <p><strong id="lbl-tech-art">Tecnologia & Arte:</strong></p>
+          <p id="credits-tech-text">• Motor: Phaser 3 (Arcade Physics)<br />• Áudio: Web Audio API (Sintetizador chiptune em tempo real)<br />• Gráficos: Arte pixel procedural dinâmica em HTML5 Canvas</p>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-close-credits" class="cyber-btn btn-primary">FECHAR</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pause Modal -->
+    <div id="screen-pause" class="ui-modal-overlay hidden">
+      <div class="cyber-panel pause-panel">
+        <h2 class="panel-heading" id="pause-heading">SISTEMA EM PAUSA</h2>
+        <p class="pause-tagline" id="pause-tagline">Processo em espera...</p>
+        <div class="menu-button-group">
+          <button id="btn-resume" class="cyber-btn btn-primary">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-resume">CONTINUAR</span> <span class="btn-bracket">]</span>
+          </button>
+          <button id="btn-restart-pause" class="cyber-btn btn-secondary">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-restart">REINICIAR NÍVEL (R)</span> <span class="btn-bracket">]</span>
+          </button>
+          <button id="btn-controls-pause" class="cyber-btn">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-controls-pause">CONTROLOS</span> <span class="btn-bracket">]</span>
+          </button>
+          <button id="btn-credits-pause" class="cyber-btn">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-credits-pause">CRÉDITOS FINAIS</span> <span class="btn-bracket">]</span>
+          </button>
+          <button id="btn-menu-pause" class="cyber-btn">
+            <span class="btn-bracket">[</span> <span id="lbl-btn-menu-pause">MENU PRINCIPAL</span> <span class="btn-bracket">]</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- In-Game Terminal Interaction Dialog -->
+    <div id="screen-terminal-dialog" class="ui-modal-overlay hidden">
+      <div class="cyber-panel terminal-dialog-panel">
+        <div class="terminal-header">
+          <span class="terminal-dot red"></span>
+          <span class="terminal-dot yellow"></span>
+          <span class="terminal-dot green"></span>
+          <span id="terminal-dialog-title" class="terminal-title-text">TERMINAL</span>
+        </div>
+        <div class="terminal-body" id="terminal-dialog-body">
+          <!-- Text written dynamically -->
+        </div>
+        <div class="modal-footer">
+          <button id="btn-close-terminal" class="cyber-btn btn-primary">FECHAR [E / Espaço]</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Level Complete Modal -->
+    <div id="screen-level-complete" class="ui-modal-overlay hidden">
+      <div class="cyber-panel results-panel">
+        <h2 class="panel-heading text-emerald" id="results-title-text">NÍVEL CONCLUÍDO!</h2>
+        <p id="results-level-name" class="results-sub">Nível 1: LOCALHOST</p>
+
+        <div class="stars-container" id="results-stars-container">
+          <span class="star" id="star-1">★</span>
+          <span class="star" id="star-2">★</span>
+          <span class="star" id="star-3">★</span>
+        </div>
+        <div class="stars-legend" id="results-stars-legend">
+          <div id="lbl-star-1">★ 1: Nível Concluído</div>
+          <div id="lbl-star-2">★ 2: Sem Mortes</div>
+          <div id="lbl-star-3">★ 3: Tempo Recorde</div>
+        </div>
+
+        <div class="results-stats-box">
+          <div class="stat-line">
+            <span id="lbl-stat-exec">Tempo de Execução:</span>
+            <span id="results-time" class="stat-val highlight-cyan">00:00.0</span>
+          </div>
+          <div class="stat-line">
+            <span id="lbl-stat-target">Tempo Alvo (3ª Estrela):</span>
+            <span id="results-target-time" class="stat-val">00:00.0</span>
+          </div>
+          <div class="stat-line">
+            <span id="lbl-stat-deaths">Falhas / Mortes:</span>
+            <span id="results-deaths" class="stat-val highlight-magenta">0</span>
+          </div>
+        </div>
+
+        <div class="menu-button-group horizontal">
+          <button id="btn-next-level" class="cyber-btn btn-primary">PRÓXIMO NÍVEL ►</button>
+          <button id="btn-retry-level" class="cyber-btn">REPETIR ↺</button>
+          <button id="btn-levels-from-results" class="cyber-btn">MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Victory Screen (Game Complete) -->
+    <div id="screen-victory" class="ui-modal-overlay hidden">
+      <div class="cyber-panel victory-panel">
+        <div class="glitch-wrapper">
+          <h1 class="victory-title" id="victory-title-text">SISTEMA RESTAURADO!</h1>
+        </div>
+        <p class="victory-subtitle" id="victory-sub-text">O VÍRUS GLITCH FOI EXTERMINADO COM SUCESSO!</p>
+
+        <div class="final-credits-banner" id="victory-final-credits-banner">
+          <div class="final-credits-header" id="victory-final-credits-header">★ CRÉDITOS FINAIS ★</div>
+          <p class="final-credits-statement" id="victory-statement">
+            "Foi tudo feito pelos Net Yahoo, a equipa do Francisco Mesquita e Gonçalo Abreu."
+          </p>
+          <div class="final-credits-details">
+            <span class="author-tag">Francisco Mesquita</span>
+            <span class="divider-tag">•</span>
+            <span class="author-tag">Gonçalo Abreu</span>
+          </div>
+        </div>
+
+        <div class="victory-lore" id="victory-lore-text">
+          <p>O Kernel do sistema compilou sem erros. O HTML estruturou a fundação, o CSS estilizou o ambiente e o JavaScript ligou todos os componentes num ciclo harmonioso.</p>
+          <p class="highlight-cyan"><strong>Obrigado pelo vosso trabalho! O sistema está a salvo!</strong></p>
+        </div>
+
+        <div class="victory-stats-summary" id="victory-stats-summary">
+          <!-- Populated by UIManager -->
+        </div>
+
+        <div class="menu-button-group horizontal">
+          <button id="btn-victory-replay" class="cyber-btn btn-primary">JOGAR NOVAMENTE ↺</button>
+          <button id="btn-victory-menu" class="cyber-btn">MENU PRINCIPAL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
