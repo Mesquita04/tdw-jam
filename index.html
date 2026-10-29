@@ -312,8 +312,8 @@
               </div>
             </button>
 
-            <!-- 06. CRÉDITOS FINAIS / CREDITS -->
-            <button id="btn-credits" class="big-menu-card card-credits">
+            <!-- 06. CRÉDITOS FINAIS / CREDITS (Only visible after completing the game) -->
+            <button id="btn-credits" class="big-menu-card card-credits hidden">
               <div class="card-left-content">
                 <span class="card-tag card-tag-credits">/*06*/</span>
                 <div class="card-text-group">
@@ -530,9 +530,6 @@
           <button id="btn-controls-pause" class="cyber-btn">
             <span class="btn-bracket">[</span> <span id="lbl-btn-controls-pause">CONTROLOS</span> <span class="btn-bracket">]</span>
           </button>
-          <button id="btn-credits-pause" class="cyber-btn">
-            <span class="btn-bracket">[</span> <span id="lbl-btn-credits-pause">CRÉDITOS FINAIS</span> <span class="btn-bracket">]</span>
-          </button>
           <button id="btn-menu-pause" class="cyber-btn">
             <span class="btn-bracket">[</span> <span id="lbl-btn-menu-pause">MENU PRINCIPAL</span> <span class="btn-bracket">]</span>
           </button>
@@ -540,30 +537,14 @@
       </div>
     </div>
 
-    <!-- Game Over / Player Death Modal -->
+    <!-- Game Over / Player Death Modal (Minimal: Level Number, Play Again, Main Menu) -->
     <div id="screen-game-over" class="ui-modal-overlay hidden">
-      <div class="cyber-panel game-over-panel">
-        <div class="death-glitch-badge">
-          <span class="death-icon">☠</span>
-          <span class="death-code">KERNEL_PANIC // 0xDEADBEEF</span>
-        </div>
-        <h2 class="panel-heading text-rose" id="game-over-title">KERNEL PANIC!</h2>
-        <p class="game-over-sub" id="game-over-sub">O processo do programador sofreu uma falha fatal.</p>
-
-        <div class="game-over-stats-box">
-          <div class="stat-line">
-            <span id="lbl-game-over-level">Nível Atual:</span>
-            <span id="game-over-level-val" class="stat-val highlight-cyan">Nível 1</span>
-          </div>
-          <div class="stat-line">
-            <span id="lbl-game-over-deaths">Falhas / Mortes Acumuladas:</span>
-            <span id="game-over-deaths-val" class="stat-val highlight-magenta">1</span>
-          </div>
-        </div>
+      <div class="cyber-panel game-over-panel minimal-death-panel">
+        <h2 class="death-lvl-heading" id="game-over-lvl-display">LVL 1</h2>
 
         <div class="menu-button-group horizontal">
           <button id="btn-game-over-retry" class="cyber-btn btn-primary btn-game-over-cta">
-            <span class="btn-bracket">[</span> <span id="lbl-btn-game-over-retry">JOGAR NOVAMENTE (R / ENTER)</span> <span class="btn-bracket">]</span>
+            <span class="btn-bracket">[</span> <span id="lbl-btn-game-over-retry">JOGAR NOVAMENTE</span> <span class="btn-bracket">]</span>
           </button>
           <button id="btn-game-over-menu" class="cyber-btn">
             <span class="btn-bracket">[</span> <span id="lbl-btn-game-over-menu">MENU PRINCIPAL</span> <span class="btn-bracket">]</span>
@@ -737,6 +718,49 @@
         <div class="menu-button-group horizontal">
           <button id="btn-victory-replay" class="cyber-btn btn-primary">JOGAR NOVAMENTE ↺</button>
           <button id="btn-victory-menu" class="cyber-btn">MENU PRINCIPAL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Roll Down Final Credits (After Beating Level 16 RGB Door) -->
+    <div id="screen-roll-credits" class="ui-modal-overlay hidden">
+      <div class="roll-credits-wrapper">
+        <div class="roll-credits-container" id="roll-credits-container">
+          <div class="roll-credits-content">
+            <div class="roll-credits-badge">TDW 24-HOUR GAME JAM // 1ª EDIÇÃO</div>
+            <h1 class="roll-credits-title" id="roll-credits-title">BEM VINDO A TDW!</h1>
+            <div class="roll-credits-divider">✦ ✦ ✦</div>
+            <p class="roll-credits-lead" id="roll-credits-body">
+              Este jogo foi desenvolvido pelos <strong>Net Yahoo</strong>, equipa composta pelo <strong>Francisco Mesquita</strong> e <strong>Gonçalo Abreu</strong> para competir na 1ª edição da <strong>TDW Jam - WEB GAME CHALLENGE 24H</strong>.
+            </p>
+            <p class="roll-credits-hope" id="roll-credits-hope">
+              Esperamos que tenham gostado!
+            </p>
+
+            <!-- Coordinator skin reward in roll credits -->
+            <div class="reward-skin-unlock-container roll-skin-box" id="roll-skin-reward-box">
+              <div class="reward-skin-header">
+                <span class="reward-pulse-star">★</span>
+                <span id="roll-skin-unlocked-title" class="reward-skin-title">NOVA SKIN DESBLOQUEADA: DEVELOPER COORDENADOR!</span>
+                <span class="reward-pulse-star">★</span>
+              </div>
+              <div class="reward-skin-card">
+                <canvas id="canvas-skin-reward-roll" class="reward-skin-canvas" width="48" height="48"></canvas>
+                <div class="reward-skin-info">
+                  <span class="reward-skin-name" id="roll-skin-name">Developer Coordenador</span>
+                </div>
+                <button id="btn-equip-coordinator-roll" class="cyber-btn btn-primary btn-equip-reward">
+                  <span id="lbl-equip-roll">EQUIPAR AGORA</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="roll-credits-action">
+              <button id="btn-roll-main-menu" class="cyber-btn btn-primary btn-roll-cta">
+                <span class="btn-bracket">&lt;</span> <span id="lbl-btn-roll-menu">Main menu</span> <span class="btn-bracket">&gt;</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

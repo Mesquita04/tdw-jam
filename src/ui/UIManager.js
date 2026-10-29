@@ -21,6 +21,7 @@ export class UIManager {
     this.updateSoundButtons(Storage.isMuted());
     this.updateAudioButtons();
     this.updateTelemetry();
+    this.updateTitleCreditsButton();
   }
 
   cacheElements() {
@@ -69,14 +70,21 @@ export class UIManager {
     this.screenGameOver = document.getElementById('screen-game-over');
     this.btnGameOverRetry = document.getElementById('btn-game-over-retry');
     this.btnGameOverMenu = document.getElementById('btn-game-over-menu');
-    this.lblGameOverLevelVal = document.getElementById('game-over-level-val');
-    this.lblGameOverDeathsVal = document.getElementById('game-over-deaths-val');
-    this.lblGameOverTitle = document.getElementById('game-over-title');
-    this.lblGameOverSub = document.getElementById('game-over-sub');
-    this.lblGameOverLevel = document.getElementById('lbl-game-over-level');
-    this.lblGameOverDeaths = document.getElementById('lbl-game-over-deaths');
+    this.lblGameOverLvlDisplay = document.getElementById('game-over-lvl-display');
     this.lblBtnGameOverRetry = document.getElementById('lbl-btn-game-over-retry');
     this.lblBtnGameOverMenu = document.getElementById('lbl-btn-game-over-menu');
+
+    // Roll Down Final Credits elements
+    this.screenRollCredits = document.getElementById('screen-roll-credits');
+    this.rollCreditsContainer = document.getElementById('roll-credits-container');
+    this.rollCreditsTitle = document.getElementById('roll-credits-title');
+    this.rollCreditsBody = document.getElementById('roll-credits-body');
+    this.rollCreditsHope = document.getElementById('roll-credits-hope');
+    this.btnRollMainMenu = document.getElementById('btn-roll-main-menu');
+    this.lblBtnRollMenu = document.getElementById('lbl-btn-roll-menu');
+    this.btnEquipRoll = document.getElementById('btn-equip-coordinator-roll');
+    this.lblEquipRoll = document.getElementById('lbl-equip-roll');
+    this.canvasRewardRoll = document.getElementById('canvas-skin-reward-roll');
 
     // Welcome to TDW elements
     this.btnWelcomeTdwContinue = document.getElementById('btn-welcome-tdw-continue');
@@ -225,7 +233,9 @@ export class UIManager {
       sounds.playJsSwitch(2);
       this.hideAllModals();
       const save = Storage.load();
-      this.callbacks.onStartLevel(save.unlockedLevel || 1);
+      const isGameFinished = save.levels && save.levels[16] && save.levels[16].completed;
+      const targetLvl = isGameFinished ? 1 : (save.unlockedLevel || 1);
+      this.callbacks.onStartLevel(targetLvl);
     });
 
     if (this.btnContinue) {
@@ -234,7 +244,9 @@ export class UIManager {
         sounds.playJsSwitch(2);
         this.hideAllModals();
         const save = Storage.load();
-        this.callbacks.onStartLevel(save.unlockedLevel || 1);
+        const isGameFinished = save.levels && save.levels[16] && save.levels[16].completed;
+        const targetLvl = isGameFinished ? 1 : (save.unlockedLevel || 1);
+        this.callbacks.onStartLevel(targetLvl);
       });
     }
 
@@ -278,12 +290,12 @@ export class UIManager {
       });
     }
 
-    // 06. CRÉDITOS FINAIS / CREDITS
+    // 06. CRÉDITOS FINAIS / CREDITS (Accessible after beating the game)
     if (this.btnCredits) {
       this.btnCredits.addEventListener('click', () => {
         ensureAudioSession();
         sounds.playJsSwitch(1);
-        if (this.screenCredits) this.screenCredits.classList.remove('hidden');
+        this.showRollCredits();
       });
     }
 
@@ -371,6 +383,15 @@ export class UIManager {
         }
       }
 
+      // Roll down credits: press ENTER or ESC to return to main menu
+      if (this.screenRollCredits && !this.screenRollCredits.classList.contains('hidden')) {
+        if (e.key === 'Enter' || e.key === 'Escape') {
+          e.preventDefault();
+          if (this.btnRollMainMenu) this.btnRollMainMenu.click();
+          return;
+        }
+      }
+
       // Welcome to TDW: press ENTER to view final credits
       if (this.screenWelcomeTdw && !this.screenWelcomeTdw.classList.contains('hidden')) {
         if (e.key === 'Enter') {
@@ -400,7 +421,9 @@ export class UIManager {
         } else if (k === '5' || k === 'm') {
           this.btnControls.click();
         } else if (k === '6' || k === 'k') {
-          this.btnCredits.click();
+          if (this.btnCredits && !this.btnCredits.classList.contains('hidden')) {
+            this.btnCredits.click();
+          }
         }
       }
     });
@@ -483,7 +506,7 @@ export class UIManager {
       if (this.currentLevel && this.currentLevel.id < LEVELS.length) {
         this.callbacks.onStartLevel(this.currentLevel.id + 1);
       } else {
-        this.showWelcomeTdwScreen();
+        this.showRollCredits();
       }
     });
 
@@ -544,7 +567,16 @@ export class UIManager {
       });
     }
 
-    // Equip Developer Coordenador Skin Buttons (from Welcome to TDW & Victory Screens)
+    // Roll Down Credits Menu button
+    if (this.btnRollMainMenu) {
+      this.btnRollMainMenu.addEventListener('click', () => {
+        sounds.playJsSwitch(1);
+        if (this.screenRollCredits) this.screenRollCredits.classList.add('hidden');
+        this.showTitleScreen();
+      });
+    }
+
+    // Equip Developer Coordenador Skin Buttons (from Welcome to TDW & Roll Credits)
     const handleEquipCoordinator = () => {
       Storage.unlockSkin('coordinator');
       Storage.setSkin('coordinator');
@@ -562,6 +594,7 @@ export class UIManager {
 
     if (this.btnEquipWelcome) this.btnEquipWelcome.addEventListener('click', handleEquipCoordinator);
     if (this.btnEquipVictory) this.btnEquipVictory.addEventListener('click', handleEquipCoordinator);
+    if (this.btnEquipRoll) this.btnEquipRoll.addEventListener('click', handleEquipCoordinator);
 
     // Virtual On-Screen Controls (Mouse & Touch)
     const bindVBtn = (id, key) => {
@@ -752,13 +785,19 @@ export class UIManager {
     const victorySkinName = document.getElementById('victory-skin-name');
     if (victorySkinName) victorySkinName.textContent = i18n.t('skinCoordinatorName');
 
-    // Game Over Modal
-    if (this.lblGameOverTitle) this.lblGameOverTitle.textContent = i18n.t('gameOverTitle');
-    if (this.lblGameOverSub) this.lblGameOverSub.textContent = i18n.t('gameOverSub');
-    if (this.lblGameOverLevel) this.lblGameOverLevel.textContent = i18n.t('deathLevel');
-    if (this.lblGameOverDeaths) this.lblGameOverDeaths.textContent = i18n.t('deathCount');
-    if (this.lblBtnGameOverRetry) this.lblBtnGameOverRetry.textContent = i18n.t('btnGameOverRetry');
+    // Game Over Modal (Minimal)
+    if (this.lblBtnGameOverRetry) this.lblBtnGameOverRetry.textContent = isEn ? 'PLAY AGAIN' : 'JOGAR NOVAMENTE';
     if (this.lblBtnGameOverMenu) this.lblBtnGameOverMenu.textContent = i18n.t('btnGameOverMenu');
+
+    // Roll Down Final Credits Modal
+    if (this.rollCreditsTitle) this.rollCreditsTitle.textContent = i18n.t('rollCreditsTitle');
+    if (this.rollCreditsBody) {
+      this.rollCreditsBody.innerHTML = isEn
+        ? `This game was developed by <strong>Net Yahoo</strong>, a team formed by <strong>Francisco Mesquita</strong> and <strong>Gonçalo Abreu</strong> to compete in the 1st edition of the <strong>TDW Jam - WEB GAME CHALLENGE 24H</strong>.`
+        : `Este jogo foi desenvolvido pelos <strong>Net Yahoo</strong>, equipa composta pelo <strong>Francisco Mesquita</strong> e <strong>Gonçalo Abreu</strong> para competir na 1ª edição da <strong>TDW Jam - WEB GAME CHALLENGE 24H</strong>.`;
+    }
+    if (this.rollCreditsHope) this.rollCreditsHope.textContent = i18n.t('rollCreditsHope');
+    if (this.lblBtnRollMenu) this.lblBtnRollMenu.textContent = i18n.t('btnRollMenu');
 
     this.updateCoordinatorEquipButtons();
 
@@ -833,6 +872,16 @@ export class UIManager {
     }
   }
 
+  updateTitleCreditsButton() {
+    if (!this.btnCredits) return;
+    const isFinished = Storage.isGameCompleted();
+    if (isFinished) {
+      this.btnCredits.classList.remove('hidden');
+    } else {
+      this.btnCredits.classList.add('hidden');
+    }
+  }
+
   openOptionsModal() {
     this.updateAudioButtons();
     this.updateFullscreenButtons();
@@ -898,6 +947,7 @@ export class UIManager {
     this.hud.classList.add('hidden');
     this.screenTitle.classList.remove('hidden');
     this.updateTelemetry();
+    this.updateTitleCreditsButton();
     if (this.callbacks && this.callbacks.onReturnToTitle) {
       this.callbacks.onReturnToTitle();
     }
@@ -915,6 +965,7 @@ export class UIManager {
     if (this.screenTerminal) this.screenTerminal.classList.add('hidden');
     if (this.screenLevelComplete) this.screenLevelComplete.classList.add('hidden');
     if (this.screenGameOver) this.screenGameOver.classList.add('hidden');
+    if (this.screenRollCredits) this.screenRollCredits.classList.add('hidden');
     if (this.screenWelcomeTdw) this.screenWelcomeTdw.classList.add('hidden');
     if (this.screenVictory) this.screenVictory.classList.add('hidden');
     if (this.hudHintCard) this.hudHintCard.classList.add('hidden');
@@ -1127,18 +1178,30 @@ export class UIManager {
     if (this.btnHintPill) this.btnHintPill.classList.add('hidden');
 
     const isEn = i18n.getLang() === 'en';
-    const lvlName = isEn ? (levelConfig.nameEn || levelConfig.name) : levelConfig.name;
-    const lvlSub = isEn ? (levelConfig.subEn || levelConfig.subtitle) : levelConfig.subtitle;
-
-    if (this.lblGameOverLevelVal) {
-      this.lblGameOverLevelVal.textContent = `${lvlName} — ${lvlSub}`;
-    }
-    if (this.lblGameOverDeathsVal) {
-      this.lblGameOverDeathsVal.textContent = String(deaths);
+    const lvlNum = levelConfig ? levelConfig.id : 1;
+    if (this.lblGameOverLvlDisplay) {
+      this.lblGameOverLvlDisplay.textContent = isEn ? `LEVEL ${lvlNum}` : `LVL ${lvlNum}`;
     }
     this.applyTranslations();
     if (this.screenGameOver) {
       this.screenGameOver.classList.remove('hidden');
+    }
+  }
+
+  showRollCredits() {
+    this.hideAllModals();
+    sounds.playVictory();
+    Storage.unlockSkin('coordinator');
+    this.applyTranslations();
+    if (this.canvasRewardRoll) {
+      TextureGenerator.drawSkinPreview(this.canvasRewardRoll, 'coordinator');
+    }
+    this.updateCoordinatorEquipButtons();
+    if (this.screenRollCredits) {
+      this.screenRollCredits.classList.remove('hidden');
+      if (this.rollCreditsContainer) {
+        this.rollCreditsContainer.scrollTop = 0;
+      }
     }
   }
 
@@ -1154,6 +1217,10 @@ export class UIManager {
     if (this.btnEquipVictory) {
       this.btnEquipVictory.className = cls;
       if (this.lblEquipVictory) this.lblEquipVictory.textContent = text;
+    }
+    if (this.btnEquipRoll) {
+      this.btnEquipRoll.className = cls;
+      if (this.lblEquipRoll) this.lblEquipRoll.textContent = text;
     }
   }
 

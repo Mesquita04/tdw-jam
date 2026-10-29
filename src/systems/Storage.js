@@ -58,6 +58,11 @@ export class Storage {
     return data.levels[levelId] || { completed: false, stars: 0, bestTime: null, deaths: 0 };
   }
 
+  static isGameCompleted() {
+    const data = Storage.load();
+    return !!(data.levels && data.levels[16] && data.levels[16].completed);
+  }
+
   static saveLevelResult(levelId, stars, timeSeconds, deaths) {
     const data = Storage.load();
     const current = data.levels[levelId] || { completed: false, stars: 0, bestTime: null, deaths: 0 };

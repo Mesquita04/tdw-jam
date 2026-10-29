@@ -1476,6 +1476,49 @@ export class TextureGenerator {
     opCtx.fillStyle = '#ffffff';
     opCtx.fillRect(14, 16, 12, 30);
     scene.textures.addCanvas('portal_open', openCanvas);
+
+    // 3. Final Level RGB Portal - Locked
+    const { canvas: rgbLockedCanvas, ctx: rgbLkCtx } = TextureGenerator.createCanvas(48, 64);
+    const gradLocked = rgbLkCtx.createLinearGradient(0, 0, 48, 64);
+    gradLocked.addColorStop(0, '#ff0055');
+    gradLocked.addColorStop(0.25, '#ffe600');
+    gradLocked.addColorStop(0.5, '#00ff88');
+    gradLocked.addColorStop(0.75, '#00e5ff');
+    gradLocked.addColorStop(1, '#a855f7');
+    rgbLkCtx.fillStyle = gradLocked;
+    rgbLkCtx.fillRect(2, 2, 44, 60);
+    rgbLkCtx.fillStyle = '#070914';
+    rgbLkCtx.fillRect(6, 6, 36, 52);
+    rgbLkCtx.fillStyle = '#ff0055';
+    rgbLkCtx.fillRect(20, 30, 8, 8);
+    rgbLkCtx.beginPath();
+    rgbLkCtx.arc(24, 28, 4, Math.PI, 0, false);
+    rgbLkCtx.strokeStyle = '#ff0055';
+    rgbLkCtx.lineWidth = 2;
+    rgbLkCtx.stroke();
+    scene.textures.addCanvas('portal_rgb_locked', rgbLockedCanvas);
+
+    // 4. Final Level RGB Portal - Open (Active Rainbow Chroma Portal)
+    const { canvas: rgbOpenCanvas, ctx: rgbOpCtx } = TextureGenerator.createCanvas(48, 64);
+    const gradOpen = rgbOpCtx.createLinearGradient(0, 0, 48, 64);
+    gradOpen.addColorStop(0, '#ff0055');
+    gradOpen.addColorStop(0.2, '#ff8800');
+    gradOpen.addColorStop(0.4, '#ffe600');
+    gradOpen.addColorStop(0.6, '#00ff88');
+    gradOpen.addColorStop(0.8, '#00e5ff');
+    gradOpen.addColorStop(1, '#d946ef');
+    rgbOpCtx.fillStyle = gradOpen;
+    rgbOpCtx.fillRect(2, 2, 44, 60);
+    rgbOpCtx.fillStyle = '#0c1024';
+    rgbOpCtx.fillRect(6, 6, 36, 52);
+    const gradVortex = rgbOpCtx.createRadialGradient(24, 32, 2, 24, 32, 20);
+    gradVortex.addColorStop(0, '#ffffff');
+    gradVortex.addColorStop(0.3, '#00e5ff');
+    gradVortex.addColorStop(0.6, '#a855f7');
+    gradVortex.addColorStop(1, '#ff007f');
+    rgbOpCtx.fillStyle = gradVortex;
+    rgbOpCtx.fillRect(10, 10, 28, 44);
+    scene.textures.addCanvas('portal_rgb_open', rgbOpenCanvas);
   }
 
   // --- Glitch Core Boss ---

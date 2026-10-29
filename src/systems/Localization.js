@@ -132,6 +132,12 @@ export const TRANSLATIONS = {
     btnEquipped: '✓ EQUIPADA!',
     skinLockedDesc: '🔒 Bloqueado: Vence o jogo (Nível 16) para desbloquear!',
 
+    // Roll Down Final Credits (Level 16 Post-Door)
+    rollCreditsTitle: 'BEM VINDO A TDW!',
+    rollCreditsBody: 'Este jogo foi desenvolvido pelos Net Yahoo, equipa composta pelo Francisco Mesquita e Gonçalo Abreu para competir na 1ª edição da TDW Jam - WEB GAME CHALLENGE 24H.',
+    rollCreditsHope: 'Esperamos que tenham gostado!',
+    btnRollMenu: 'Main menu',
+
     // In-Game Toasts
     fragCollected: 'Fragmento HTML recolhido!',
     bridgeBuilt: 'Ponte de elementos <div/> construída!',
@@ -305,6 +311,12 @@ export const TRANSLATIONS = {
     btnEquipNow: 'EQUIP NOW',
     btnEquipped: '✓ EQUIPPED!',
     skinLockedDesc: '🔒 Locked: Beat the game (Level 16) to unlock!',
+
+    // Roll Down Final Credits (Level 16 Post-Door)
+    rollCreditsTitle: 'WELCOME TO TDW!',
+    rollCreditsBody: 'This game was developed by Net Yahoo, a team formed by Francisco Mesquita and Gonçalo Abreu to compete in the 1st edition of the TDW Jam - WEB GAME CHALLENGE 24H.',
+    rollCreditsHope: 'We hope you enjoyed it!',
+    btnRollMenu: 'Main menu',
 
     // In-Game Toasts
     fragCollected: 'HTML fragment collected!',

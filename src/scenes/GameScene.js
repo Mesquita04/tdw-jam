@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { LEVELS } from '../levels/LevelData.js';
 import { sounds } from '../audio/SoundManager.js';
 import { i18n } from '../systems/Localization.js';
+import { Storage } from '../systems/Storage.js';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -44,6 +45,7 @@ export class GameScene extends Phaser.Scene {
     this.isPaused = false;
     this.levelCompleted = false;
     this.isDead = false;
+    this.physics.resume();
     this.activeInteractable = null;
     this.jsSequenceEntered = [];
 
@@ -341,17 +343,60 @@ export class GameScene extends Phaser.Scene {
   setupExitPortal() {
     const ex = this.levelConfig.exit;
     this.portalLocked = ex.locked;
-    const initialTex = this.portalLocked ? 'portal_locked' : 'portal_open';
+    const isBossLevel = (this.levelConfig.id === 16);
+    const initialTex = isBossLevel
+      ? (this.portalLocked ? 'portal_rgb_locked' : 'portal_rgb_open')
+      : (this.portalLocked ? 'portal_locked' : 'portal_open');
+
     this.portalSprite = this.physics.add.sprite(ex.x, ex.y, initialTex);
     this.portalSprite.body.setAllowGravity(false);
     this.portalSprite.body.setImmovable(true);
+
+    if (isBossLevel) {
+      // Continuous RGB cycling around the final gateway
+      this.rgbPortalTimer = this.time.addEvent({
+        delay: 60,
+        loop: true,
+        callback: () => {
+          if (!this.portalSprite || !this.portalSprite.active) return;
+          const hue = (this.time.now % 3000) / 3000;
+          const col = Phaser.Display.Color.HSLToColor(hue, 1, 0.55);
+          this.portalSprite.setTint(col.color);
+
+          // Subtle RGB aura particles around the doorway perimeter
+          if (Math.random() < 0.45) {
+            const rx = this.portalSprite.x + Phaser.Math.Between(-24, 24);
+            const ry = this.portalSprite.y + Phaser.Math.Between(-30, 30);
+            const pTypes = ['particle_cyan', 'particle_magenta', 'particle_yellow', 'particle_green'];
+            const pTex = pTypes[Math.floor(Math.random() * pTypes.length)];
+            const p = this.add.image(rx, ry, pTex);
+            p.setScale(0.8);
+            this.tweens.add({
+              targets: p,
+              y: ry - 14,
+              alpha: 0,
+              scaleX: 0.2,
+              scaleY: 0.2,
+              duration: 450,
+              ease: 'Quad.easeOut',
+              onComplete: () => p.destroy()
+            });
+          }
+        }
+      });
+    }
   }
 
   unlockPortal() {
     this.portalLocked = false;
-    this.portalSprite.setTexture('portal_open');
+    const isBossLevel = (this.levelConfig.id === 16);
+    this.portalSprite.setTexture(isBossLevel ? 'portal_rgb_open' : 'portal_open');
     this.cameras.main.flash(200, 5, 255, 161);
-    this.createParticleBurst(this.portalSprite.x, this.portalSprite.y, 'particle_green', 25);
+    this.createParticleBurst(this.portalSprite.x, this.portalSprite.y, isBossLevel ? 'particle_yellow' : 'particle_green', 35);
+    if (isBossLevel) {
+      this.createParticleBurst(this.portalSprite.x, this.portalSprite.y, 'particle_cyan', 25);
+      this.createParticleBurst(this.portalSprite.x, this.portalSprite.y, 'particle_magenta', 25);
+    }
   }
 
   // --- Glitch Boss (Level 16: Giant Virus & The Web Hammer) ---
@@ -806,13 +851,17 @@ export class GameScene extends Phaser.Scene {
 
   // --- Player Setup ---
   createPlayer() {
-    const start = this.levelConfig.playerStart;
+    const start = this.levelConfig.playerStart || { x: 80, y: 440 };
     this.player = this.physics.add.sprite(start.x, start.y, 'player_idle');
     this.player.setCollideWorldBounds(true);
     this.player.body.setSize(18, 26);
     this.player.body.setOffset(7, 6);
     this.player.body.setMaxVelocity(250, 900);
     this.player.body.setGravityY(950);
+    this.player.setAlpha(1);
+    this.player.setScale(1);
+    this.player.body.enable = true;
+    this.player.body.reset(start.x, start.y);
   }
 
   // --- Keyboard Controls ---
@@ -1477,7 +1526,12 @@ export class GameScene extends Phaser.Scene {
       ease: 'Back.easeIn',
       onComplete: () => {
         if (this.uiManager) {
-          this.uiManager.showLevelComplete(this.levelConfig, this.levelTime, this.deaths);
+          if (this.levelConfig.id === 16) {
+            Storage.saveLevelResult(16, 3, this.levelTime, this.deaths);
+            this.uiManager.showRollCredits();
+          } else {
+            this.uiManager.showLevelComplete(this.levelConfig, this.levelTime, this.deaths);
+          }
         }
       }
     });

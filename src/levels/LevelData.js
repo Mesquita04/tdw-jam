@@ -1035,7 +1035,7 @@ export const LEVELS = [
     subEn: 'HTML (Structure) + CSS (Enable) + JS (Animation)',
     unlockedAbility: 'HTML + CSS + JS (O MARTELO)',
     targetTime: 65,
-    playerStart: { x: 70, y: 440 },
+    playerStart: { x: 80, y: 448 },
     theme: {
       key: 'boss',
       bgColor: '#050308',
@@ -1067,17 +1067,17 @@ export const LEVELS = [
       { x: 0, y: 480, w: 960, h: 60, type: 'tile_corrupted_accent' },
       { x: 0, y: 0, w: 32, h: 480, type: 'tile_corrupted_hex' },
       { x: 928, y: 0, w: 32, h: 480, type: 'tile_corrupted_hex' },
-      // Left steps for HTML fragments
-      { x: 70, y: 410, w: 80, h: 32, type: 'tile_corrupted_hex' },
-      { x: 160, y: 340, w: 80, h: 32, type: 'tile_corrupted_hex' },
+      // Left steps for HTML fragments (placed right of player spawn)
+      { x: 170, y: 410, w: 80, h: 32, type: 'tile_corrupted_hex' },
+      { x: 260, y: 340, w: 80, h: 32, type: 'tile_corrupted_hex' },
       // Center raised pedestal for the JS animation switch
       { x: 420, y: 410, w: 120, h: 32, type: 'tile_corrupted_hex' },
       // Right step for arena variety
       { x: 760, y: 410, w: 90, h: 32, type: 'tile_corrupted_hex' }
     ],
     htmlFragments: [
-      { id: 'f1', x: 110, y: 365 }, // Left step 1
-      { id: 'f2', x: 200, y: 295 }  // Left step 2
+      { id: 'f1', x: 210, y: 365 }, // Left step 1
+      { id: 'f2', x: 300, y: 295 }  // Left step 2
     ],
     buildPoints: [
       {
